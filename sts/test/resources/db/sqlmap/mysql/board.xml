@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.practice.mapper.BoardMapper">
+	
+<!-- @@@ 게시글 처리 : insert, update, delete, select-->
+	<insert id="insertBoard" parameterType="boardVO" useGeneratedKeys="true" keyProperty="bno">
+		insert into tb_board(
+			id, title, content
+		)values(
+			#{id}, #{title},#{content}
+		)
+	</insert>
+	
+	<update id="updateBoard" parameterType="boardVO">
+		update tb_board
+		set title=#{title},
+			content=#{content}
+		where bno=#{bno}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete
+		from tb_board
+		where bno=#{bno}
+	</delete>
+	
+	<select id="selectBoard" parameterType="pageVO" resultType="boardVO">
+    	select *
+    	  from tb_board
+	 	  order by bno desc
+	 	  limit  ${begin-1}, 10
+    </select>
+	
+	<select id="searchBoard" resultType="boardVO">
+		select *
+	    	  from (
+				     	select * 
+				     	from tb_board
+						where case ${option} 
+								 when '1' then (title like "%${keyword}%") or (content like "%${keyword}%") or (id like "%${keyword}%")
+								 when '2' then title like "%${keyword}%"
+								 when '3' then content like "%${keyword}%"
+				                 when '4' then (title like "%${keyword}%") or (content like "%${keyword}%")
+				                 when '5' then id like "%${keyword}%"
+							  else title="%" end
+				              order by bno desc
+	    	  		) as A
+		 	  order by bno desc
+		 	  limit  ${begin-1}, 10
+    </select>
+
+	<select id="selectBoardByNo" parameterType="int" resultType="boardVO">
+		select*
+		from tb_board
+		where bno=#{bno}
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+    	select count(*)
+          from tb_board 
+    </select> 
+	<select id="searchBoardCount" resultType="int">
+    	select count(*)
+          from (
+			     	select * 
+			     	from tb_board
+					where case ${option} 
+							 when '1' then (title like "%${keyword}%") or (content like "%${keyword}%") or (id like "%${keyword}%")
+							 when '2' then title like "%${keyword}%"
+							 when '3' then content like "%${keyword}%"
+			                 when '4' then (title like "%${keyword}%") or (content like "%${keyword}%")
+			                 when '5' then id like "%${keyword}%"
+						  else title="%" end
+	    	  	) as A
+    </select> 
+<!-- @@@ 파일 처리  -->
+	<insert id="insertFile" parameterType="fileVO">
+	insert into tb_file ( 
+			bno,         
+			oriName, 
+			sysName, 
+			path, 
+			size
+		) values (
+			#{bno}, 
+			#{oriName}, 
+			#{sysName},
+			#{path}, 
+			#{size}		
+		)
+	</insert>
+	<select id="selectFileByNo" parameterType="int" resultType="fileVO">
+	    select fno,
+	    	   bno,
+	           oriName,
+	           sysName,
+	           path,
+	           size
+	      from tb_file
+	     where bno = #{bno}      
+	</select>  
+	<update id="updatefile" parameterType="fileVO">
+		update tb_file
+		set oriName=#{oriName},
+			sysName=#{sysName},
+			path=#{path},
+			size=#{size}
+		where fno=#{fno}
+	</update>
+	<delete id="deleteFile" parameterType="int">
+		delete
+		from tb_file
+		where fno=#{fno}
+	</delete>
+	
+	
+<!-- @@@댓글처리  -->
+	<insert id="insertComment" parameterType="commentVO">
+		insert into tb_comment(
+			bno, id, content, sortId, depth, parentCno 
+		) values (
+			#{bno}, #{id}, #{content},#{sortId},#{depth},<if test='parentCno==0'>null</if><if test='parentCno!=0'>#{parentCno}</if>
+		)
+	</insert>
+	
+	<select id="selectComment" resultType="commentVO">
+	    select *
+	      from tb_comment
+	     where bno = #{bno} 
+  		 order by sortId asc
+  		 limit ${begin-1},10
+	</select>
+	<select id="selectParentCno" resultType="int">
+	    select IFNULL(parentCno, 0)
+	      from tb_comment
+	     where cno = #{cno} 
+	</select>
+	
+	<delete id="deleteComment" parameterType="int">
+	    delete 
+	      from tb_comment
+	     where cno = #{cno}
+	</delete>
+	
+	<update id="updateComment" parameterType="commentVO">
+	    update tb_comment
+	       set content = #{content}
+	     where cno = #{cno}
+	</update>
+	<select id="selectCommentCount" parameterType="int" resultType="int">
+	select count(*)
+	from tb_comment
+	where bno=#{bno}
+	</select>
+	
+	<!-- 추천수  -->
+	<select id="countLike" parameterType="int" resultType="int">
+	select count(*)
+	from tb_like
+	where bno=#{bno}
+	</select>
+	
+	<select id="checkLike" parameterType="likeVO" resultType ="likeVO">
+	select *
+	from tb_like
+	where bno=#{bno} and id=#{id}
+	</select>
+
+	<insert id="insertLike">
+		insert into tb_like(
+			bno, id
+		) values (
+			#{bno},#{id}
+		)
+	</insert>
+	<delete id="deleteLike">
+	    delete 
+	      from tb_like
+	     where bno = #{bno} and id=#{id}
+	</delete>
+	
+	<!-- 조회수 -->
+	<update id="viewCntUp" parameterType="int">
+		update tb_board 
+		   set viewCnt = viewCnt+1
+		 where bno = #{bno}    	    
+	</update>
+	<update id="updateCommentCnt" parameterType="int">
+		update tb_board 
+		   set commentCnt = (select count(*) from tb_comment where bno=#{bno})
+		 where bno = #{bno}    	    
+	</update>
+	<update id="commentSortIdUp" parameterType="int">
+		update tb_board 
+		   set commentSortId= commentSortId+1
+		 where bno = #{bno}    	    
+	</update>
+	<update id="childCntUp" parameterType="int">
+		update tb_comment 
+		   set childCnt = childCnt+1
+		 where cno = #{cno}    	    
+	</update>
+	<update id="updateChildCnt" parameterType="int">
+		update tb_comment 
+		  set childCnt = (select * from (select count(*) from tb_comment where parentCno=#{parentCno}) aa)
+		 where cno = #{parentCno}    	    
+	</update>
+<!-- 	<update id="updateChildCnt" parameterType="int"> -->
+<!-- 		 update tb_comment -->
+<!-- 		   set chikld = (select count(*) from tb_comment where pren=#{bno}) -->
+<!-- 		 where bno = #{bno}    	     	     -->
+<!-- 	</update> -->
+
+</mapper>

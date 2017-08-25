@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="kr.co.practice" />
+	
+	
+	
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html; charset=UTF-8</value>
+						<value>application/json; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- interceptor 호출할 경로 설정 -->
+	<mvc:interceptors> 
+     <mvc:interceptor> 
+         <mvc:mapping path="/board/**" />  <!-- 호출할 경로 -->
+         <mvc:exclude-mapping path="/board/list.do*" /> 
+         <mvc:exclude-mapping path="/board/list.json*" /> 
+         <mvc:exclude-mapping path="/board/searchlist.json*" /> 
+         <mvc:exclude-mapping path="/board/searchlist.do*" /> 
+         <bean class="kr.co.practice.interceptor.AuthInterceptor" /> 
+     </mvc:interceptor> 
+ 	</mvc:interceptors>
+	
+	
+	<mvc:default-servlet-handler />
+	
+	<mvc:view-resolvers>
+		<mvc:jsp prefix="/views/" suffix=".html" />
+	</mvc:view-resolvers>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10485760" />
+	</bean>
+
+</beans>
