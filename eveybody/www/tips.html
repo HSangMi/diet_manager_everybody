@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <!-- BEGIN HEAD -->
@@ -18,8 +17,16 @@
     <link href="vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
     <!-- THEME STYLES -->
     <link href="css/layout.css" rel="stylesheet" type="text/css"/>
+    <!-- CUSTOM STYLES -->
+    <link class="cssdeck" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="css/table.css" rel="stylesheet" type="text/css"/>
+    <link href="css/pagination.css" rel="stylesheet" type="text/css"/>
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Include Script Source -->
+    <script src="js/include/handlebars-v4.0.10.js"></script>
+    <script src="js/include/jquery.min.js"></script>
 </head>
 <!-- END HEAD -->
 <!-- BODY -->
@@ -38,6 +45,44 @@
         </h1>
         <h2> 운동 및 다이어트 tips (에디터만 글올리기 가능)</h2>
 
+        <div class="tbl-header">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>글쓴이</th>
+                    <th>조회수</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+                <tr>
+                    <td colspan="5" style="text-align: center">등록된 게시물이 없습니다 *^_^*</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul class="pagination" id="pagination">
+            <li><a href="#" class="prev">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#" class="active">5</a></li>
+            <li><a href="#">6</a></li>
+            <li><a href="#">7</a></li>
+            <li><a href="#" class="next">
+                <i class="fa fa-chevron-right"></i>
+            </a></li>
+        </ul>
     </div>
 </div>
 <!-- End Work -->
@@ -75,6 +120,38 @@
     $("header.header").load("includes/header.html");
     $("footer.footer").load("includes/footer.html");
 </script>
+
+<script id="list-template" type="text/x-handlebars-template">
+    {{#each .}}
+    <tr>
+        <td>{{boardNo}}</td>
+        <td>{{title}}</td>
+        <td>{{userId}}</td>
+        <td>{{viewCnt}}</td>
+        <td>{{setRegDate regDate}}</td>
+    </tr>
+    {{/each}}
+</script>
+
+<script id="write-template" type="text/x-handlebars-template">
+    <tr>
+        <th>제목</th>
+        <td><input type='text' id='title' size='60' /></td>
+    </tr>
+    <tr>
+        <th>내용</th>
+        <td><textarea id='content' rows='10' cols='80'></textarea></td>
+    </tr>
+    <tr>
+        <td rowspan='2'>파일첨부</td>
+        <td><input type="file" multiple="multiple" name="attachFile"></td>
+    </tr>
+    <tr>
+        <td><div id='imageThumbnail'></div></td>
+    </tr>
+</script>
+
+<script src="js/board/board.js"></script>
 </body>
 <!-- END BODY -->
 </html>
