@@ -132,16 +132,18 @@
         detail: function (boardNo) {
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.detail,
-                data: {
-                    boardNo: boardNo
-                },
                 dataType: "json"
             }).done(function (result) {
                 var data = result.board;
-                if (data === undefined) {
+                if (data === null) {
                     console.log("결과 없습니다");
+                    // 수정, 삭제 버튼도 제거해야 함....
                     return;
                 }
+                console.log("========");
+                console.dir(data);
+                console.log("========");
+
                 var source = $("#detail-template").html();
                 var template = Handlebars.compile(source);
 

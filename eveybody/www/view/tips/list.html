@@ -128,7 +128,7 @@
     {{#each .}}
     <tr>
         <td>{{boardNo}}</td>
-        <td><a href="detail.html?boardNo={{boardNo}}">{{title}}</a></td>
+        <td><a href="javascript:board.modifyURL({{boardNo}});" id="moveDetailPage">{{title}}</a></td>
         <td>{{userId}}</td>
         <td>{{viewCnt}}</td>
         <td>{{setRegDate regDate}}</td>
@@ -155,6 +155,73 @@
         </tr>
     </table>
     <button type="button" id="writeBoard">등록</button>
+</script>
+
+<script id="detail-template" type="text/x-handlebars-template">
+    <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>글쓴이</th>
+                    <th>조회수</th>
+                    <th>추천수</th>
+                    <th>등록일</th>
+                    <th>내용</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                <tr id="detail-form">
+                    <td style="text-align: center">{{boardNo}}</td>
+                    <td style="text-align: center">{{title}}</td>
+                    <td style="text-align: center">{{userId}}</td>
+                    <td style="text-align: center">{{viewCnt}}</td>
+                    <td id="likeCnt" style="text-align: center">{{{setLike boardNo}}}</td>
+                    <td style="text-align: center">{{setRegDate regDate}}</td>
+                    <td style="text-align: center">{{content}}</td>
+                </tr>
+            </tbody>
+    </table>
+    </div>
+    <button type="button" id="showUpdateForm">수정</button>
+    <button type="button" id="deleteBtn">삭제</button>
+</script>
+
+<script id="comment-list-template" type="text/x-handlebars-template">
+    <table id="commentListForm">
+        <thead>
+        <tr>
+            <th>작성자</th>
+            <th>내용</th>
+            <th colspan="2">작성시간</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each .}}
+        <tr id="row{{cno}}">
+            <td>{{userId}}</td>
+            <td colspan="2">{{content}}<a href="javascript:makeRecommentWriteForm({{cno}}, {{bno}});">답글달기</a></td>
+            <td>{{regDate regDate}}</td>
+            <td>{{{updateAndDelete cno content userId}}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script id="comment-write-template" type="text/x-handlebars-template">
+    <table id="commentWriteForm">
+        <tr>
+            <td id='idtext'>{{userId}}</td>
+            <td><textarea name='commentContent' rows='3' cols='60'></textarea></td>
+            <td><a href="javascript:commentInsert('{{userId}}', {{bno}});">등록</a></tdz>
+        </tr>
+    </table>
 </script>
 
 <script src="../../js/board/list.js"></script>

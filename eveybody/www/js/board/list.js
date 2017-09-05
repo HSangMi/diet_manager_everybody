@@ -1,13 +1,17 @@
-(function () {
+var board = (function () {
     var urlList = {
         "contextPath": "http://192.168.0.16:8000/board/tip/",
         "list": "list.do",
         "write": "write.do",
         "detail": "detail.json",
-        "like": "like.do"
+        "setLike": "setLike.do",
+        "like": "like.do",
+        "update": "update.do",
+        "delete": "delete.do"
     };
     var listModule = {
         bindEvent: function () {
+            var boardNo = listModule.urlParsing("boardNo");
             // 게시글 목록
             $(document.body).on("click", "#showWriteForm", function () {
                 listModule.writeForm();
@@ -20,6 +24,23 @@
                 listModule.write();
             });
         },
+        urlParsing: function (name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            var results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        },
+        /* url 변경 */
+        modifyURL: function (boardNo) {
+            var renewURL = location.href;
+            renewURL = renewURL.replace("list.html", 'detail.html');
+            renewURL = renewURL.replace(/\?boardNo=([0-9]+)/gi, '');
+
+            renewURL += '?boardNo=' + boardNo;
+
+            history.pushState(null, null, renewURL);
+            listModule.detail(boardNo);
+        },
         /* 게시글 목록 */
         pageList: function (pageNo) {
             $.ajax({
@@ -31,6 +52,7 @@
             var data = result.list;
             if (data.length <= 0) {
                 console.log("결과 없습니다");
+                // 결과 없을 때 페이지 구성...
                 return;
             }
             var source = $("#list-template").html();
@@ -117,15 +139,20 @@
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.detail,
                 data: {
-                    boardNo : boardNo
+                    boardNo: boardNo
                 },
                 dataType: "json"
             }).done(function (result) {
                 var data = result.board;
-                if (board === undefined) {
+                if (data === undefined) {
                     console.log("결과 없습니다");
+                    $("#detail-form").html('<td style="text-align: center">등록된 게시물이 없습니다 ~ ^_^</td>');
                     return;
                 }
+                console.log("--------");
+                console.dir(data);
+                console.log("--------");
+
                 var source = $("#detail-template").html();
                 var template = Handlebars.compile(source);
 
@@ -133,28 +160,86 @@
                     var date = new Date(regDate);
                     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                 });
-                var isLike = false;
                 Handlebars.registerHelper("setLike", function (boardNo) {
                     var likeCnt = 0;
-                    /*
+                    var isLike = "<button type='button' id='likeBtn'>취소</button>";
                     $.ajax({
-                        url: urlList.contextPath + boardNo + "/" + urlList.like,
+                        url: urlList.contextPath + boardNo + "/" + urlList.setLike,
                         dataType: "json",
-                        async : false
+                        async: false
                     }).done(function (result) {
-                        likeCnt = result.likeCnt;
-                        isLike = result.isLike;
+                        likeCnt = "<span>" + result.likeCnt + "</span>";
+                        if (result.isLike === 0) {
+                            isLike = "<button type='button' id='likeBtn'>추천</button>";
+                        }
+                        ;
                     });
-                     */
-                    return likeCnt;
+                    return likeCnt + isLike;
                 });
                 var html = template(data);
-                $("div.tbl-content > table > tbody").html(html);
-                listModule.makePageNav(result.page);
+                $("div#board-body").html(html);
             });
+        },
+        /* 추천 */
+        doLike: function (boardNo) {
+            var isLike = $("#likeBtn").text();
+            $.ajax({
+                url: urlList.contextPath + boardNo + "/" + urlList.like,
+                dataType: "json",
+                data: {
+                    isLike: isLike
+                },
+                async: false
+            }).done(function (result) {
+                $("#likeCnt > span").text(result);
+                if(isLike === "추천") {
+                    $("#likeBtn").text("취소");
+                }
+                else {
+                    $("#likeBtn").text("추천");
+                }
+            });
+        },
+        /* 수정 */
+        updateForm: function (boardNo) {
+            var data = {};
+            $.ajax({
+                url: urlList.contextPath + boardNo + "/" + urlList.detail,
+                dataType: "json"
+            }).done(function (result) {
+                data = result.board;
+                var source = $("#update-template").html();
+                var template = Handlebars.compile(source);
+
+                var html = template(data);
+                $("div#board-body").html(html);
+            });
+        },
+        update: function (boardNo) {
+            $.ajax({
+                url: urlList.contextPath + urlList.update,
+                dataType: "json",
+                data: {
+                    boardNo: boardNo,
+                    title: $("#title").val(),
+                    content: $("#content").val()
+                },
+                method: "post"
+            }).done(listModule.detail);
+        },
+        /* 삭제 */
+        delete: function (boardNo) {
+            $.ajax({
+                url: urlList.contextPath + boardNo + "/" + urlList.delete,
+                dataType: "json"
+            }).done();
         }
     };
     listModule.bindEvent();
     listModule.pageList($("#pagination li a.active").text());
     // listModule.detail(2);
+
+    return {
+        modifyURL: listModule.modifyURL,
+    }
 })();
