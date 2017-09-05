@@ -20,8 +20,9 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!--소켓 & chat css -->
-    <script type="text/javascript" src="http://cdn.socket.io/socket.io-1.0.3.js"></script>
- <!--   <link rel="stylesheet" type="text/css" href="css/chat.css">-->
+    <script src="http://192.168.0.30:10005/socket.io/socket.io.js"></script>
+
+    <!--   <link rel="stylesheet" type="text/css" href="css/chat.css">-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -67,47 +68,18 @@
                         <div class="box-body" style="display: block;">
                             <!-- Conversations are loaded here -->
                             <div class="direct-chat-messages">
-
-                                <!-- 받은 메세지 -->
-                                <div class="direct-chat-msg">
-                                    <div class="direct-chat-info clearfix">
-                                        <!-- 쪽지보낸사람, 시간-->
-                                        <span class="direct-chat-name pull-left">봇</span>
-                                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                                    </div>
-                                    <!-- 쪽지보낸사람 프로필 -->
-                                    <img class="direct-chat-img" src="../../img/robot.png" alt="Message User Image"><!-- /.direct-chat-img -->
-                                    <!-- 받은쪽지 내용 -->
-                                    <div class="direct-chat-text">
-                                        Is this template really for free? That's unbelievable!
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                <!-- /받은 메세지-->
-
-                                <!-- 보내는 메세지 -->
-                                <div class="direct-chat-msg right">
-                                    <div class="direct-chat-info clearfix">
-                                        <span class="direct-chat-name pull-right">상미</span>
-                                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-                                    </div>
-                                    <!-- /.direct-chat-info -->
-                                    <img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="Message User Image"><!-- /.direct-chat-img -->
-                                    <div class="direct-chat-text">
-                                        You better believe it!dddd dfas dfasd  asdf as
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                <!-- /.direct-chat-msg -->
                             </div>
                             <!--/.direct-chat-messages-->
-
                         </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer" style="display: block;">
                             <form class="chat-form" action="#" method="post">
-                                <div class="input-group">
+                                <div class ="input-group-btn">
+                                    <button class="btn btn-primary btn-flat" style="width: 47%; margin: 1%;" id="ansBtn1">1</button>
+                                    <button class="btn btn-primary btn-flat" style="width: 47%;margin: 1%" id="ansBtn2">2</button>
+                                </div>
+                                <div class="input-group" style="display: none">
                                     <input type="text" name="message" placeholder="Type Message ..." class="form-control chat-input" required>
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary btn-flat">Send</button>
@@ -146,26 +118,25 @@
 </script>
 <script type="application/javascript">
     var socket;
-    var loginId;
+    var loginId="user1";
     $(document).ready(function () {
         // 소켓서버에 접속
-        socket = io.connect('http://192.168.0.30:10005/test');
-        console.log("소켓dir");
+        socket = io.connect('http://192.168.0.30:10005');
         console.dir(socket);
-        // 유저 아이디 전달...
-        socket.emit("login", "user1");
 
-        socket.on("msg", function (data) {
-            console.log("서버에서 응답");
-            $("div.direct-chat-messages").append(data);
-        });
+        // 유저 아이디 전달...
+        socket.emit("login", loginId);
+            socket.on("msg", function (data) {
+                console.log("서버에서 응답");
+                $("div.direct-chat-messages").append(data);
+            });
     });
 
     $("form.chat-form").submit(function(){
         var $msg = $("input.chat-input").val();
         $("input.chat-input").val("");
         $("div.direct-chat-messages").append(makeSendMsg($msg));
-       // socket.emit("msg", {recvId: "chatbot", sendId: loginId, msg: $msg});
+        socket.emit("msg", {recvId: "chatbot", sendId: loginId, msg: $msg});
         return false;
     });
 
@@ -173,10 +144,9 @@
         /*유저 정보가져오기*/
         var userId = "상미";
         var html='<div class="direct-chat-msg right"><div class="direct-chat-info clearfix">' +
-            '<span class="direct-chat-name pull-right">' + userId + '</span><span class="direct-chat-timestamp pull-left">' + '23 Jan 2:05 pm' +
-            '' +
-            '</span></div><img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="Message User Image"><div class="direct-chat-text">' +  //user 프로필
-            '' + msg + '</div></div>';
+            '<span class="direct-chat-name pull-right">' + userId +
+            '</div><img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="Message User Image"><div class="direct-chat-text">' +  //user 프로필
+            '' + msg + '</div><br><br><span class="direct-chat-timestamp" style="float:right">'+ '23 Jan 2:05 pm' +'</span></div>';
         return html;
     }
 
