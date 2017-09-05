@@ -2767,8 +2767,9 @@ table.text-center th {
   padding: 5px 10px;
   background: #d2d6de;
   border: 1px solid #d2d6de;
-  margin: 5px 0 0 50px;
+  margin: 5px 3% 0 3%;
   color: #444444;
+  display:inline-block;
 }
 .direct-chat-text:after,
 .direct-chat-text:before {
@@ -2791,8 +2792,7 @@ table.text-center th {
   margin-top: -6px;
 }
 .right .direct-chat-text {
-  margin-right: 50px;
-  margin-left: 0;
+  float: right;
 }
 .right .direct-chat-text:after,
 .right .direct-chat-text:before {
