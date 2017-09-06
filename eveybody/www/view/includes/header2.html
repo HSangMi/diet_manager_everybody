@@ -163,3 +163,24 @@
         </ul>
     </div>
 </nav>
+
+<script type="application/javascript">
+    var getLoginId;
+    (getLoginId = function (){
+        var userId = "";
+        if(!checkMobileDevice()){
+            userId = window.sessionStorage.getItem("user");
+        }else {
+            userId = window.localStorage.getItem("user");
+        }
+
+        if(userId !== null && userId !== "" ){
+            $("ul>li>a#loginBtn").html("Logout")
+                .attr("data-target", "#");
+        }else{
+            $("ul>li>a#loginBtn").html("Login")
+                .attr("data-target", "#myModal1");
+        }
+        return userId;
+    })();
+</script>

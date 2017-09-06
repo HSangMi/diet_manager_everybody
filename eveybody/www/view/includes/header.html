@@ -23,6 +23,14 @@
             <div class="collapse navbar-collapse nav-collapse">
                 <div class="menu-container">
                     <ul class="navbar-nav navbar-nav-right">
+                        <!-- login -->
+                        <li class="nav-item">
+                            <a class="nav-item-child" data-toggle="modal" data-target="#myModal1" id = "loginBtn" href="#">
+                                login
+                            </a>
+                        </li>
+                        <!-- login -->
+
                         <!-- Home -->
                         <li class="nav-item">
                             <a class="nav-item-child active" href="index.html">
@@ -68,7 +76,129 @@
     <!-- Navbar -->
 </header>
 <!--========== END HEADER ==========-->
-<script type="application/javascript">
-//    remove
 
+
+
+
+
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="section" id="section1">
+            <div class="form form--login">
+                <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
+                <h1 class="alpha">Login</h1>
+                <p>You already have an account? Great! Login here.</p>
+                <div>
+                    <form class="form-wrap">
+                        <input id="id" class="inputbox email" type="text" placeholder="Email id" />
+                        <input id="pw" class="inputbox password" type="password" placeholder="Password" />
+                        <p>
+                            <a  class="button loginBtn">Login <i class="icon-rocket"></i></a>
+                        </p>
+                    </form>
+                    <!-- <p>
+                         Forget password? It's ok. <a class="scroll" href="#section3" data-section="3">Recover here &raquo;</a>
+                     </p>-->
+                </div>
+                <hr />
+                <!--<p>Or you can Login with one of the following</p>-->
+                <!--<div class="social">-->
+                    <!--<a href="" id ="facebook_id_login"  class="facebook"><i class="icon-facebook"></i></a> <a-->
+                        <!--href="#" id ="naver_id_login" class="twitter">&lt;!&ndash;<i class="icon-twitter"></i>&ndash;&gt;</a> <a-->
+                        <!--href="javascript:checkLoginStateWithKakao()" id="kakao-login-btn" class="google"><i class="icon-google-plus"></i></a>-->
+                <!--</div>-->
+                <p>
+                    Don't have an account? <a class="scroll1" data-dismiss="modal" href="javascript:openModal(2)">Register Now &raquo;</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    $('a.loginBtn').on('click',function () {
+        console.log("로그인 버튼누름")
+
+        var userId = $("input#id").val();
+        var pw = $("input#pw").val();
+
+        $.ajax({
+            url:"http://192.168.0.16:8000/user/login.do",
+            data:{
+                userId : userId,
+                pw : pw
+            },
+            type:"POST",
+            crossDomain : true
+        }).done(function(result){
+            if(result === 'fail'){
+                alert("입력하신 정보가 존재하지 않습니다.");
+            }else{
+                alert("로그인 성공!");
+                if(!checkMobileDevice()){
+                    window.sessionStorage.setItem("user", userId)
+                }else {
+                    window.localStorage.setItem("user", userId);
+                }
+
+                var id = getLoginId();
+                console.log("id = " + id);
+                $(".modal1").click();
+            }
+        });
+
+    });
+
+    function checkMobileDevice() {
+        var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
+        for (var info in mobileKeyWords) {
+            if (navigator.userAgent.match(mobileKeyWords[info]) !== null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    var getLoginId;
+    (getLoginId = function (){
+        var userId = "";
+        if(!checkMobileDevice()){
+            userId = window.sessionStorage.getItem("user");
+        }else {
+            userId = window.localStorage.getItem("user");
+        }
+
+        if(userId !== null && userId !== "" ){
+            $("ul>li>a#loginBtn").html("Logout")
+                .attr("data-target", "#");
+        }else{
+            $("ul>li>a#loginBtn").html("Login")
+                .attr("data-target", "#myModal1");
+        }
+        return userId;
+    })();
+
+
+    $("ul>li>a#loginBtn").click(function(){
+
+        if(this.innerHTML === "Logout"){
+            $.ajax({
+                url:"http://192.168.0.16:8000/user/logout.do",
+                type:"POST",
+                crossDomain : true
+            }).done(function(result){
+                alert("로그아웃 되었습니다.");
+                if(!checkMobileDevice()){
+                    window.sessionStorage.removeItem("user");
+                }else {
+                    window.localStorage.removeItem("user");
+                }
+                getLoginId();
+            });
+        }
+    });
 </script>
