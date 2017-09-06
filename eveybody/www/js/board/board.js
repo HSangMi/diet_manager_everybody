@@ -9,20 +9,38 @@ var board = (function () {
         "update": "update.do",
         "delete": "delete.do"
     };
-    var listModule = {
+    var boardModule = {
         bindEvent: function () {
-            var boardNo = listModule.urlParsing("boardNo");
             // 게시글 목록
             $(document.body).on("click", "#showWriteForm", function () {
-                listModule.writeForm();
+                boardModule.writeForm();
             });
             $(document.body).on("click", "#pagination li.disabled", function () {
                 return false;
             });
             // 게시글 작성
             $(document.body).on("click", "#writeBoard", function () {
-                listModule.write();
+                boardModule.write();
             });
+            /*
+            // 게시글 추천
+            $(document.body).on("click", "#likeBtn", function () {
+                console.log("click bind");
+                boardModule.doLike(boardModule.urlParsing("boardNo"));
+            });
+             */
+            // 게시글 수정
+            $(document.body).on("click", "#showUpdateForm", function () {
+                boardModule.updateForm(boardModule.urlParsing("boardNo"));
+            });
+            $(document.body).on("click", "#updateBtn", function () {
+                boardModule.update(boardModule.urlParsing("boardNo"));
+            });
+            // 게시글 삭제
+            $(document.body).on("click", "#deleteBtn", function () {
+                boardModule.delete(boardModule.urlParsing("boardNo"));
+            });
+            return boardModule.urlParsing("boardNo");
         },
         urlParsing: function (name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -31,22 +49,32 @@ var board = (function () {
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         },
         /* url 변경 */
-        modifyURL: function (boardNo) {
+        modifyURL: function (param) {
             var renewURL = location.href;
-            renewURL = renewURL.replace("list.html", 'detail.html');
+            var paramInfo = param.split("=");
+
+            if ((boardModule.urlParsing(paramInfo[0])) === "") {
+                renewURL = renewURL.substring(0, renewURL.indexOf("?"));
+                renewURL += "?" + paramInfo[0] + "=" + paramInfo[1];
+            }
+            else {
+                var regex = new RegExp('\\b' + paramInfo[0] + '\\b=([0-9]+)');
+                renewURL = renewURL.replace(regex, paramInfo[0] + "=" + paramInfo[1]);
+            }
+            /*
             renewURL = renewURL.replace(/\?boardNo=([0-9]+)/gi, '');
 
             renewURL += '?boardNo=' + boardNo;
-
+             */
             history.pushState(null, null, renewURL);
-            listModule.detail(boardNo);
         },
         /* 게시글 목록 */
         pageList: function (pageNo) {
             $.ajax({
                 url: urlList.contextPath + pageNo + "/" + urlList.list,
                 dataType: "json"
-            }).done(listModule.makePageList);
+            }).done(boardModule.makePageList);
+            boardModule.modifyURL("pageNo=" + pageNo);
         },
         makePageList: function (result) {
             var data = result.list;
@@ -64,7 +92,7 @@ var board = (function () {
             });
             var html = template(data);
             $("table > tbody").html(html);
-            listModule.makePageNav(result.page);
+            boardModule.makePageNav(result.page);
         },
         makePageNav: function (page) {
             var html = "";
@@ -77,7 +105,8 @@ var board = (function () {
 
                 var fn = "";
                 if (page.prev === true) {
-                    fn = urlList.contextPath + (page.beginPage - 1) + "/" + urlList.list;
+                    // fn = urlList.contextPath + (page.beginPage - 1) + "/" + urlList.list;
+                    fn = "javascript:board.pageList(" + (page.beginPage - 1) + ");";
                 }
                 html += '<a href="' + fn + '" class="prev"><i class="fa fa-chevron-left"></i></a>';
 
@@ -85,7 +114,7 @@ var board = (function () {
                     if (i === page.pageNo) {
                         html += '<li class="active"><a href="#1">' + i + '</a></li>';
                     } else {
-                        html += '' + urlList.contextPath + i + "<li><a href=" / ">" + urlList.list + '' + i + '</a></li>';
+                        html += "<li><a href='javascript:board.pageList(" + i + ");'>" + i + "</a></li>";
                     }
                 }
 
@@ -97,7 +126,8 @@ var board = (function () {
 
                 fn = "";
                 if (page.next === true) {
-                    fn = urlList.contextPath + (page.endPage + 1) + "/" + urlList.list;
+                    // fn = urlList.contextPath + (page.endPage + 1) + "/" + urlList.list;
+                    fn = "javascript:board.pageList(" + (page.endPage + 1) + ");";
                 }
                 html += '<a href="' + fn + '" class="next"><i class="fa fa-chevron-right"></i></a>';
 
@@ -136,6 +166,7 @@ var board = (function () {
         },
         /* 상세글 보기 */
         detail: function (boardNo) {
+            boardModule.modifyURL("boardNo=" + boardNo);
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.detail,
                 data: {
@@ -162,7 +193,7 @@ var board = (function () {
                 });
                 Handlebars.registerHelper("setLike", function (boardNo) {
                     var likeCnt = 0;
-                    var isLike = "<button type='button' id='likeBtn'>취소</button>";
+                    var isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>취소</button>";
                     $.ajax({
                         url: urlList.contextPath + boardNo + "/" + urlList.setLike,
                         dataType: "json",
@@ -170,18 +201,20 @@ var board = (function () {
                     }).done(function (result) {
                         likeCnt = "<span>" + result.likeCnt + "</span>";
                         if (result.isLike === 0) {
-                            isLike = "<button type='button' id='likeBtn'>추천</button>";
+                            isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>추천</button>";
                         }
-                        ;
                     });
                     return likeCnt + isLike;
                 });
                 var html = template(data);
                 $("div#board-body").html(html);
+                // 로그인 한 유저 이이디로 바꾸기.....
+                comment.commentWriteForm("user1");
             });
         },
         /* 추천 */
         doLike: function (boardNo) {
+            console.log("doLike 호출");
             var isLike = $("#likeBtn").text();
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.like,
@@ -192,7 +225,7 @@ var board = (function () {
                 async: false
             }).done(function (result) {
                 $("#likeCnt > span").text(result);
-                if(isLike === "추천") {
+                if (isLike === "추천") {
                     $("#likeBtn").text("취소");
                 }
                 else {
@@ -225,7 +258,7 @@ var board = (function () {
                     content: $("#content").val()
                 },
                 method: "post"
-            }).done(listModule.detail);
+            }).done(boardModule.detail);
         },
         /* 삭제 */
         delete: function (boardNo) {
@@ -235,11 +268,27 @@ var board = (function () {
             }).done();
         }
     };
-    listModule.bindEvent();
-    listModule.pageList($("#pagination li a.active").text());
-    // listModule.detail(2);
+    boardModule.bindEvent();
+    var pageNo = boardModule.urlParsing("pageNo");
+    var boardNo = boardModule.urlParsing("boardNo");
+
+    if (boardNo) {
+        console.log("boardNo 있음 : " + boardNo);
+        boardModule.detail(boardNo);
+    }
+    else if (pageNo) {
+        console.log("pageNo 있음 : " + pageNo);
+        boardModule.pageList(pageNo);
+    }
+    else {
+        console.log("pageNo 없음 : " + 1);
+        boardModule.pageList(1);
+    }
 
     return {
-        modifyURL: listModule.modifyURL,
+        detail: boardModule.detail,
+        pageList: boardModule.pageList,
+        doLike: boardModule.doLike,
+        boardNo: boardModule.bindEvent()
     }
 })();
