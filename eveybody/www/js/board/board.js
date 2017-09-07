@@ -1,6 +1,6 @@
 var board = (function () {
     var urlList = {
-        "contextPath": "http://192.168.0.16:8000/board/tip/",
+        "contextPath": "http://192.168.0.16:8000/board/free-board/",
         "list": "list.do",
         "write": "write.do",
         "detail": "detail.json",
