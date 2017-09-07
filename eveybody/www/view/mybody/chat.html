@@ -1,0 +1,112 @@
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+    <h1>
+        Chat
+        <small>with your bot</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+        <li class="active">Here</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+
+    <div class="row">
+
+        <!-- Chatbox 1 -->
+        <div class="col-md-6">
+            <div class="box box-primary direct-chat direct-chat-primary">
+                <div class="box-header with-border">
+                    <!-- 채팅 상대 이름-->
+                    <h3 class="box-title"> Diet Bot </h3>
+                    <div class="box-tools pull-right">
+                        <!-- 신규메세지 -->
+                        <span data-toggle="tooltip" title="" class="badge bg-light-blue" data-original-title="3 New Messages">3</span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="display: block;">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+                    </div>
+                    <!--/.direct-chat-messages-->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer" style="display: block;">
+                    <form class="chat-form" action="#" method="post">
+                        <div class ="input-group-btn" style="display: none">
+                        </div>
+                        <div class="input-group" >
+                            <input type="text" name="message" placeholder="Type Message ..." class="form-control chat-input" required>
+                            <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-flat">Send</button>
+                                    </span>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </div>
+
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script type="application/javascript">
+    var socket;
+    var loginId="user1";
+    var $divchat =  $("div.direct-chat-messages");
+    $(document).ready(function () {
+        // 소켓서버에 접속
+        socket = io.connect('http://192.168.0.30:10005');
+
+        console.dir(socket);
+        // 유저 아이디 전달...
+        socket.emit("login", loginId);
+        socket.on("msg", function (data) {
+            console.log("서버에서 응답");
+            if(data.indexOf("btn")==0){
+                //키버튼
+                var key = data.substring(3);
+                $("div.input-group-btn").html(key).show();
+                $("div.input-group").hide();
+            }else if(data.indexOf("msg")==0){
+                //url
+            }else{
+                //text
+                $("div.direct-chat-messages").append(data);
+                $divchat.scrollTop($divchat[0].scrollHeight);
+            }
+        });
+
+    });
+    $("form.chat-form").submit(function(){
+        var $msg = $("input.chat-input").val();
+        $("input.chat-input").val("");
+        $divchat.append(makeSendMsg($msg));
+        $divchat.scrollTop($divchat[0].scrollHeight);
+        socket.emit("msg", {recvId: "chatbot", sendId: loginId, msg: $msg});
+        return false;
+    });
+
+    function keybtn(question, option) {
+        $("div.input-group>input").val($("div.input-group-btn>button:eq("+option+")").html());
+        //  $("div.input-group-btn>button:eq(${option})").html()
+        $("form.chat-form").submit();
+        $("div.input-group-btn").html("").hide();
+        $("div.input-group").show();
+    }
+    function makeSendMsg(msg){
+        /*유저 정보가져오기*/
+        var userId = "상미";
+        var html='<div class="direct-chat-msg right"><div class="direct-chat-info clearfix">' +
+            '<span class="direct-chat-name pull-right">' + userId +
+            '</div><img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="Message User Image"><div class="direct-chat-text">' +  //user 프로필
+            '' + msg + '</div><br><br><span class="direct-chat-timestamp" style="float:right">'+ '23 Jan 2:05 pm' +'</span></div>';
+        return html;
+    }
+</script>
