@@ -1,4 +1,4 @@
-(function () {
+var imageBoard = (function () {
     var urlList = {
         "contextPath": "http://192.168.0.16:8000/board/tip/",
         "list": "list.do",
@@ -9,24 +9,27 @@
         "update": "update.do",
         "delete": "delete.do"
     };
-    var detailModule = {
+    var imageBoardModule = {
         bindEvent: function () {
-            var boardNo = detailModule.urlParsing("boardNo");
+            // 게시글 목록
+            $(document.body).on("click", "#showWriteForm", function () {
+                imageBoardModule.writeForm();
+            });
             $(document.body).on("click", "#pagination li.disabled", function () {
                 return false;
             });
-            $(document.body).on("click", "#likeBtn", function () {
-                detailModule.doLike(boardNo);
-            });
+            // 게시글 수정
             $(document.body).on("click", "#showUpdateForm", function () {
-                detailModule.updateForm(boardNo);
+                imageBoardModule.updateForm(imageBoardModule.urlParsing("boardNo"));
             });
             $(document.body).on("click", "#updateBtn", function () {
-                detailModule.update(boardNo);
+                imageBoardModule.update(imageBoardModule.urlParsing("boardNo"));
             });
+            // 게시글 삭제
             $(document.body).on("click", "#deleteBtn", function () {
-                detailModule.delete(boardNo);
+                imageBoardModule.delete(imageBoardModule.urlParsing("boardNo"));
             });
+            return imageBoardModule.urlParsing("boardNo");
         },
         urlParsing: function (name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -34,77 +37,64 @@
             var results = regex.exec(location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         },
+        /* url 변경 */
+        modifyURL: function (param) {
+            var renewURL = location.href;
+            var paramInfo = param.split("=");
+
+            if ((imageBoardModule.urlParsing(paramInfo[0])) === "") {
+                renewURL = renewURL.substring(0, renewURL.indexOf("?"));
+                renewURL += "?" + paramInfo[0] + "=" + paramInfo[1];
+            }
+            else {
+                var regex = new RegExp('\\b' + paramInfo[0] + '\\b=([0-9]+)');
+                renewURL = renewURL.replace(regex, paramInfo[0] + "=" + paramInfo[1]);
+            }
+            /*
+            renewURL = renewURL.replace(/\?boardNo=([0-9]+)/gi, '');
+
+            renewURL += '?boardNo=' + boardNo;
+             */
+            history.pushState(null, null, renewURL);
+        },
         /* 게시글 목록 */
-        /*
         pageList: function (pageNo) {
             $.ajax({
                 url: urlList.contextPath + pageNo + "/" + urlList.list,
                 dataType: "json"
-            }).done(detailModule.makePageList);
+            }).done(imageBoardModule.makePageList);
+            imageBoardModule.modifyURL("pageNo=" + pageNo);
         },
         makePageList: function (result) {
             var data = result.list;
             if (data.length <= 0) {
                 console.log("결과 없습니다");
+                // 결과 없을 때 페이지 구성...
                 return;
             }
             var source = $("#list-template").html();
             var template = Handlebars.compile(source);
 
-            Handlebars.registerHelper("setRegDate", function (regDate) {
-                var date = new Date(regDate);
-                return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-            });
             var html = template(data);
-            $("table > tbody").html(html);
-            detailModule.makePageNav(result.page);
+            $("#boardArea").append(html);
         },
-        makePageNav: function (page) {
-            var html = "";
-            if (page.count !== 0) {
-                var clz = "";
-                if (page.prev === false) {
-                    clz = "disabled";
-                }
-                html += '<li class="' + clz + '">';
+        /* 무한 스크롤 */
+        infiniteScroll: function () {
+            var sh = $(window).scrollTop() + $(window).height();
+            var dh = $(document).height();
 
-                var fn = "";
-                if (page.prev === true) {
-                    fn = urlList.contextPath + (page.beginPage - 1) + "/" + urlList.list;
-                }
-                html += '<a href="' + fn + '" class="prev"><i class="fa fa-chevron-left"></i></a>';
-
-                for (var i = page.beginPage; i <= page.endPage; i++) {
-                    if (i === page.pageNo) {
-                        html += '<li class="active"><a href="#1">' + i + '</a></li>';
-                    } else {
-                        html += '' + urlList.contextPath + i + "<li><a href=" / ">" + urlList.list + '' + i + '</a></li>';
-                    }
-                }
-
-                clz = "";
-                if (page.next === false) {
-                    clz = "disabled";
-                }
-                html += '<li class="' + clz + '">';
-
-                fn = "";
-                if (page.next === true) {
-                    fn = urlList.contextPath + (page.endPage + 1) + "/" + urlList.list;
-                }
-                html += '<a href="' + fn + '" class="next"><i class="fa fa-chevron-right"></i></a>';
-
-                $("#pagination").html(html);
+            if (sh >= dh - 10) {
+                imageBoardModule.pageList(2);
             }
         },
-         */
         /* 게시글 작성 */
         writeForm: function () {
             var source = $("#write-template").html();
             var template = Handlebars.compile(source);
-
             var html = template();
-            $("div#board-body").html(html);
+
+            $("div#boardArea").hide();
+            $("div#buttonArea").html(html);
         },
         write: function () {
             var fileEle = $("input[name='attachFile']")[0];
@@ -124,25 +114,27 @@
                 // 파일 업로드 처리 위한 옵션 추가
                 processData: false,
                 contentType: false
-            }).done(function (result) {
-                // createAlert('', '게시글 등록', '게시글이 등록 되었습니다!', 'success', true, true, 'pageMessages', "/myBoard/board/" + result + "/detail.do");
-            });
+            }).done(imageBoardModule.detail);
         },
         /* 상세글 보기 */
         detail: function (boardNo) {
+            imageBoardModule.modifyURL("boardNo=" + boardNo);
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.detail,
+                data: {
+                    boardNo: boardNo
+                },
                 dataType: "json"
             }).done(function (result) {
                 var data = result.board;
-                if (data === null) {
+                if (data === undefined) {
                     console.log("결과 없습니다");
-                    // 수정, 삭제 버튼도 제거해야 함....
+                    $("#detail-form").html('<td style="text-align: center">등록된 게시물이 없습니다 ~ ^_^</td>');
                     return;
                 }
-                console.log("========");
+                console.log("--------");
                 console.dir(data);
-                console.log("========");
+                console.log("--------");
 
                 var source = $("#detail-template").html();
                 var template = Handlebars.compile(source);
@@ -153,7 +145,7 @@
                 });
                 Handlebars.registerHelper("setLike", function (boardNo) {
                     var likeCnt = 0;
-                    var isLike = "<button type='button' id='likeBtn'>취소</button>";
+                    var isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>취소</button>";
                     $.ajax({
                         url: urlList.contextPath + boardNo + "/" + urlList.setLike,
                         dataType: "json",
@@ -161,18 +153,20 @@
                     }).done(function (result) {
                         likeCnt = "<span>" + result.likeCnt + "</span>";
                         if (result.isLike === 0) {
-                            isLike = "<button type='button' id='likeBtn'>추천</button>";
+                            isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>추천</button>";
                         }
-                        ;
                     });
                     return likeCnt + isLike;
                 });
                 var html = template(data);
-                $("div.tbl-content > table > tbody").html(html);
+                $("div#tipBoardForm").html(html);
+                // 로그인 한 유저 이이디로 바꾸기.....
+                // comment.commentWriteForm("user1");
             });
         },
         /* 추천 */
         doLike: function (boardNo) {
+            console.log("doLike 호출");
             var isLike = $("#likeBtn").text();
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.like,
@@ -183,7 +177,7 @@
                 async: false
             }).done(function (result) {
                 $("#likeCnt > span").text(result);
-                if(isLike === "추천") {
+                if (isLike === "추천") {
                     $("#likeBtn").text("취소");
                 }
                 else {
@@ -216,7 +210,7 @@
                     content: $("#content").val()
                 },
                 method: "post"
-            }).done(detailModule.detail);
+            }).done(imageBoardModule.detail);
         },
         /* 삭제 */
         delete: function (boardNo) {
@@ -226,7 +220,14 @@
             }).done();
         }
     };
-    detailModule.bindEvent();
-    // detailModule.pageList($("#pagination li a.active").text());
-    detailModule.detail(detailModule.urlParsing("boardNo"));
+    
+    imageBoardModule.pageList(1);
+    imageBoardModule.bindEvent();
+    
+    return {
+        infiniteScroll: imageBoardModule.infiniteScroll,
+        write: imageBoardModule.write
+    }
 })();
+
+$(window).scroll(imageBoard.infiniteScroll);
