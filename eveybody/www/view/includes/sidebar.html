@@ -25,14 +25,15 @@
     <!-- /.sidebar-menu -->
 </section>
 <!-- /.sidebar -->
-<<<<<<< Updated upstream
-=======
 <script type="application/javascript">
+    $("document").ready(function () {
+        $("#profileLayer").load('profile.html');
+    });
+
     function pageLoad(pageUrl,layer){
         $("div.pagelayer").hide();
         $("#"+layer).load(pageUrl).show();
     };
-
     $("section.sidebar>ul.sidebar-menu>li>a").on("click", function() {
         $(".sidebar-menu ").find(".active").removeClass("active");
         $(this).parent().addClass("active");
@@ -43,4 +44,3 @@
         this.siblings().removeClass("active").addClass("active");
     });*/
 </script>
->>>>>>> Stashed changes
