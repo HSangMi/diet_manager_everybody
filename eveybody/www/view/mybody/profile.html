@@ -62,13 +62,6 @@
         background: #04c434;
     }
 </style>
-<section class="content-header">
-    <h1>
-        내 프로필
-        <small>내 정보를 볼 수 있어요!</small>
-    </h1>
-</section>
-
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
@@ -143,32 +136,7 @@
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
-        </div>
 
-        <div class="col-md-3">
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Water a Day</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="text-center">
-                            <div class="chart">
-                            <span style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; ">
-                            3
-                            </span>
-                                <canvas id= "waterCnt" width="590" height="295"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-            </div>
-        </div>
-        <div class="col-md-3">
             <div class="info-box bg-red">
                 <span class="info-box-icon"><i class="fa fa-users"></i></span>
 
@@ -233,11 +201,79 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-tint text-aqua"></i> Water a Day</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="text-center">
+                            <div class="chart">
+                            <span style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; ">
+                            3
+                            </span>
+                                <canvas id= "waterCnt" width="590" height="295"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-users text-green"></i> 그룹관리 </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-heart text-red"></i> 친구관리 </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <div class="user-block">
+                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                                <span class="username">
+                                    <a href="#">Jonathan Burke Jr.</a>
+                                    <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
+                                 </span>
+                            </div>
+                            <!-- /.user-block -->
+                        </li>
+                        <li class="list-group-item">
+                            <div class="user-block">
+                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                                <span class="username">
+                                    <a href="#">Jonathan Burke Jr.</a>
+                                    <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
+                                 </span>
+                            </div>
+                            <!-- /.user-block -->
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
         <div class="col-md-3">
             <!-- About Me Box -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-gear"></i> 환경설정 </h3>
+                    <h3 class="box-title"><i class="fa fa-gear text-gray"></i> 환경설정 </h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -248,12 +284,13 @@
                         <li class="list-group-item">
                             <b>물마시기 알림</b> <a class="pull-right"> <input type="checkbox" id="switch2" class='switch' checked/><label for="switch2"></label></a>
                         </li>
+                        <li class="list-group-item">
+                            <b>몸무게 입력 메세지 알림</b> <a class="pull-right"> <input type="checkbox" id="switch3" class='switch' checked/><label for="switch3"></label></a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.box-body -->
             </div>
-        </div>
-
         </div>
     </div>
 </section>
