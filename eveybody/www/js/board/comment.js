@@ -22,23 +22,22 @@ var comment = (function () {
             var template = Handlebars.compile(source);
 
             var data = {};
-            data.boardNo = commentModule.urlParsing("boardNo");
             data.userId = userId;
 
             var html = template(data);
 
             $("#commentWriteForm").html(html);
-            commentModule.pageList(data.boardNo, 1);
+            commentModule.pageList(1);
         },
         /* 댓글 보기 */
-        pageList: function (boardNo, pageNo) {
+        pageList: function (pageNo) {
             if (pageNo === undefined) {
                 pageNo = 1;
             }
             $.ajax({
                 url: urlList.contextPath + urlList.list,
                 data: {
-                    boardNo: boardNo,
+                    boardNo: commentModule.urlParsing("boardNo"),
                     pageNo: pageNo
                 },
                 dataType: "json"
@@ -53,7 +52,11 @@ var comment = (function () {
             var data = {};
             data = result.list;
 
-            Handlebars.registerHelper("regDate", function(regDate) {
+            console.log("***********");
+            console.dir(result);
+            console.log("***********");
+
+            Handlebars.registerHelper("setRegDate", function(regDate) {
                 var date = new Date(regDate);
                 return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " "
                     + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -73,8 +76,8 @@ var comment = (function () {
             });
             var html = template(data);
             if (!data.length) {
-                html = "<tr><td colspan='4'>아직 등록된 댓글이 없어요</td></tr>";
-
+                html = "";
+                console.log("댓글이 없다!");
                 /*
                 // 첫 번째 페이지가 아니면 이전 페이지로 다시 호출해야 함...
                 if(result.page.pageNo != 1) {
@@ -129,7 +132,7 @@ var comment = (function () {
         },
         /* 댓글 쓰기 */
         write: function (boardNo) {
-            var content = $("table#commentWriteForm textarea[name='commentContent']");
+            var content = $("#commentWriteForm textarea[name='commentContent']");
             $.ajax({
                 url : urlList.contextPath + urlList.write,
                 data : {
@@ -138,7 +141,7 @@ var comment = (function () {
                 },
                 dataType : "json",
                 type : "post"
-            }).done(commentModule.makePageList);
+            }).done(commentModule.pageList);
             content.val("");
         }
     };

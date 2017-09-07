@@ -3,7 +3,7 @@ var board = (function () {
         "contextPath": "http://192.168.0.16:8000/board/free-board/",
         "list": "list.do",
         "write": "write.do",
-        "detail": "detail.json",
+        "detail": "detail.do",
         "setLike": "setLike.do",
         "like": "like.do",
         "update": "update.do",
@@ -184,7 +184,7 @@ var board = (function () {
                 console.dir(data);
                 console.log("--------");
 
-                var source = $("#detail-template").html();
+                var source = $("#detail-content-template").html();
                 var template = Handlebars.compile(source);
 
                 Handlebars.registerHelper("setRegDate", function (regDate) {

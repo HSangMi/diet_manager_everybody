@@ -20,11 +20,15 @@
     <link href="../../css/layout.css" rel="stylesheet" type="text/css"/>
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
+    <!-- CUSTOM STYLES -->
+    <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/detail-content.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/comment.css" rel="stylesheet" type="text/css"/>
+
     <!-- Include Script Source -->
     <script src="../../js/include/handlebars-v4.0.10.js"></script>
     <script src="../../js/include/jquery.min.js"></script>
 
-    <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
 </head>
 <!-- END HEAD -->
 <!-- BODY -->
@@ -99,7 +103,7 @@
                 <h3 class="color-white margin-b-5"><span>{{title}}<span><span class="text-uppercase margin-l-20">{{userId}}</span></h3>
                 <p class="color-white margin-b-0">{{content}}</p>
             </div>
-            <a class="content-wrapper-link" href="#"></a>
+            <a class="content-wrapper-link" href="javascript:imageBoard.detail({{boardNo}});"></a>
         </div>
     </div>
     {{/each}}
@@ -127,39 +131,72 @@
 </script>
 
 <script id="detail-template" type="text/x-handlebars-template">
-    <div class="bg-color-sky-light">
+    <img class="img-responsive" src="../../img/1920x1080/02.jpg" alt="Slider Image">
+
+    <div class="section-seperator">
         <div class="content-md container">
-            <img class="img-responsive" src="../../img/1920x1080/02.jpg" alt="Slider Image">
+            <div class="row">
+                <div class="col-sm-4 sm-margin-b-50">
+                    <div class="wow fadeInLeft animated" data-wow-duration=".3" data-wow-delay=".3s" id="detail-content">
+                        <h3>{{title}}</h3>
+                        <p>{{content}}</p>
+                        <a class="link" href="#">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <!--// end row -->
         </div>
     </div>
-    <div class="content-md container">
-        <div class="row">
-            <div class="col-sm-4 sm-margin-b-50">
-                <div class="wow fadeInLeft animated" data-wow-duration=".3" data-wow-delay=".3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInLeft;">
-                    <h3>{{title}}</h3>
-                    <p>{{content}}</p>
-                    <a class="link" href="#">Read More</a>
+
+    <div id="commentWriteForm"></div>
+</script>
+
+<script id="comment-write-template" type="text/x-handlebars-template">
+    <div class="comments-app" ng-app="commentsApp" ng-controller="CommentsController as cmntCtrl">
+        <div class="comment-form">
+            <!-- Comment Avatar -->
+            <div class="comment-avatar">
+                <img src="../../img/robot.png">
+            </div>
+            <form class="form" name="form" onsubmit="return false;" novalidate>
+                <div class="form-row">
+                    <textarea class="input" name="commentContent" placeholder="Add comment..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <a href="javascript:comment.write({{boardNo}});">Add Comment</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+
+<script id="comment-list-template" type="text/x-handlebars-template">
+    {{#each .}}
+    <div class="comment">
+        <!-- Comment Avatar -->
+        <div class="comment-avatar">
+            <img src="../../img/logo2.png">
+        </div>
+        <!-- Comment Box -->
+        <div class="comment-box" id="row{{commentNo}}">
+            <div class="comment-text">{{content}}</div>
+            <div class="comment-footer">
+                <div class="comment-info">
+                    <span class="comment-author">{{userId}}</span>
+                    <span class="comment-date">{{setRegDate regDate}}</span>
+                </div>
+                <div class="comment-actions">
+                    <a href="#">Reply</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <button type="button" id="showUpdateForm">수정</button>
-    <button type="button" id="deleteBtn">삭제</button>
-    <div id="commentArea">
-        <table id="commentWriteForm">
-        </table>
-        <table id="commentListForm">
-        </table>
-    </div>
-    <div id="pageArea">
-        <ul class="pagination" id="pagination">
-        </ul>
-    </div>
+    {{/each}}
 </script>
 
 <script src="../../js/board/comment.js"></script>
 <script src="../../js/board/imageBoard.js"></script>
+
 </body>
 <!-- END BODY -->
 </html>

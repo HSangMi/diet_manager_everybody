@@ -3,7 +3,7 @@ var imageBoard = (function () {
         "contextPath": "http://192.168.0.16:8000/board/tip/",
         "list": "list.do",
         "write": "write.do",
-        "detail": "detail.json",
+        "detail": "detail.do",
         "setLike": "setLike.do",
         "like": "like.do",
         "update": "update.do",
@@ -80,11 +80,14 @@ var imageBoard = (function () {
         },
         /* 무한 스크롤 */
         infiniteScroll: function () {
+            if(imageBoardModule.urlParsing("boardNo") !== "") {
+                return ;
+            }
             var sh = $(window).scrollTop() + $(window).height();
             var dh = $(document).height();
 
             if (sh >= dh - 10) {
-                imageBoardModule.pageList(2);
+                imageBoardModule.pageList(parseInt(imageBoardModule.urlParsing("pageNo")) + 1);
             }
         },
         /* 게시글 작성 */
@@ -129,7 +132,6 @@ var imageBoard = (function () {
                 var data = result.board;
                 if (data === undefined) {
                     console.log("결과 없습니다");
-                    $("#detail-form").html('<td style="text-align: center">등록된 게시물이 없습니다 ~ ^_^</td>');
                     return;
                 }
                 console.log("--------");
@@ -161,7 +163,7 @@ var imageBoard = (function () {
                 var html = template(data);
                 $("div#tipBoardForm").html(html);
                 // 로그인 한 유저 이이디로 바꾸기.....
-                // comment.commentWriteForm("user1");
+                comment.commentWriteForm("user1");
             });
         },
         /* 추천 */
@@ -220,13 +222,20 @@ var imageBoard = (function () {
             }).done();
         }
     };
-    
-    imageBoardModule.pageList(1);
+
+    var boardNo = imageBoardModule.urlParsing("boardNo");
+    if(boardNo !== "") {
+        imageBoardModule.detail(boardNo);
+    }
+    else {
+        imageBoardModule.pageList(1);
+    }
     imageBoardModule.bindEvent();
-    
+
     return {
         infiniteScroll: imageBoardModule.infiniteScroll,
-        write: imageBoardModule.write
+        write: imageBoardModule.write,
+        detail: imageBoardModule.detail
     }
 })();
 
