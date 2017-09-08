@@ -77,7 +77,7 @@ var comment = (function () {
             var html = template(data);
             if (!data.length) {
                 html = "";
-                console.log("댓글이 없다!");
+                console.log("댓글 없다!");
                 /*
                 // 첫 번째 페이지가 아니면 이전 페이지로 다시 호출해야 함...
                 if(result.page.pageNo != 1) {
@@ -131,12 +131,12 @@ var comment = (function () {
             }
         },
         /* 댓글 쓰기 */
-        write: function (boardNo) {
+        write: function () {
             var content = $("#commentWriteForm textarea[name='commentContent']");
             $.ajax({
                 url : urlList.contextPath + urlList.write,
                 data : {
-                    boardNo : parseInt(boardNo),
+                    boardNo : parseInt(commentModule.urlParsing("boardNo")),
                     content : content.val()
                 },
                 dataType : "json",

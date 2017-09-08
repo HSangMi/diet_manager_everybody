@@ -148,7 +148,16 @@
         </div>
     </div>
 
-    <div id="commentWriteForm"></div>
+    <div id="commentArea">
+        <table id="commentWriteForm">
+        </table>
+        <table id="commentListForm">
+        </table>
+    </div>
+    <div id="pageArea">
+        <ul class="pagination" id="pagination">
+        </ul>
+    </div>
 </script>
 
 <script id="comment-write-template" type="text/x-handlebars-template">
@@ -163,7 +172,7 @@
                     <textarea class="input" name="commentContent" placeholder="Add comment..." required></textarea>
                 </div>
                 <div class="form-row">
-                    <a href="javascript:comment.write({{boardNo}});">Add Comment</a>
+                    <a href="javascript:comment.write();">Add Comment</a>
                 </div>
             </form>
         </div>
