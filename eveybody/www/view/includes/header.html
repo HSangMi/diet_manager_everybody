@@ -92,10 +92,13 @@
 <div class="modal fade" id="myModal1" role="dialog">
     <div class="modal-dialog">
 
+
         <div class="section" id="section1">
+
+            <!-- 로그인 화면 -->
             <div class="form form--login">
                 <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
-                <h1 class="alpha">Login</h1>
+                <h1 class="alpha">Sign In!</h1>
                 <p>You already have an account? Great! Login here.</p>
                 <div>
                     <form class="form-wrap">
@@ -117,14 +120,67 @@
                         <!--href="javascript:checkLoginStateWithKakao()" id="kakao-login-btn" class="google"><i class="icon-google-plus"></i></a>-->
                 <!--</div>-->
                 <p>
-                    Don't have an account? <a class="scroll1" data-dismiss="modal" href="javascript:openModal(2)">Register Now &raquo;</a>
+                    Don't have an account? <br><a class="scroll1">Register Now &raquo;</a>
                 </p>
             </div>
+
+            <!-- 회원가입 화면 -->
+            <div class="form form--signup">
+                <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
+                <h1 class="alpha">Sign Up!</h1>
+                <p>Signup using your Email address</p>
+                <div>
+                    <form class="form-wrap">
+                        <input id="joinId" class="inputbox email" type="text" placeholder="Email id" />
+                        <input id="joinName" class="inputbox name" type="text"  placeholder="Your Name" />
+                        <input id="joinPw" class="inputbox password" type="password" placeholder="Password" />
+                        <input id="joinPwConfirm" class="inputbox password" type="password" placeholder="Confirm Password" />
+
+                        <p>
+                            <a href="#" class="button joinBtn">Create my Account <i class="icon-rocket"></i></a>
+                        </p>
+                        <!--<input id="" type="button" class="button" value="Sign up" />-->
+                    </form>
+                </div>
+                <hr />
+                <!--<p>Or you can Signup with one of the following</p>-->
+                <!--<div class="social">-->
+                <!--<a href="javascript:checkJoinStateWithFace()" class="facebook"><i class="icon-facebook"></i><span></span></a>-->
+                <!--<a href="#" class="twitter"><i class="icon-twitter"></i><span></span></a>-->
+                <!--<a href="javascript:checkJoinStateWithKakao()" class="google"><i class="icon-google-plus"></i><span></span></a>-->
+                <!--</div>-->
+                <p>
+                    <!--<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>-->
+                    <a class="scroll2">&laquo;Login here</a>
+                </p>
+            </div>
+
         </div>
+
+
+
+        <!--<div class="section" id="section2">-->
+
+        <!--</div>-->
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+
+
+
     </div>
 </div>
 
 
-<script type="application/javascript">
 
+
+
+<script type="application/javascript">
+    (function(){
+        $("div.form--signup").hide();
+    })();
 </script>

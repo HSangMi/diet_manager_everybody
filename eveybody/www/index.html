@@ -17,7 +17,20 @@
             </div>
         </div>
         <script type="application/javascript">
-            self.location="view/main.html";
+            function checkMobileDevice() {
+                var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
+                for (var info in mobileKeyWords) {
+                    if (navigator.userAgent.match(mobileKeyWords[info]) !== null) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            if(checkMobileDevice()){
+                self.location="view/mybody/myBody.html"
+            }else
+                self.location="view/main/main.html";
         </script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
