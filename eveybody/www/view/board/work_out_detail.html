@@ -32,6 +32,7 @@
             visibility: visible!important;
         }
     </style>
+
 </head>
 <!-- END HEAD -->
 
@@ -47,29 +48,29 @@
 
 
     <!--========== PAGE LAYOUT ==========-->
+<div class="bg-color-sky-light">
+    <div class="content-md container">
+        <!--<div class="row margin-b-40">-->
+            <!--<div class="col-sm-6">-->
+                <!--<h2>WORK OUT</h2>-->
+                <!--<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna aliqua enim minim veniam exercitation</p>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--// end row -->
 
-    <div class="bg-color-sky-light">
-        <div class="content-md container">
-            <div class="row margin-b-40">
-                <div class="col-sm-6">
-                    <h2>WORK OUT</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna aliqua enim minim veniam exercitation</p>
-                </div>
-            </div>
-            <!--// end row -->
+        <div class="row detail">
+            <!-- Team -->
+            <!-- End Team -->
 
 
-            <button  type="button" id="writeBtn">글쓰기</button>
 
-            <div class="row list">
-                <!-- Team -->
-                <!-- End Team -->
-
-                <!-- End Team -->
-            </div>
-            <!--// end row -->
+            <!-- End Team -->
         </div>
+        <!--// end row -->
     </div>
+</div>
+
+
 
 
 
@@ -109,49 +110,43 @@
     $("footer.footer").load("../includes/footer.html");
 </script>
 
+<script id="workout-detail" type="text/x-handlebars-template">
+    <div class="sm-margin-b-50">
+        <h4><a href="work_out_detail.html?{{boardNo}}">{{title}}</a></h4>
 
-    <script id="workout-list" type="text/x-handlebars-template">
-        {{#each .}}
-        <div class="col-sm-4 sm-margin-b-50">
-            <div class="bg-color-white margin-b-20">
-                <div class="wow zoomIn animated" data-wow-duration=".3" data-wow-delay=".1s" style="visibility: visible; animation-delay: 0.1s; animation-name: zoomIn;">
-                    <img class="img-responsive" src="{{{setThumbnail boardNo}}}" alt="Team Image">
-                </div>
+        <div class="bg-color-white margin-b-20">
+            <div class="wow zoomIn animated" data-wow-duration=".3" data-wow-delay=".1s" style="visibility: visible; animation-delay: 0.1s; animation-name: zoomIn;">
+                {{{setVideo boardNo}}}
             </div>
-            <h4><a href="work_out_detail.html?boardNo={{boardNo}}">{{title}}</a> <span class="text-uppercase margin-l-20">조회수 {{viewCnt}} | ♥ {{{setLike boardNo}}}</span></h4>
-            <p>{{content}}</p>
-            <a class="link" href="#">{{setRegDate regDate}}</a>
         </div>
-        {{/each}}
-    </script>
+        <span class="text-uppercase margin-l-20">조회수 {{viewCnt}} | ♥ {{{setLike boardNo}}}</span>
+        <a class="link" >{{setRegDate regDate}}</a>
+        <p>{{content}}</p>
 
-
+    </div>
+</script>
 
 <script type="application/javascript">
-    (function(){
-        if(getLoginId() !== "admin"){
-            $("button#writeBtn").hide();
-        }
-    })();
 
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
-    $("button#writeBtn").on("click", function(){
-        location.href = "work_out_write.html";
-    });
+    var pageNo = getParameterByName("pageNo");
+    var boardNo = getParameterByName("boardNo");
+    var genre = getParameterByName("search");
 
-
-    function loadList(genre, pageNo){
-        var boardGenre = "workout-" + genre;
+    function loadDetail(boardNo, genre){
         $.ajax({
-            url:"http://192.168.0.16:8000/board/"+ boardGenre + "/" + pageNo +"/list.do",
-            data:{
-                boardGenre : boardGenre
-            },
-            dataType:"json"
+            url:"http://192.168.0.16:8000/board/workout-" + genre + "/" + boardNo +"/detail.do",
+            type : "post"
         }).done(function(result){
-            var data = result.list;
+            var data = result.board;
 
-            var source = $("#workout-list").html();
+            var source = $("#workout-detail").html();
             var template = Handlebars.compile(source);
 
             Handlebars.registerHelper("setRegDate", function (regDate) {
@@ -160,7 +155,7 @@
             });
             Handlebars.registerHelper("setLike", function (boardNo) {
                 var likeCnt = 0;
-//                var isLike = "<button type='button' id='likeBtn'>취소</button>";
+//                var isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>취소</button>";
 //                $.ajax({
 //                    url: urlList.contextPath + boardNo + "/" + urlList.setLike,
 //                    dataType: "json",
@@ -168,36 +163,34 @@
 //                }).done(function (result) {
 //                    likeCnt = "<span>" + result.likeCnt + "</span>";
 //                    if (result.isLike === 0) {
-//                        isLike = "<button type='button' id='likeBtn'>추천</button>";
-//                    };
+//                        isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>추천</button>";
+//                    }
 //                });
-                return boardNo +":"+likeCnt;
-
+                return likeCnt;
             });
-            Handlebars.registerHelper("setThumbnail", function(boardNo){
-                var imgSRC = "#";
+            Handlebars.registerHelper("setVideo", function(boardNo){
+                var iframe = "";
                 $.ajax({
-                    url:"http://192.168.0.16:8000/board/workout/thumbnail.do",
+                    url:"http://192.168.0.16:8000/board/workout/video.do",
                     data:{
                         boardNo : boardNo
                     },
                     type:"post",
                     async: false
                 }).done(function(result){
-                    console.log(result);
-                    imgSRC = result;
+                    iframe = result;
                 });
-
-                return imgSRC;
+                return iframe;
             });
 
+
+
             var html = template(data);
-            $("div.list").html(html);
+            $("div.detail").html(html);
         });
     }
 
-
-    loadList(1, 1);
+    loadDetail(boardNo, genre);
 </script>
 
 </body>

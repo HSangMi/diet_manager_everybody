@@ -116,27 +116,26 @@
 <script type="application/javascript">
 
     $("button#writeBtn").click(function (){
-        var genreVal = 1;
+        var genreVal = "";
         var genre = $("input#genre").val();
-
         switch(genre){
             case "어깨":
-                genreVal = 11;
+                genreVal = "workout-1";
                 break;
             case "팔":
-                genreVal = 12;
+                genreVal = "workout-2";
                 break;
             case "복근":
-                genreVal = 13;
+                genreVal = "workout-3";
                 break;
             case "다리":
-                genreVal = 14;
+                genreVal = "workout-4";
                 break;
             case "전신":
-                genreVal = 15;
+                genreVal = "workout-5";
                 break;
             case "스트레칭":
-                genreVal = 16;
+                genreVal = "workout-6";
                 break;
         }
 
