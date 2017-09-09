@@ -1,0 +1,38 @@
+/*body{font-family:"Helvetica"; margin:25% auto; width:max-content;}*/
+
+select{
+	height: 3.5em;
+	display:inline-block;
+	margin-top:10px;
+	border:1px solid #35d5d5;
+	border-radius:3px;
+	padding:0 3rem 0 1rem;
+	line-height: 2.5em;
+	outline:none;
+	font-size:1.5rem;
+	color:#656565;cursor: pointer;
+	/*-webkit-appearance:none;*/
+	/*-moz-appearance:none;*/
+	/*appearance:none;*/
+	background:transparent;
+}
+label{
+	margin:5% auto;
+	position:relative;
+	color:#35d5d5;
+	cursor: pointer;
+}
+
+label::after{
+	content: " \f13a";
+	box-sizing:border-box;
+	position:absolute;
+	font-family: "FontAwesome";
+	top:0;
+	right:1rem;
+	z-index:-1;
+}
+
+select::-ms-expand {
+	display: none; /* hide the default arrow in ie10 and ie11 */
+}

@@ -6,6 +6,7 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>Hello World</title>
     </head>
     <body>
@@ -16,7 +17,125 @@
                 <p class="event received">Device is Ready</p>
             </div>
         </div>
+
+        <a class="nav-item-child" data-toggle="modal" data-target="#myModal1" id = "loginBtn" href="#">
+            login
+        </a>
+
+        <div class="modal fade" id="myModal1" role="dialog">
+            <div class="modal-dialog">
+
+
+                <div class="section" id="section1">
+
+                    <!-- 로그인 화면 -->
+                    <div class="form form--login">
+                        <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
+                        <h1 class="alpha">Sign In!</h1>
+                        <p>You already have an account? Great! Login here.</p>
+                        <div>
+                            <form class="form-wrap">
+                                <input id="id" class="inputbox email" type="text" placeholder="Email id" />
+                                <input id="pw" class="inputbox password" type="password" placeholder="Password" />
+                                <p>
+                                    <a  class="button loginBtn">Login <i class="icon-rocket"></i></a>
+                                </p>
+                            </form>
+                            <!-- <p>
+                                 Forget password? It's ok. <a class="scroll" href="#section3" data-section="3">Recover here &raquo;</a>
+                             </p>-->
+                        </div>
+                        <hr />
+                        <!--<p>Or you can Login with one of the following</p>-->
+                        <!--<div class="social">-->
+                        <!--<a href="" id ="facebook_id_login"  class="facebook"><i class="icon-facebook"></i></a> <a-->
+                        <!--href="#" id ="naver_id_login" class="twitter">&lt;!&ndash;<i class="icon-twitter"></i>&ndash;&gt;</a> <a-->
+                        <!--href="javascript:checkLoginStateWithKakao()" id="kakao-login-btn" class="google"><i class="icon-google-plus"></i></a>-->
+                        <!--</div>-->
+                        <p>
+                            Don't have an account? <br><a class="scroll1">Register Now &raquo;</a>
+                        </p>
+                    </div>
+
+                    <!-- 회원가입 화면 -->
+                    <div class="form form--signup">
+                        <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
+                        <h1 class="alpha">Sign Up!</h1>
+                        <p>Signup using your Email address</p>
+                        <div>
+                            <form class="form-wrap">
+                                <input id="joinId" class="inputbox email" type="text" placeholder="Email id" />
+                                <input id="joinName" class="inputbox name" type="text"  placeholder="Your Name" />
+                                <input id="joinPw" class="inputbox password" type="password" placeholder="Password" />
+                                <input id="joinPwConfirm" class="inputbox password" type="password" placeholder="Confirm Password" />
+
+                                <p>
+                                    <a href="#" class="button joinBtn">Create my Account <i class="icon-rocket"></i></a>
+                                </p>
+                                <!--<input id="" type="button" class="button" value="Sign up" />-->
+                            </form>
+                        </div>
+                        <hr />
+                        <!--<p>Or you can Signup with one of the following</p>-->
+                        <!--<div class="social">-->
+                        <!--<a href="javascript:checkJoinStateWithFace()" class="facebook"><i class="icon-facebook"></i><span></span></a>-->
+                        <!--<a href="#" class="twitter"><i class="icon-twitter"></i><span></span></a>-->
+                        <!--<a href="javascript:checkJoinStateWithKakao()" class="google"><i class="icon-google-plus"></i><span></span></a>-->
+                        <!--</div>-->
+                        <p>
+                            <!--<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>-->
+                            <a class="scroll2">&laquo;Login here</a>
+                        </p>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+
         <script type="application/javascript">
+            (function(){
+                $("div.form--signup").hide();
+                $("a#loginBtn").hide();
+            })();
+
+            $("a#loginBtn").click(function(){
+                console.log("로그인 버튼누름")
+
+                var userId = $("input#id").val();
+                var pw = $("input#pw").val();
+
+                $.ajax({
+                    url: "http://192.168.0.16:8000/user/login.do",
+                    data: {
+                        userId: userId,
+                        pw: pw
+                    },
+                    type: "POST",
+                    crossDomain: true
+                }).done(function (result) {
+                    if (result === 'fail') {
+                        alert("입력하신 정보가 존재하지 않습니다.");
+                    } else {
+                        alert("로그인 성공!");
+                        window.localStorage.setItem("user", userId);
+
+                        $(".modal1").click();
+
+                        var recentDate = window.localStorage.getItem("recentDate");
+                        if(recentDate !== null && recentDate !== ""){
+                            // 사진 전송
+                            //
+                            window.localStorage.setItem("reccentDate", new Date().getTime());
+                        }
+                        self.location = "view/mybody/myBody.html";
+                    }
+                });
+            });
+
             function checkMobileDevice() {
                 var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
                 for (var info in mobileKeyWords) {
@@ -27,9 +146,35 @@
                 return false;
             }
 
-            if(checkMobileDevice()){
-                self.location="view/mybody/myBody.html"
-            }else
+
+            if(checkMobileDevice()){    // 폰
+                var userId = window.localStorage.getItem("user");
+                var recentDate = window.localStorage.getItem("recentDate");
+
+
+                self.location = "view/mybody/myBody.html";
+
+
+//
+//
+//                // 자동로그인 됐을 때
+//                if(userId !== null && userId !== ""){
+//                    // recentDate에서 현재시간까지의 사진 보내기
+//                    //
+//                    //
+//                    //
+//                    window.localStorage.setItem("reccentDate", new Date().getTime());
+//                    self.location = "view/mybody/myBody.html";
+//                }
+//                // 자동로그인 안 됐을 때
+//                else{
+//                    if(recentDate !== null && recentDate !== ""){
+//                        $("a#loginBtn").click();
+//                    }else {
+//                        self.location="view/carousel.html";
+//                    }
+//                }
+            }else   //웹
                 self.location="view/main/main.html";
         </script>
         <script type="text/javascript" src="cordova.js"></script>

@@ -49,6 +49,7 @@
 
     <!--========== PAGE LAYOUT ==========-->
 <div class="bg-color-sky-light">
+    <!-- 게시글 -->
     <div class="content-md container">
         <!--<div class="row margin-b-40">-->
             <!--<div class="col-sm-6">-->
@@ -59,14 +60,41 @@
         <!--// end row -->
 
         <div class="row detail">
-            <!-- Team -->
-            <!-- End Team -->
-
-
-
-            <!-- End Team -->
         </div>
-        <!--// end row -->
+    </div>
+
+
+
+
+    <!-- 댓글 -->
+    <div class="container">
+        <h2>댓글</h2>
+        <p>댓글</p><br>
+
+
+        <div class="media">
+            <div class="media-left">
+                <img src="img_avatar1.png" class="media-object" style="width:45px">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                <!-- 대댓글 -->
+                <div class="media">
+                    <div class="media-left">
+                        <img src="img_avatar2.png" class="media-object" style="width:45px">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
@@ -123,6 +151,32 @@
         <a class="link" >{{setRegDate regDate}}</a>
         <p>{{content}}</p>
 
+    </div>
+</script>
+
+<script id="workout-comment" type="text/x-handlebars-template">
+    <div class="media">
+        <div class="media-left">
+            <img src="{{}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{userId}}<small><i>{{setRegDate commentNo}}</i></small></h4>
+            <p>{{content}}</p>
+
+            <!-- 대댓글 -->
+            <div class="media">
+                <div class="media-left">
+                    <img src="img_avatar2.png" class="media-object" style="width:45px">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </script>
 
