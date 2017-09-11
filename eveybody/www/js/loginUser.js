@@ -40,8 +40,9 @@ $(document.body).on("click", "a.loginBtn", function () {
 
             var id = getLoginId();
             console.log("id = " + id);
+            console.log(result);
             $(".modal1").click();
-            window.location.reload();
+            //window.location.reload();
         }
     });
 });
@@ -94,6 +95,7 @@ var getLoginId;
         userId = window.localStorage.getItem("user");
     }
 
+    console.log("storage의 user ID : " + userId);
     if (userId !== null && userId !== "") {
         $("ul>li>a#loginBtn").html("Logout")
             .attr("data-target", "#");
