@@ -33,7 +33,7 @@
 
                         <!-- Home -->
                         <li class="nav-item">
-                            <a class="nav-item-child active" href="../main/main.html">
+                            <a class="nav-item-child" href="../main/main.html">
                                 Home
                             </a>
                         </li>
@@ -166,5 +166,26 @@
 <script type="application/javascript">
     (function(){
         $("div.form--signup").hide();
+        console.log("/android/www/view/main/main.html");
+        console.log(location.pathname);
+        console.log(location.pathname.substring(18));
+        var pathName = location.pathname.substring(17);
+        switch(pathName){
+            case "/main/main.html":
+                $("ul li:nth-child(2)>a").addClass("active");
+                break;
+            case "/board/work_out.html":
+            case "/board/work_out_detail.html":
+            case "/board/work_out_write.html":
+                $("ul li:nth-child(3)>a").addClass("active");
+                break;
+            case "/board/tip.html":
+                $("ul li:nth-child(4)>a").addClass("active");
+                break;
+            case "/board/free-board.html":
+                $("ul li:nth-child(5)>a").addClass("active");
+                break;
+        }
     })();
+
 </script>
