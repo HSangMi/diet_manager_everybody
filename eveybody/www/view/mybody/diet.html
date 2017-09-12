@@ -249,34 +249,34 @@
         </span>
     </li>
     {{/ifCheckDate}}
-
+    {{#ifDpNoCheckClone dpNo}}
+    </ul>
+        </div>
+            <div class="timeline-footer"></div>
+        </div>
+    </li>
+    {{/ifDpNoCheckClone}}
     {{#ifDpNoCheck dpNo}}
     <li>
         <i class="fa fa-cutlery bg-blue"></i>
         <div class="timeline-item">
-            <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>{{prettifyTime date}}</span></h3>
+            <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i> 12:05</span></h3>
             <div class="timeline-body">
                 <ul class="mailbox-attachments clearfix">
+
     {{/ifDpNoCheck}}
                     <li>
-                        <span class="mailbox-attachment-icon has-img"><img src="{{dataUrl}}" alt="Attachment"></span>
-                         <div class="mailbox-attachment-info">
-                             <p class="mailbox-attachment-name">
-                                 {{{makeFixFood fixFood}}}
-                             </p>
-                             <span class="mailbox-attachment-size">&emsp;
-                                 <a href="javascript:editDiet({{dietNo}},{{fixFood}},{{foodNo}},{{foodNo2}},{{foodNo3}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
-                                 <a href="javascript:deleteDiet({{dietNo}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
+                        <span class="mailbox-attachment-icon has-img"><img src="data:image/jpeg;base64,{{dataUrl}}" alt="Attachment"></span>
+                        <div class="mailbox-attachment-info">
+                            <p class="mailbox-attachment-name">
+                                {{{makeFixFood fixFood}}}
+                            </p>
+                            <span class="mailbox-attachment-size">&emsp;
+                                 <a href="javascript:deleteDiet({{dietNo}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
+                                 <a href="javascript:editDiet({{dietNo}},{{fixFood}},{{foodNo}},{{foodNo2}},{{foodNo3}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
                              </span>
-                         </div>
+                        </div>
                     </li>
-     {{#ifDpNoCheck dpNo}}
-                </ul>
-            </div>
-            <div class="timeline-footer"></div>
-        </div>
-    </li>
-    {{/ifDpNoCheck}}
     {{/each}}
 </script>
 <script type="application/javascript">
@@ -297,7 +297,7 @@
     });
     Handlebars.registerHelper("makeFixFood",function (fixFood) {
             var food = getFood(fixFood);
-       return '<a class="btn btn-primary btn-xs">'+food.korName+'</a>&emsp;'+food.kcal +'<br>';
+       return '<a class="btn btn-primary btn-xs">'+food.korName+'</a>&emsp;'+food.kcal +'kcal<br>';
     });
     Handlebars.registerHelper('ifCheckDate', function(date,options) {
         var dateObj = new Date(date);
@@ -315,6 +315,13 @@
     Handlebars.registerHelper('ifDpNoCheck', function(dpNo,options){
         if($checkDpNo!==dpNo||$checkDpNo === undefined){
             $checkDpNo = dpNo;
+            return options.fn(this);
+        }else if($checkDpNo === dpNo){
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper('ifDpNoCheckClone', function(dpNo,options){
+        if($checkDpNo!==dpNo&&$checkDpNo!==undefined){
             return options.fn(this);
         }else if($checkDpNo === dpNo){
             return options.inverse(this);
