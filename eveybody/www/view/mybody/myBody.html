@@ -67,6 +67,33 @@
     $("header.main-header").load("../includes/header2.html");
     $("footer.main-footer").load("../includes/footer2.html");
     $("aside.main-sidebar").load("../includes/sidebar.html");
+
+
+    function checkMobileDevice() {
+        var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
+        for (var info in mobileKeyWords) {
+            if (navigator.userAgent.match(mobileKeyWords[info]) !== null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    if(checkMobileDevice()) {
+        var date = new Date();
+        $.ajax({
+            url: "http://192.168.0.16:8000/user/updateRecentDate.do",
+            data: {
+                userId: getLoginId,
+                recentDate: date
+            },
+            type: "POST",
+            async: false,
+            crossDomain: true
+        }).done(function (result) {
+            window.localStorage.setItem("recentDate", date.getTime()*1000);
+        });
+    }
 </script>
 <script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
 </body>
