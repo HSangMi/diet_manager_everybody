@@ -67,13 +67,25 @@ var imageBoard = (function () {
         },
         makePageList: function (result) {
             var data = result.list;
+            var temp = result.fileList;
+
+            for(var i = 0; i < data.length; i++) {
+                data[i].path = temp[i].path;
+                data[i].sysName = temp[i].sysName;
+            }
+
             if (data.length <= 0) {
                 console.log("결과 없습니다");
                 // 결과 없을 때 페이지 구성...
-                return;
+                return ;
             }
+
             var source = $("#list-template").html();
             var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper("setAttachFileImage", function(path, sysName) {
+                return file.preview(path, sysName);
+            });
 
             var html = template(data);
             $("#boardArea").append(html);
@@ -130,13 +142,11 @@ var imageBoard = (function () {
                 dataType: "json"
             }).done(function (result) {
                 var data = result.board;
+                data.fileList = result.fileList;
                 if (data === undefined) {
                     console.log("결과 없습니다");
                     return;
                 }
-                console.log("--------");
-                console.dir(data);
-                console.log("--------");
 
                 var source = $("#detail-template").html();
                 var template = Handlebars.compile(source);
@@ -159,6 +169,9 @@ var imageBoard = (function () {
                         }
                     });
                     return likeCnt + isLike;
+                });
+                Handlebars.registerHelper("setAttachFileImage", function(path, sysName) {
+                    return file.preview(path, sysName);
                 });
                 var html = template(data);
                 $("div#tipBoardForm").html(html);

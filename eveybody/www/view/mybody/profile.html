@@ -1,67 +1,3 @@
-<!-- Content Header (Page header) -->
-<style type="text/css">
-    input::-webkit-input-placeholder {
-        color: rgba(255, 255, 255, 0.29);
-        font-size: 15px;
-    }
-    /* Important switch stuff */
-    input[type=checkbox].switch + label {
-        width: 34px;
-        height: 14px;
-        background: lightgray;
-        display: inline-block;
-        border-radius: 10px;
-        position: relative;
-        cursor: pointer;
-        margin: 10px;
-    }
-    input[type=checkbox].switch + label:before, input[type=checkbox].switch + label:after {
-        content: "";
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: white;
-        border-radius: 50%;
-        position: absolute;
-        top: -3px;
-        left: 0;
-        transition: all 0.2s;
-    }
-    input[type=checkbox].switch + label:after {
-        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-    }
-    input[type=checkbox].switch + label:before {
-        background: lightgray;
-        transform: scale3d(0, 0, 1);
-    }
-    input[type=checkbox].switch + label:active:before {
-        transform: scale3d(3, 3, 1);
-        opacity: 0;
-    }
-    input[type=checkbox].switch {
-        display: none;
-    }
-    input[type=checkbox].switch:checked + label {
-        background: rgba(3, 155, 229, 0.5);
-    }
-    input[type=checkbox].switch:checked + label:before, input[type=checkbox].switch:checked + label:after {
-        left: 14px;
-        background: #039be5;
-    }
-    input[type=checkbox].switch:disabled + label {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-    input[type=checkbox].switch.green {
-        display: none;
-    }
-    input[type=checkbox].switch.green:checked + label {
-        background: rgba(4, 196, 52, 0.5);
-    }
-    input[type=checkbox].switch.green:checked + label:before, input[type=checkbox].switch.green:checked + label:after {
-        background: #04c434;
-    }
-</style>
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
@@ -69,71 +5,11 @@
         <div class="col-md-3">
             <!-- Profile Image -->
             <div id="profileDiv" class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Profile</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" onclick="editProfile()" class="btn btn-box-tool"><i class="fa fa-gear"></i></button>
-                    </div>
-                </div>
-                <div class="box-body box-profile">
-                    <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
 
-                    <h3 class="profile-username text-center">Yumi Kim</h3>
-                    <p class="text-muted text-center">다이어트 성공하자!</p>
-
-
-                    <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <b>Friends</b> <a class="pull-right">13명</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>body spec</b> <a class="pull-right">163/52</a>
-                        </li>
-                    </ul>
-                </div>
                 <!-- /.box-body -->
             </div>
             <!-- 프로필 수정!! -->
             <div id="editProfileDiv" class="box box-primary" style="display: none;">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Edit Profile</h3>
-                    <div class="box-tools pull-right">
-                        <button onclick="cancelEdit()" type="button" class="btn btn-box-tool"><i class="fa fa-close"></i></button>
-                        <button onclick="submitEdit()" type="button" class="btn btn-box-tool"><i class="fa fa-check"></i></button>
-                    </div>
-                </div>
-                <div class="box-body box-profile">
-                    <img id="profile_Edit" class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
-                    <p id="insertImg" class="pull-right">사진 변경<i class="fa fa-gear"></i></p>
-                    <form class="form-horizontal">
-                        <input id="attachFile" type="file" style="display: none;">
-                        <div class="form-group">
-                            <label for="inputName" class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="inputName" placeholder="닉네임">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputName" class="col-sm-2 control-label">Status Message</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="stsMsg" placeholder="상태메세지">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputName" class="col-sm-2 control-label">Tall</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="tall" placeholder="키">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputName" class="col-sm-2 control-label">Weight</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="weight" placeholder="몸무게">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.box-body -->
             </div>
             <!-- /.box -->
 
@@ -188,7 +64,8 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">현재 몸무게 입력하기</span>
-                    <span class="info-box-number"><input type="text" style="background: none; color: white; outline-color: transparent;border: none"  placeholder="몸무게를 입력하세요">
+                    <span class="info-box-number">
+                        <input type="text" style="background: none; color: white; outline-color: transparent;border: none" placeholder="몸무게를 입력하세요">
                         <a href="#" style="color: white"><i class="fa fa-mail-forward pull-right"></i></a>
                     </span>
 
@@ -203,26 +80,28 @@
         </div>
 
         <div class="col-md-3">
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-tint text-aqua"></i> Water a Day</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-tint text-aqua"></i> Water a Day</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
                     </div>
-                    <div class="box-body">
-                        <div class="text-center">
-                            <div class="chart">
+                </div>
+                <div class="box-body">
+                    <div class="text-center">
+                        <div class="chart">
                             <span style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; ">
                             3
                             </span>
-                                <canvas id= "waterCnt" width="590" height="295"></canvas>
-                            </div>
+                            <canvas id="waterCnt" width="590" height="295"></canvas>
                         </div>
                     </div>
-                    <!-- /.box-body -->
+                </div>
+                <!-- /.box-body -->
             </div>
         </div>
         <div class="col-md-3">
@@ -245,7 +124,8 @@
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
                             <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
+                                     alt="user image">
                                 <span class="username">
                                     <a href="#">Jonathan Burke Jr.</a>
                                     <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
@@ -255,7 +135,8 @@
                         </li>
                         <li class="list-group-item">
                             <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
+                                     alt="user image">
                                 <span class="username">
                                     <a href="#">Jonathan Burke Jr.</a>
                                     <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
@@ -276,68 +157,130 @@
                     <h3 class="box-title"><i class="fa fa-gear text-gray"></i> 환경설정 </h3>
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body">
-                    <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <b>Push 알림</b> <a class="pull-right"> <input type="checkbox" id="switch1" class='switch' checked/><label for="switch1"></label></a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>물마시기 알림</b> <a class="pull-right"> <input type="checkbox" id="switch2" class='switch' checked/><label for="switch2"></label></a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>몸무게 입력 메세지 알림</b> <a class="pull-right"> <input type="checkbox" id="switch3" class='switch' checked/><label for="switch3"></label></a>
-                        </li>
-                    </ul>
+                <div class="box-body" id="settingAlarm">
+
                 </div>
                 <!-- /.box-body -->
             </div>
         </div>
     </div>
 </section>
+
+<script id="profile-template" type="text/x-handlebars-template">
+    <div class="box-header with-border">
+        <h3 class="box-title">Profile</h3>
+        <div class="box-tools pull-right">
+            <button type="button" onclick="profile.updateForm()" class="btn btn-box-tool"><i
+                    class="fa fa-gear"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-profile" id="box-profile">
+        <img class="profile-user-img img-responsive img-circle" src="{{setProfileImg path sysName}}"
+             alt="User profile picture">
+        <h3 class="profile-username text-center">{{name}}</h3>
+        <p class="text-muted text-center">{{statMsg}}</p>
+        <ul class="list-group list-group-unbordered">
+            <li class="list-group-item">
+                <b>Friends</b> <a class="pull-right">13명</a>
+            </li>
+            <li class="list-group-item">
+                <b>body spec</b> <a class="pull-right">{{tall}}/{{weight}}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script id="update-template" type="text/x-handlebars-template">
+    <div class="box-header with-border">
+        <h3 class="box-title">Edit Profile</h3>
+        <div class="box-tools pull-right">
+            <button onclick="profile.showProfile()" type="button" class="btn btn-box-tool"><i
+                    class="fa fa-close"></i></button>
+            <button onclick="profile.update()" type="button" class="btn btn-box-tool"><i
+                    class="fa fa-check"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-profile">
+        <img id="profile_Edit" class="profile-user-img img-responsive img-circle" src = "{{setProfileImg path sysName}}" alt = "User profile picture" >
+        <p id="insertImg" class="pull-right">
+            사진 변경<i class="fa fa-gear"></i>
+        </p>
+        <form class="form-horizontal">
+            <input id="attachFile" type="file" style="display: none;" >
+            <div class="form-group" >
+                <label for="inputName" class="col-sm-2 control-label"> Name </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputName" placeholder="닉네임" value="{{name}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Status Message </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="statMsg" placeholder="상태메세지" value="{{statMsg}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Tall </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="tall" placeholder="키" value="{{tall}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Weight </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="weight" placeholder="몸무게" value="{{weight}}">
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script id="alarm-template" type="text/x-handlebars-template">
+    <ul class="list-group list-group-unbordered">
+        <li class="list-group-item">
+            <b>Push 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="pushA" class='switch' {{setChecked pushA}}/>
+                <label for="pushA"></label>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <b>물마시기 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="waterA" class='switch' {{setChecked waterA}}/>
+                <label for="waterA"></label>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <b>몸무게 입력 메세지 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="weightA" class='switch' {{setChecked weightA}}/>
+                <label for="weightA"></label>
+            </a>
+        </li>
+    </ul>
+</script>
+
 <!-- /.content -->
 <script type="application/javascript">
-   // console.log("로그인아이디" +loginId);
-    var waterdata = {datasets:[{data:[3,5], backgroundColor:['#09f5f0','#e2e1e1']}] ,labels:["마신물","마셔아할 물"]};
-    new Chart($("#waterCnt"),{type:'doughnut', data:waterdata, options: {
-        responsive: true,
-        legend: { position: false },
-        title: {display: false, },
-        animation: { animateScale: true, animateRotate: true }
-    }});
-    function editProfile() {
-        $("#profileDiv").hide();
-        $("#editProfileDiv").show();
-    }
-    $("#insertImg").click(function(event){
-        $("#attachFile").trigger("click");
-    });
-    $("#attachFile").on("change",function () {
-       // console.log(event.target.files);
-        var files = this.files
-        var f = files[0];
-        /*if(f.size>100*1000){
-            alert("사진 크기가 너무커");
-            return ;
-        }*/
-        var imageType = "image/gif:image/jpeg:image/JPG:image/png";
-       if(imageType.indexOf(f.type)===-1){
-            alert("지원하지않는 타입의 파일입니다."+f.type);
-            return ;
-        }else{
-            $("#profile_Edit").attr("src",URL.createObjectURL(f));
-
+    // console.log("로그인아이디" +loginId);
+    var waterdata = {datasets: [{data: [3, 5], backgroundColor: ['#09f5f0', '#e2e1e1']}], labels: ["마신 물", "마셔아 할 물"]};
+    new Chart($("#waterCnt"), {
+        type: 'doughnut', data: waterdata, options: {
+            responsive: true,
+            legend: {position: false},
+            title: {display: false,},
+            animation: {animateScale: true, animateRotate: true}
         }
     });
-    function cancelEdit(){
+
+    function cancelEdit() {
         //수정취소 확인 alert띄우기!!
         $("#profileDiv").show();
         $("#editProfileDiv input").val("");
         $("#editProfileDiv").hide();
     }
-    function submitEdit(){
-        //ajax호출해서, 서버에 변경사항 전달...
-        //alret 호출... & reloading..
-    }
-
-
 </script>
+
+<script src="../../js/board/file.js"></script>
+<script src="../../js/profile/profile.js"></script>

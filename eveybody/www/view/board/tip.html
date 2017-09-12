@@ -86,6 +86,7 @@
 <script src="../../js/components/wow.min.js" type="text/javascript"></script>
 <script src="../../js/components/swiper.min.js" type="text/javascript"></script>
 <script src="../../js/components/masonry.min.js" type="text/javascript"></script>
+<script src="../../js/loginUser.js" type="text/javascript"></script>
 
 <script type="application/javascript">
     $("header.header").load("../includes/header.html");
@@ -97,7 +98,7 @@
     <div class="masonry-grid-item col-xs-6 col-sm-6 col-md-4">
         <div class="work">
             <div class="work-overlay">
-                <img class="full-width img-responsive" src="../../img/397x400/01.jpg" alt="Portfolio Image">
+                <img class="full-width img-responsive" src="{{setAttachFileImage path sysName}}" alt="Portfolio Image">
             </div>
             <div class="work-content">
                 <h3 class="color-white margin-b-5"><span>{{title}}<span><span class="text-uppercase margin-l-20">{{userId}}</span></h3>
@@ -131,7 +132,9 @@
 </script>
 
 <script id="detail-template" type="text/x-handlebars-template">
-    <img class="img-responsive" src="../../img/1920x1080/02.jpg" alt="Slider Image">
+    {{#each fileList}}
+        <img class="img-responsive" src="{{setAttachFileImage path sysName}}" alt="Slider Image">
+    {{/each}}
 
     <div class="section-seperator">
         <div class="content-md container">
@@ -204,6 +207,7 @@
 </script>
 
 <script src="../../js/board/comment.js"></script>
+<script src="../../js/board/file.js"></script>
 <script src="../../js/board/imageBoard.js"></script>
 
 </body>
