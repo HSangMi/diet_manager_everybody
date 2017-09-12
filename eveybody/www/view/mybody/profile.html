@@ -153,7 +153,7 @@
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#" class="text-center"> 친구 추가 &emsp; <i class="fa fa-user-plus text-blue"></i></a></li>
+                        <li><a href="javascript:;" class="text-center" id="addFriendBtn"> 친구 추가 &emsp; <i class="fa fa-user-plus text-blue"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -172,6 +172,7 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addFriend" role="dialog"></div>
 </section>
 
 <script id="profile-template" type="text/x-handlebars-template">
@@ -269,6 +270,29 @@
     </ul>
 </script>
 
+<script id="friend-add-template" type="text/x-handlebars-template">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 30%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">친구 추가</h4>
+            </div>
+            <div class="modal-body">
+                <p>아이디로 검색하기</p>
+                <div class="input-group" id ="searchDiv">
+                    <input type="text" name="search" id="searchIdTxt" class="form-control" placeholder="Search">
+                    <div class="input-group-btn">
+                        <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</script>
+
 <!-- /.content -->
 <script type="application/javascript">
     // console.log("로그인아이디" +loginId);
@@ -281,14 +305,8 @@
             animation: {animateScale: true, animateRotate: true}
         }
     });
-
-    function cancelEdit() {
-        //수정취소 확인 alert띄우기!!
-        $("#profileDiv").show();
-        $("#editProfileDiv input").val("");
-        $("#editProfileDiv").hide();
-    }
 </script>
 
 <script src="../../js/board/file.js"></script>
 <script src="../../js/profile/profile.js"></script>
+<script src="../../js/friend/friend.js"></script>

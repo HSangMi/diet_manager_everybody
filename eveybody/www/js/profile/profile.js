@@ -8,6 +8,11 @@ var profile = (function () {
     };
     /* 알림 체크 */
     var profileModule = {
+        init: function () {
+            profileModule.bindEvent();
+            profileModule.alarm();
+            profileModule.showProfile();
+        },
         bindEvent: function () {
             // 알림 설정
             $(document.body).on("change", "#pushA", function () {
@@ -158,7 +163,7 @@ var profile = (function () {
                     }
                 });
 
-                var html = template(result);
+                var html = template(result.userInfo);
                 $("div#settingAlarm").html(html);
             });
         },
@@ -180,9 +185,8 @@ var profile = (function () {
         }
     };
 
-    profileModule.bindEvent();
-    profileModule.alarm();
-    profileModule.showProfile();
+    profileModule.init();
+
     return {
         showProfile: profileModule.showProfile,
         updateForm: profileModule.updateForm,
