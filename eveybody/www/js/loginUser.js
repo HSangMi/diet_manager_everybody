@@ -86,8 +86,7 @@ function checkMobileDevice() {
 }
 
 
-var getLoginId;
-(getLoginId = function () {
+var getLoginId = function () {
     var userId = "";
     if (!checkMobileDevice()) {
         userId = window.sessionStorage.getItem("user");
@@ -96,15 +95,18 @@ var getLoginId;
     }
 
     console.log("storage의 user ID : " + userId);
-    if (userId !== null && userId !== "") {
+    if (userId) {
+        console.log("로그인해써");
         $("ul>li>a#loginBtn").html("Logout")
             .attr("data-target", "#");
     } else {
+        console.log("로그인안해써");
         $("ul>li>a#loginBtn").html("Login")
             .attr("data-target", "#myModal1");
     }
     return userId;
-})();
+};
+
 
 $(document.body).on("click", "ul>li>a#loginBtn", function () {
     $("ul>li>a#loginBtn").click(function () {
