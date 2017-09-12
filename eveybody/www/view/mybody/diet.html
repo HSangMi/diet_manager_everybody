@@ -1,5 +1,18 @@
 <!-- Content Header (Page header) -->
-
+<style type="text/css">
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index:99999;
+        background-color: ghostwhite;
+        width: 60%;
+        list-style: none;
+    }
+    .ui-autocomplete>li{
+        margin: 5px;
+    }
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -8,40 +21,36 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-cutlery"></i>내 식단 관리</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
 
-                    <ul class="timeline">
+                    <ul class="timeline" id="dietTimeLine">
                         <!-- timeline time label -->
                         <li class="time-label">
-                  <span class="bg-red">
-                    10 Feb. 2014
-                  </span>
+                              <span class="bg-red">
+                                10 Feb. 2014
+                              </span>
                         </li>
                         <!-- /.timeline-label -->
                         <!-- timeline item -->
                         <li>
                             <i class="fa fa-cutlery bg-blue"></i>
-
                             <div class="timeline-item">
-                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
                                 <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i> 12:05</span></h3>
-
                                 <div class="timeline-body">
                                     <ul class="mailbox-attachments clearfix">
                                         <li>
                                             <span class="mailbox-attachment-icon has-img"><img src="../../dist/img/photo1.png" alt="Attachment"></span>
                                             <div class="mailbox-attachment-info">
-                                                <p class="mailbox-attachment-name"><a class="btn btn-primary btn-xs">파스타</a>
-                                                <span class="mailbox-attachment-size">
-                                            320kcal
-                                        <a href="" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
-                                        <a href="" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
+                                                <p class="mailbox-attachment-name"><a class="btn btn-primary btn-xs">파스타</a>&emsp;320kcal
+                                                </p>
+                                                    <span class="mailbox-attachment-size">
+                                                     &emsp;
+                                        <a href="javascript:deleteDiet(30);" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
+                                        <a href="javascript:editDiet(17,9362,4033,9362,6639);" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
                                         </span>
                                             </div>
                                         </li>
@@ -110,11 +119,12 @@
                             </div>
                         </li>
                         <!-- END timeline item -->
+
                         <!-- timeline time label -->
                         <li class="time-label">
-                  <span class="bg-green">
-                    3 Jan. 2014
-                  </span>
+                           <span class="bg-green">
+                            3 Jan. 2014
+                          </span>
                         </li>
                         <!-- /.timeline-label -->
                         <!-- timeline item -->
@@ -124,7 +134,7 @@
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
 
-                                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
+                                <h3 class="timeline-header"><a href="#">Mina Lee</a>uploaded new photos</h3>
                                 <div class="timeline-body">
                                     <ul class="mailbox-attachments clearfix">
                                         <li>
@@ -174,5 +184,296 @@
 
         </div>
     </div>
+    <div class="modal fade" id="editDiet" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top: 30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>다른 라벨 선택하기</p>
+                    <div id="labelsDiv">
+                    </div>
+                    <br><br>
+                    <p>직접검색하기
+                    </p>
+
+                    <div class="input-group" id ="searchDiv">
+                        <input type="text" name="search" id="foodSearchInput" class="form-control" placeholder="Search">
+
+                        <div class="input-group-btn">
+                            <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </section>
 <!-- /.content -->
+<script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
+<script type="application/javascript">
+   $(function() {
+        $("#foodSearchInput").autocomplete({
+            source: function (request, response) {
+                console.log("??");
+                $.ajax({
+                    type: 'post',
+                    url: contextPath + "autocomplete.do",
+                    dataType: "json",
+                    data: {value: request.term},
+                    success: function (data) {
+                        response(
+                            $.map(data.foodList, function (item) {
+                                console.log("=====data========");
+                                console.dir(data);
+                                console.log("=====item========");
+                                console.dir(item);
+                                return {
+                                    label: item,
+                                    value: item
+                                }
+                            })
+                        );
+                    }
+                });
+            },
+            //조회를 위한 최소글자수
+            minLength: 2,
+            select: function (event, ui) {
+                // 만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트발생
+            }
+        });
+    })
+
+</script>
+
+
+<script id="Diet-list-temp" type="text/x-handlebars-template">
+    {{#each .}}
+    {{#ifCheckDate date}}
+    <li class="time-label">
+        <span class="bg-red">
+            {{prettifyDate date}}
+        </span>
+    </li>
+    {{/ifCheckDate}}
+
+    {{#ifDpNoCheck dpNo}}
+    <li>
+        <i class="fa fa-cutlery bg-blue"></i>
+        <div class="timeline-item">
+            <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>{{prettifyTime date}}</span></h3>
+            <div class="timeline-body">
+                <ul class="mailbox-attachments clearfix">
+    {{/ifDpNoCheck}}
+                    <li>
+                        <span class="mailbox-attachment-icon has-img"><img src="{{dataUrl}}" alt="Attachment"></span>
+                         <div class="mailbox-attachment-info">
+                             <p class="mailbox-attachment-name">
+                                 {{{makeFixFood fixFood}}}
+                             </p>
+                             <span class="mailbox-attachment-size">&emsp;
+                                 <a href="javascript:editDiet({{dietNo}},{{fixFood}},{{foodNo}},{{foodNo2}},{{foodNo3}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
+                                 <a href="javascript:deleteDiet({{dietNo}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
+                             </span>
+                         </div>
+                    </li>
+     {{#ifDpNoCheck dpNo}}
+                </ul>
+            </div>
+            <div class="timeline-footer"></div>
+        </div>
+    </li>
+    {{/ifDpNoCheck}}
+    {{/each}}
+</script>
+<script type="application/javascript">
+    var $checkDpNo;
+    var $checkDate;
+    Handlebars.registerHelper("prettifyDate", function(timeValue) {
+        var dateObj = new Date(timeValue);
+        var year = dateObj.getFullYear();
+        var month = dateObj.getMonth() + 1;
+        var date = dateObj.getDate();
+        return year + "." + month + "." + date;
+    });
+    Handlebars.registerHelper("prettifyTime", function(timeValue) {
+        var dateObj = new Date(timeValue);
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        return hour+":"+minute;
+    });
+    Handlebars.registerHelper("makeFixFood",function (fixFood) {
+            var food = getFood(fixFood);
+       return '<a class="btn btn-primary btn-xs">'+food.korName+'</a>&emsp;'+food.kcal +'<br>';
+    });
+    Handlebars.registerHelper('ifCheckDate', function(date,options) {
+        var dateObj = new Date(date);
+        var year = dateObj.getFullYear();
+        var month = dateObj.getMonth() + 1;
+        var day = dateObj.getDate();
+        var dateString =  ""+ year + month + day;
+        if($checkDate===undefined||$checkDate !== dateString){
+            $checkDate = dateString;
+            return options.fn(this);
+        }else if($checkDate === dateString){
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper('ifDpNoCheck', function(dpNo,options){
+        if($checkDpNo!==dpNo||$checkDpNo === undefined){
+            $checkDpNo = dpNo;
+            return options.fn(this);
+        }else if($checkDpNo === dpNo){
+            return options.inverse(this);
+        }
+    });
+
+    function getFood(foodNo) {
+        console.log("getFood호출");
+        var food;
+        $.ajax({
+            url: contextPath+foodNo+"/getFood.do",
+            dataType: "json",
+            async : false
+        }).done(function (result) {
+            console.log("getFood완료...");
+            console.dir(result);
+            food = result;
+        }).fail(function (err) {
+            console.log("에러!!");
+            console.dir(err);
+        });
+        return food;
+    }
+
+    function editDiet(dietNo,fixFood,foodNo1, foodNo2, foodNo3){
+        var html = "";
+         var food = getFood(fixFood);
+         console.log(food);
+         console.log("#############");
+
+        html += '<a class="btn btn-primary btn-xs foodNameTag">'+food.korName+'</a>&emsp;'+food.kcal +'<br>';
+
+        if(fixFood!==foodNo1){
+            food = getFood(foodNo1);
+            html += '<a class="btn btn-default btn-xs foodNameTag">'+food.korName+'</a>&emsp;' + food.kcal +'<br>';
+        }
+        if(fixFood!==foodNo2){
+            food = getFood(foodNo2);
+            html += '<a class="btn btn-default btn-xs foodNameTag">'+food.korName+'</a>&emsp;'+food.kcal +'<br>';
+        }
+        if(fixFood!==foodNo3){
+            food = getFood(foodNo3);
+            html += '<a class="btn btn-default btn-xs foodNameTag">'+food.korName+'</a>&emsp;'+food.kcal +'<br>';
+        }
+        $("#labelsDiv").append(html);
+
+        $("#editDiet").modal();
+    }
+    $("#labelsDiv").on(
+        "click",
+        "a.foodNameTag",	//매개변수 : 이벤트를 걸 엘리먼트
+        function(e){
+            console.log(e);
+            console.log(this);
+            $(this).addClass("btn-primary").siblings().removeClass("btn-primary");
+        }
+    );
+
+
+/*        $(".sidebar-menu ").find(".active").removeClass("active");
+        $(this).parent().addClass("active");*/
+
+    /*무한스크롤*/
+    $(window).scroll(function(){
+        var sh = $(window).scrollTop() + $(window).height();
+        //현재 스크롤의 맨위 높이 + 현재창의 높이
+        var dh = $(document).height();
+        //전체문서 길이
+     //   console.log(sh,dh);
+        //전체문서길이랑 스크롤 내린게 비슷할때 또 로딩해라..
+
+        if(sh >= dh - 10){
+            console.log("=======무한스크롤 로딩=======");
+            dietPageNo++;
+           getDietList(dietPageNo);
+               // $("#imglist").append(
+               //     $("#imglist>div:first-child").clone()
+               // );
+                //실제로는 db에서 가져와야할 부분..
+            }
+    });
+
+    var dietPageNo = 1;
+    var notLastPage = true;
+    var contextPath = "http://192.168.0.16:8000/diet/";
+    function getDietList(dietPageNo){
+        console.log("==========getDietList 호출================")
+        console.log("로그인아이디 : "+getLoginId());
+        if(notLastPage){
+            console.log("===========마지막 페이지가 아니라면 ajax호출  ======dietPageNo : "+dietPageNo);
+            $.ajax({
+                url: contextPath+"user1"+"/"+ dietPageNo +"/dietList.do",
+                dataType: "json"
+               }).done(makeDietList).fail(function (err) {
+                   console.log("에러..");
+                    console.dir(err);
+               });
+        }else{
+
+        }
+    }
+
+    function makeDietList(result){
+        console.log("===============makeDietList 호출됨==============");
+        var todayList = result.todayList;
+        var dietList = result.dietList;
+        console.log("========todayList=============");
+        console.dir(todayList);
+        console.log("=========dietList============");
+        console.dir(dietList);
+        console.log("=====================");
+
+        if(todayList.length ===0 && dietList.length===0){
+            console.log("======= 더이상 등록된 식단이 없는경우==========")
+            $("#dietTimeLine").append("<h3>등록된 식단이 없습니다.</h3>").append('<li><i class="fa fa-clock-o bg-gray"></i></li>');
+                //식단이 없습니다 출력
+                console.log("----notLastPage = false로 변경----")
+                notLastPage = false;
+        }else{
+            console.log("=======등록된식단이있다....====== 템플릿적용==========")
+            var source = $("#Diet-list-temp").html();
+            var template = Handlebars.compile(source);
+            //console.dir(result);
+            var html = template(dietList);
+            $('#dietTimeLine').append(html);
+        }
+    }
+   // getDietList(1);
+
+    function deleteDiet(dietNo){
+        var answer =  confirm("정말 삭제하시겠습니까?");
+        if(answer){
+            console.log("삭제");
+            $.ajax({
+                url: contextPath+deitNo+"/deleteDiet.do",
+                dataType: "json"
+            }).done(function (result) {
+                if(result==="success"){
+                    alert("삭제완료!");
+                }
+            });
+        }else{
+            console.log("취소");
+        }
+    }
+</script>
