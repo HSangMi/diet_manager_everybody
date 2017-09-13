@@ -20,6 +20,8 @@
                 <div class="box-body" style="display: block;">
                     <!-- Conversations are loaded here -->
                     <div class="direct-chat-messages">
+
+
                     </div>
                     <!--/.direct-chat-messages-->
                 </div>
@@ -46,15 +48,58 @@
 <!-- /.content -->
 <script type="application/javascript">
     var socket;
-    var loginId="user1";
     var $divchat =  $("div.direct-chat-messages");
+
+
+    /*DB에서 대화목록 가져오는 ajax호출...
+     1. 챗봇 대화기록 가져오기...(제일 위에)
+
+     2. 유저id에 해당하는 채팅방 번호로 채팅방 이름....
+        (닫은 채팅방으로 보여주기...);
+            => 채팅방을 + 로 열었을때, 또 다른 ajax 호출 해서 친구 대화목록 가져오기...
+     */
+        function getChatContent(chatRoomNo , chatPageNo, callback){
+            console.log("getChatContent 호출됨....");
+            $.ajax({
+                url: serverPath+"chat/"+$loginId+"/"+chatRoomNo+"/"+chatPageNo+"/getChatContent.do",
+                dataType: "json"
+            }).done(function (result) {
+                console.log("채팅 컨텐트 가져오기...");
+                console.dir(result);
+                console.log("callback 호출...");
+                callback(result);
+            }).fail(function (err) {
+                console.log("에러!!");
+                console.dir(err);
+            });
+        }
+        function getChatRoomList(loginId,callback){
+            console.log("getChatContent 호출됨....");
+            $.ajax({
+                url: serverPath+"chat/"+$loginId+"/getChatRoomList.do",
+                dataType: "json"
+            }).done(function (result) {
+                console.log("채팅 컨텐트 가져오기...");
+                console.dir(result);
+                console.log("callback 호출...");
+                callback(result);
+            }).fail(function (err) {
+                console.log("에러!!");
+                console.dir(err);
+            });
+        }
+
+
+
+
+
     $(document).ready(function () {
         // 소켓서버에 접속
         socket = io.connect('http://192.168.0.30:10005');
 
         console.dir(socket);
         // 유저 아이디 전달...
-        socket.emit("login", loginId);
+        socket.emit("login", $loginId);
         socket.on("msg", function (data) {
             console.log("서버에서 응답");
             if(data.indexOf("btn")==0){
@@ -77,7 +122,7 @@
         $("input.chat-input").val("");
         $divchat.append(makeSendMsg($msg));
         $divchat.scrollTop($divchat[0].scrollHeight);
-        socket.emit("msg", {recvId: "chatbot", sendId: loginId, msg: $msg});
+        socket.emit("msg", {recvId: "chatbot", sendId: $loginId, msg: $msg});
         return false;
     });
 
