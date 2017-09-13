@@ -68,7 +68,11 @@
     $("header.main-header").load("../includes/header2.html");
     $("footer.main-footer").load("../includes/footer2.html");
     $("aside.main-sidebar").load("../includes/sidebar.html");
+
+    ///////전역변수////////
     var serverPath = "http://192.168.0.16:8000/";
+    var $loginId= (!checkMobileDevice()?window.sessionStorage.getItem("user"):window.localStorage.getItem("user"));
+    /////////////////////
 
     function checkMobileDevice() {
         var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
