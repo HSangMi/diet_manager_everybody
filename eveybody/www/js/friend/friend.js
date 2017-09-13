@@ -4,7 +4,8 @@ var friend = (function () {
         "autocomplete": "autocomplete.do",
         "list": "list.do",
         "request": "request.do",
-        "confirm": "confirm.do"
+        "confirm": "confirm.do",
+        "delete": "delete.do"
     };
     var friendModule = {
         init: function () {
@@ -16,6 +17,7 @@ var friend = (function () {
 
             friendModule.bindEvent();
             friendModule.autoComplete();
+            friendModule.list();
         },
         bindEvent: function () {
             $(document.body).on("click", "#addFriendBtn", function () {
@@ -25,6 +27,7 @@ var friend = (function () {
                 friendModule.request();
             });
         },
+        /* 자동 완성 */
         autoComplete: function () {
             $("#searchIdTxt").autocomplete({
                 source: function (request, response) {
@@ -52,12 +55,21 @@ var friend = (function () {
                 }
             });
         },
+        /* 친구 요청 */
         request: function () {
+            var friendId = $("#searchIdTxt").val();
+
+            if(friendId === $loginId) {
+                console.log("내가 나랑 친구한다고?..");
+                /* 처리 해줄 것.. */
+                return ;
+            }
+
             $.ajax({
                 url: urlList.contextPath + urlList.request,
                 data: {
-                    userId: /* 로그인 한 아이디로 변경 */"admin",
-                    friendId: $("#searchIdTxt").val()
+                    userId: $loginId,
+                    friendId: friendId
                 },
                 type: "post"
             }).done(function (result) {
@@ -66,11 +78,55 @@ var friend = (function () {
                     return ;
                 }
                 $("#modalCloseBtn").click();
+                $("#searchIdTxt").val("");
             });
+        },
+        /* 친구 목록 */
+        list: function () {
+            $.ajax({
+                url: urlList.contextPath + urlList.list,
+                data: {
+                    userId: $loginId
+                },
+                type: "post"
+            }).done(function (result) {
+                var source = $("#friend-list-template").html();
+                var template = Handlebars.compile(source);
+
+                var data = result;
+
+                Handlebars.registerHelper("setProfileImg", function (friendId) {
+                    return notification.setFriendPhoto(friendId);
+                });
+
+                Handlebars.registerHelper("setProfileInfo", function (friendId) {
+                    return notification.setFriendInfo(friendId);
+                });
+
+                var html = template(data);
+                $("#friendListUl").html(html);
+
+                profile.showProfile();
+            });
+        },
+        /* 친구 삭제 */
+        delete: function (friendId) {
+            $.ajax({
+                url: urlList.contextPath + urlList.delete,
+                data: {
+                    userId: $loginId,
+                    friendId: friendId
+                },
+                type: "post"
+            }).done(friendModule.list);
         }
 
     };
 
     friendModule.init();
 
+    return {
+        list: friendModule.list,
+        delete: friendModule.delete
+    }
 })();

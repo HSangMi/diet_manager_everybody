@@ -18,13 +18,19 @@ var notification = (function () {
                 url: urlList.contextPath + urlList.notification,
                 dataType: "json",
                 data: {
-                    userId: /* 로그인 한 아이디로 변경 */"admin"
+                    userId: $loginId
                 }
             }).done(function (result) {
                 var source = $("#friend-request-template").html();
                 var template = Handlebars.compile(source);
 
                 var data = result;
+
+                Handlebars.registerHelper("setRequestCnt", function (requestCnt) {
+                    if(requestCnt !== 0) {
+                        return "<span class=\"label label-success\">" + requestCnt + "</span>";
+                    }
+                });
 
                 Handlebars.registerHelper("setProfileImg", function (friendId) {
                     return notificationModule.setFriendPhoto(friendId);
@@ -42,17 +48,19 @@ var notification = (function () {
                 $("#friendRequest").html(html);
             });
         },
-        confirm: function (check) {
+        confirm: function (friendId, check) {
             $.ajax({
                 type: "post",
-                url: urlList.contextPath + urlList.requestCnt,
-                dataType: "json",
+                url: urlList.contextPath + urlList.confirm,
                 data: {
-                    reqId: /* 로그인 한 아이디로 변경 */"admin",
-                    resId: $("#searchIdTxt").val(),
+                    userId: $loginId,
+                    friendId: friendId,
                     confirm: check
                 }
-            }).done(/* alert 띄우기 OR 친구 신청 이후 처리 */);
+            }).done(function () {
+                notificationModule.notification();
+                friend.list();
+            });
         },
         setFriendPhoto: function (friendId) {
             var returnImg = "";
@@ -69,7 +77,7 @@ var notification = (function () {
 
                 if(data.userPhoto) {
                     var photoTemp = data.userPhoto;
-                    returnImt = file.preview(photoTemp.path, photoTemp.sysName);
+                    returnImg = file.preview(photoTemp.path, photoTemp.sysName);
                 }
                 else {
                     // setting default image
@@ -101,7 +109,7 @@ var notification = (function () {
                 async: false,
                 method: "post",
                 data: {
-                    userId: /* 로그인 한 아이디 */"admin",
+                    userId: $loginId,
                     friendId: friendId
                 }
             }).done(function (result) {
@@ -121,11 +129,15 @@ var notification = (function () {
                 else if(timeDifference < (60 * 60 * 24 * 3)) {
                     returnVal = Math.floor( (timeDifference / (60 * 60 * 24)) ) + "일 전";
                 }
-
-
             });
             return returnVal;
         }
     };
     notificationModule.init();
+
+    return {
+        confirm: notificationModule.confirm,
+        setFriendPhoto: notificationModule.setFriendPhoto,
+        setFriendInfo: notificationModule.setFriendInfo
+    }
 })();

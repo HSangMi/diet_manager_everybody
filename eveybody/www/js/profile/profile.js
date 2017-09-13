@@ -52,7 +52,7 @@ var profile = (function () {
                 async: false,
                 method: "post",
                 data: {
-                    userId : /* 로그인 한 아이디 받아서 처리 */"admin"
+                    userId : $loginId
                 }
             }).done(function (result) {
                 var source = $("#profile-template").html();
@@ -64,14 +64,14 @@ var profile = (function () {
                 if(photoTemp) {
                     data.path = photoTemp.path;
                     data.sysName = photoTemp.sysName;
-                    console.log("사용자 프로필 이미지 존재");
                 }
                 else {
                     // setting default image
                     data.path = "/default-img";
                     data.sysName = "20170905_134208.jpg";
-                    console.log("프로필 이미지 없음");
                 }
+
+                data.friendCnt = result.friendCnt;
 
                 Handlebars.registerHelper("setProfileImg", function (path, sysName) {
                     return file.preview(path, sysName);
@@ -88,7 +88,7 @@ var profile = (function () {
                 async: false,
                 method: "post",
                 data: {
-                    userId : /* 로그인 한 아이디 받아서 처리 */"admin"
+                    userId : $loginId
                 }
             }).done(function (result) {
                 var source = $("#update-template").html();
@@ -128,7 +128,7 @@ var profile = (function () {
             fd.append("statMsg", $("#statMsg").val());
             fd.append("tall", $("#tall").val());
             fd.append("weight", $("#weight").val());
-            fd.append("userId", /* 로그인 한 아이디 받아서 처리 */"admin");
+            fd.append("userId", $loginId);
 
             $.ajax({
                 url: urlList.contextPath + urlList.update,
@@ -147,7 +147,7 @@ var profile = (function () {
                 async: false,
                 method: "post",
                 data: {
-                    userId : /* 로그인 한 아이디 받아서 처리 */"admin"
+                    userId : $loginId
                 }
             }).done(function (result) {
                 var source = $("#alarm-template").html();
@@ -174,7 +174,7 @@ var profile = (function () {
                 data: {
                     updateName: $switch[0].id,
                     updateVal: updateVal,
-                    userId: /* 로그인 한 유저 아이디로 변경 */"admin"
+                    userId: $loginId
                 },
                 method: "post"
             }).done();

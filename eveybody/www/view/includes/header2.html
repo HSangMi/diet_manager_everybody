@@ -2,7 +2,7 @@
 <!-- Logo -->
 <a href="../main/main.html" class="logo">
     <!-- mini logo for sidebar mini 50x50 pixels -->
-    <span class="logo-mini"><b>EB</b>d</span>
+    <span class="logo-mini"><b>EB</b></span>
     <!-- logo for regular state and mobile devices -->
     <span class="logo-lg"><b>Every B</b>ody</span>
 </a>
@@ -89,7 +89,7 @@
 
 <script type="application/javascript">
     var getLoginId;
-    (getLoginId = function (){
+    getLoginId = (function (){
         var userId = "";
         if(!checkMobileDevice()){
             userId = window.sessionStorage.getItem("user");
@@ -111,7 +111,7 @@
 <script id="friend-request-template" type="text/x-handlebars-template">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-bell-o"></i>
-        <span class="label label-success">{{requestCnt}}</span>
+        {{{setRequestCnt requestCnt}}}
     </a>
     <ul class="dropdown-menu">
         <li class="header">You have {{requestCnt}} messages</li>
@@ -127,11 +127,11 @@
                             {{setProfileInfo friendId}}
                             <small><i class="fa fa-clock-o"></i> {{setTime friendId}}</small>
                         </h4>
-                        <p>나랑 친구 할래?ㅎ</p>
+                        <p>( ͡° ͜ʖ ͡°) 안녕~ㅎ 우리 친구할래?ㅎ</p>
                     </a>
                     <div class="tools">
-                        <i class="fa fa-check" id="apply-{{friendId}}"></i>
-                        <i class="fa fa-close" id="refuse-{{friendId}}"></i>
+                        <i class="fa fa-check" onclick="notification.confirm('{{friendId}}', 1)"></i>
+                        <i class="fa fa-close" onclick="notification.confirm('{{friendId}}', 0)"></i>
                     </div>
                 </li>
                 {{/each}}
