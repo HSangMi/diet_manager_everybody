@@ -1,0 +1,19 @@
+.tools {
+    display: none;
+    float: right;
+    color: #dd4b39;
+    position: absolute;
+    top: 30%;
+    left: 80%;
+}
+
+.tools > .fa,
+.tools > .glyphicon,
+.tools > .ion {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+li:hover .tools {
+    display: inline-block;
+}

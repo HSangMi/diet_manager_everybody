@@ -10,7 +10,6 @@ var file = (function () {
         bindEvent: function () {
         },
         preview: function (path, sysName) {
-            console.log(urlList.imagePath + path + "/" + sysName);
             return urlList.imagePath + path + "/" + sysName;
         }
     };

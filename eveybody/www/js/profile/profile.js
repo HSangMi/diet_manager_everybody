@@ -6,7 +6,6 @@ var profile = (function () {
         "alarm": "alarm.do",
         "updateAlarm": "updateAlarm.do"
     };
-    /* 알림 체크 */
     var profileModule = {
         init: function () {
             profileModule.bindEvent();
@@ -123,11 +122,8 @@ var profile = (function () {
 
             var fileEle = $("input#attachFile")[0];
             if(fileEle.files) {
-                console.log("파일 등록됨");
                 fd.append("attachFile", fileEle.files[0]);
             }
-            console.log(fileEle);
-
             fd.append("name", $("#inputName").val());
             fd.append("statMsg", $("#statMsg").val());
             fd.append("tall", $("#tall").val());

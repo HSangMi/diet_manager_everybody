@@ -3,7 +3,8 @@ var friend = (function () {
         "contextPath": "http://192.168.0.16:8000/friend/",
         "autocomplete": "autocomplete.do",
         "list": "list.do",
-        "add": "add.do"
+        "request": "request.do",
+        "confirm": "confirm.do"
     };
     var friendModule = {
         init: function () {
@@ -21,11 +22,8 @@ var friend = (function () {
                 $("#addFriend").modal();
             });
             $(document.body).on("click", "#searchDiv > div.input-group-btn", function () {
-                console.log("검색 시작");
+                friendModule.request();
             });
-        },
-        add: function () {
-
         },
         autoComplete: function () {
             $("#searchIdTxt").autocomplete({
@@ -53,7 +51,24 @@ var friend = (function () {
                     // 만약 검색 리스트에서 선택하였을 때 선택한 데이터에 의한 이벤트발생
                 }
             });
+        },
+        request: function () {
+            $.ajax({
+                url: urlList.contextPath + urlList.request,
+                data: {
+                    userId: /* 로그인 한 아이디로 변경 */"admin",
+                    friendId: $("#searchIdTxt").val()
+                },
+                type: "post"
+            }).done(function (result) {
+                if(result === "존재하지 않는 아이디 입니다") {
+                    console.log("잘못된 아이디");
+                    return ;
+                }
+                $("#modalCloseBtn").click();
+            });
         }
+
     };
 
     friendModule.init();
