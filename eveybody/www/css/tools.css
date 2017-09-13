@@ -3,8 +3,8 @@
     float: right;
     color: #dd4b39;
     position: absolute;
-    top: 30%;
     left: 80%;
+    z-index: 999;
 }
 
 .tools > .fa,

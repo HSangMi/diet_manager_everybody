@@ -4,6 +4,7 @@ var notification = (function () {
         "contextProfilePath": "http://192.168.0.16:8000/user/setting/",
         "profile": "profile.do",
         "notification": "notification.do",
+        "requestTime": "request-time.do",
         "confirm": "confirm.do"
     };
     /* 알림 체크 */
@@ -34,7 +35,7 @@ var notification = (function () {
                 });
 
                 Handlebars.registerHelper("setTime", function (friendId) {
-                    return notificationModule.setFriendInfo(friendId);
+                    return notificationModule.setRequestTime(friendId);
                 });
 
                 var html = template(data);
@@ -66,16 +67,12 @@ var notification = (function () {
             }).done(function (result) {
                 var data = result;
 
-                console.log(data);
-
                 if(data.userPhoto) {
                     var photoTemp = data.userPhoto;
-                    console.log("사용자 프로필 이미지 존재");
                     returnImt = file.preview(photoTemp.path, photoTemp.sysName);
                 }
                 else {
                     // setting default image
-                    console.log("프로필 이미지 없음");
                     returnImg = file.preview("/default-img", "20170905_134208.jpg");
                 }
             });
@@ -93,6 +90,39 @@ var notification = (function () {
                 }
             }).done(function (result) {
                 returnVal = result.userInfo.name;
+            });
+            return returnVal;
+        },
+        setRequestTime: function (friendId) {
+            var returnVal = "";
+            $.ajax({
+                url: urlList.contextPath + urlList.requestTime,
+                dataType: "json",
+                async: false,
+                method: "post",
+                data: {
+                    userId: /* 로그인 한 아이디 */"admin",
+                    friendId: friendId
+                }
+            }).done(function (result) {
+                var date = new Date(result);
+                var timeDifference = Math.floor( (new Date().getTime() - date.getTime()) / 1000 );
+                returnVal = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+                if(timeDifference < 60) {
+                    returnVal = Math.floor(timeDifference) + "초 전";
+                }
+                else if(timeDifference < (60 * 60)) {
+                    returnVal = Math.floor( (timeDifference / 60) ) + "분 전";
+                }
+                else if(timeDifference < (60 * 60 * 24)) {
+                    returnVal = Math.floor( (timeDifference / (60 * 60)) ) + "시간 전";
+                }
+                else if(timeDifference < (60 * 60 * 24 * 3)) {
+                    returnVal = Math.floor( (timeDifference / (60 * 60 * 24)) ) + "일 전";
+                }
+
+
             });
             return returnVal;
         }
