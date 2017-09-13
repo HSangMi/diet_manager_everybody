@@ -276,26 +276,29 @@
     <li>
         <i class="fa fa-cutlery bg-blue"></i>
         <div class="timeline-item">
-            <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>  {{prettifyTime date}}</span></h3>
+            <span class="time" id="{{dpNo}}">{{{makeTotalKcal dpNo}}}</span>
+            <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>{{prettifyTime date}}</span></h3>
             <div class="timeline-body">
                 <ul class="mailbox-attachments clearfix">
 
     {{/ifDpNoCheck}}
 
-                    <li>
+                    <li id="dietNo{{dietNo}}" >
                         <span class="mailbox-attachment-icon has-img"><img src="data:image/jpeg;base64,{{dataUrl}}" alt="Attachment" ></span>
                         <div class="mailbox-attachment-info">
                             <p class="mailbox-attachment-name">
-                                {{{makeFixFood fixFood}}}
+                                <a class="btn btn-primary btn-xs">{{makeFoodName fixFood}}</a>
                             </p>
-                            <span class="mailbox-attachment-size">&emsp;
-                                 <a href="javascript:deleteDiet({{dietNo}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
+                            <span class="mailbox-attachment-size">
+                                <a href="#" class="mailbox-attachment-name">{{makeFoodKcal fixFood dpNo}}</a>
+                                 <a href="javascript:deleteDiet({{{dietNo}}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
                                  <a href="javascript:editDiet({{dietNo}},{{fixFood}},{{foodNo}},{{foodNo2}},{{foodNo3}});" class="btn btn-default btn-xs pull-right"><i class="fa fa-wrench"></i></a>
                              </span>
                         </div>
                     </li>
     {{/each}}
 </script>
+
 <script type="application/javascript">
     var $checkDpNo;
     var $checkDate;
@@ -312,9 +315,25 @@
         var minute = dateObj.getMinutes();
         return hour+":"+minute;
     });
-    Handlebars.registerHelper("makeFixFood",function (fixFood) {
+    Handlebars.registerHelper("makeFoodName",function (fixFood) {
             var food = getFood(fixFood);
-       return '<a class="btn btn-primary btn-xs">'+food.korName+'</a>&emsp;'+food.kcal +'kcal<br>';
+       return food.korName;
+    });
+    Handlebars.registerHelper("makeFoodKcal",function (fixFood, dpNo) {
+            var food = getFood(fixFood);
+       return food.kcal + " Kcal";
+    });
+    Handlebars.registerHelper("makeTotalKcal",function (dpNo) {
+       var totalKcal = $.ajax({
+            url: serverPath+"diet/getTotalKcal.do",
+            data:{
+                dpNo:dpNo
+            },
+            async : false
+        }).done(function (result) {
+            return result;
+        }).responseText;
+        return "총 " + totalKcal + "Kcal";
     });
     Handlebars.registerHelper('ifCheckDate', function(date,options) {
         var dateObj = new Date(date);
@@ -453,8 +472,9 @@
 
         if(todayList.length ===0 && dietList.length===0 && dietPageNo === 1){
             console.log("======= 더이상 등록된 식단이 없는경우==========")
-            $("#dietTimeLine").append("<h3>등록된 식단이 없습니다.</h3>").append('<li><i class="fa fa-clock-o bg-gray"></i></li>');
-                //식단이 없습니다 출력
+            $("#dietTimeLine").prepend("<li><div class=\"timeline-item\"><h3 class=\"timeline-header\"><span class=\"time\">"
+                +"등록된 식단이 없습니다.</span></h3></div></li>");
+
                 console.log("----notLastPage = false로 변경----")
                 notLastPage = false;
         }else{
@@ -463,7 +483,7 @@
             var template = Handlebars.compile(source);
             //console.dir(result);
             var html = template(dietList);
-            $('#dietTimeLine').append(html);
+            $('#dietTimeLine').prepend(html);
         }
     }
     getDietList(1);
@@ -473,11 +493,12 @@
         if(answer){
             console.log("삭제");
             $.ajax({
-                url: serverPath+"diet/"+deitNo+"/deleteDiet.do",
-                dataType: "json"
+                url: serverPath+"diet/"+dietNo+"/deleteDiet.do"
             }).done(function (result) {
                 if(result==="success"){
                     alert("삭제완료!");
+
+                    $("li#dietNo"+dietNo).remove();
                 }
             });
         }else{

@@ -2145,8 +2145,8 @@ a:focus {
 .timeline > li > .timeline-item > .time {
   color: #999;
   float: right;
-  padding: 10px;
-  font-size: 12px;
+  padding: 7px;
+  font-size: 15px;
 }
 .timeline > li > .timeline-item > .timeline-header {
   margin: 0;
@@ -3119,6 +3119,7 @@ table.text-center th {
 .mailbox-attachments li {
   float: left;
   width: 200px;
+  height: 250px;
   border: 1px solid #eee;
   margin-bottom: 10px;
   margin-right: 10px;
@@ -3134,6 +3135,7 @@ table.text-center th {
 }
 .mailbox-attachment-info {
   padding: 10px;
+  height:75px;
   background: #f4f4f4;
 }
 .mailbox-attachment-size {
@@ -3148,10 +3150,11 @@ table.text-center th {
 }
 .mailbox-attachment-icon.has-img {
   padding: 0;
+  height: 175px;
 }
 .mailbox-attachment-icon.has-img > img {
-  max-width: 100%;
-  height: auto;
+  width: 200px;
+  height: 175px;
 }
 /*
  * Page: Lock Screen
