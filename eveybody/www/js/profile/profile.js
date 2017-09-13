@@ -11,6 +11,7 @@ var profile = (function () {
             profileModule.bindEvent();
             profileModule.alarm();
             profileModule.showProfile();
+            profileModule.waterChart();
         },
         bindEvent: function () {
             // 알림 설정
@@ -178,6 +179,29 @@ var profile = (function () {
                 },
                 method: "post"
             }).done();
+        },
+        /* 물 그래프 */
+        waterChart: function () {
+            var waterdata = {
+                datasets: [{
+                    data: ["15", "16"],
+                    backgroundColor: ['#09f5f0', '#e2e1e1']
+                }],
+                labels: ["마신 물", "마셔아 할 물"]
+            };
+            new Chart(
+                $("#waterCnt"),
+                {
+                    type: 'doughnut',
+                    data: waterdata,
+                    options: {
+                        responsive: true,
+                        legend: {position: false},
+                        title: {display: false},
+                        animation: {animateScale: true, animateRotate: true}
+                    }
+                }
+            );
         }
     };
 

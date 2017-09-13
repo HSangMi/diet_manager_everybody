@@ -1,6 +1,8 @@
 var friend = (function () {
     var urlList = {
         "contextPath": "http://192.168.0.16:8000/friend/",
+        "profile": "profile.do",
+        "contextProfilePath": "http://192.168.0.16:8000/user/setting/",
         "autocomplete": "autocomplete.do",
         "list": "list.do",
         "request": "request.do",
@@ -60,7 +62,7 @@ var friend = (function () {
             var friendId = $("#searchIdTxt").val();
 
             if(friendId === $loginId) {
-                console.log("내가 나랑 친구한다고?..");
+                console.log("혹시.. 왕따?...");
                 /* 처리 해줄 것.. */
                 return ;
             }
@@ -119,14 +121,46 @@ var friend = (function () {
                 },
                 type: "post"
             }).done(friendModule.list);
-        }
+        },
+        /* 친구 정보 보기 */
+        detail: function (friendId) {
+            $.ajax({
+                url: urlList.contextProfilePath + urlList.profile,
+                dataType: "json",
+                async: false,
+                method: "post",
+                data: {
+                    userId : friendId
+                }
+            }).done(function (result) {
+                var source = $("#friend-detail-template").html();
+                var template = Handlebars.compile(source);
 
+                var data = result.userInfo;
+                data.friendCnt = result.friendCnt;
+
+                Handlebars.registerHelper("setProfileImg", function (userId) {
+                    return notification.setFriendPhoto(userId);
+                });
+
+                Handlebars.registerHelper("setAddBtn", function (userId) {
+                    /* 이미 친구일 경우 처리 */
+                    return "친구추가";
+                });
+
+                var html = template(data);
+                $("#profileRow").after(html);
+
+                $("#friendInfo").modal();
+            });
+        }
     };
 
     friendModule.init();
 
     return {
         list: friendModule.list,
-        delete: friendModule.delete
+        delete: friendModule.delete,
+        detail: friendModule.detail
     }
 })();
