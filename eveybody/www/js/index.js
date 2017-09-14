@@ -143,6 +143,9 @@ var app = {
                     self.location="view/carousel.html";
                 }
             }
+        }else {
+            window.sessionStorage.setItem("recentDate", new Date().getTime() * 1000);
+            self.location="view/main/main.html";
         }
 
         this.receivedEvent('deviceready');

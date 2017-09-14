@@ -2255,6 +2255,9 @@ a:focus {
   background-color: #3c8dbc;
   border-color: #367fa9;
 }
+.btn-primary.foodNameLabel {
+  max-width: 180px;
+}
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.hover {
