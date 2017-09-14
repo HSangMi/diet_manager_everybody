@@ -334,7 +334,7 @@
                     alert("수정 완료!");
 
                     var editLiTag = $("li#dietNo"+editDietNo).parents("li");
-                    var tagId = editLiTag.children("div").children("span").attr("id")
+                    var tagId = editLiTag.children("div").children("span").attr("id");
                      $.ajax({
                         url: serverPath+"diet/getDietByDpNo.do",
                         data:{
@@ -368,30 +368,29 @@
                     alert("삭제완료!");
 
                     if($("li#dietNo"+dietNo).parent().children("li").length === 1){
-                        console.log($("li#dietNo"+dietNo).parent());
-                        console.log($("li#dietNo"+dietNo).parents("li"));
-                        console.log($("li#dietNo"+dietNo).parents("li")[0]);
-//                        console.log($("li#dietNo"+dietNo).parents("li").next("li"));
-//                        console.log($("li#dietNo"+dietNo).parent("li")[0].next("li"));
-//                        console.log($("li#dietNo"+dietNo).parent("li")[0].prev("li"));
 
                         var timeLi = $("li#dietNo"+dietNo).parents("li");
                         var dateLi = timeLi.prev("li");
                         timeLi[0].remove();
-
-
-
-            console.log( dateLi.prevObject);
-            console.log( dateLi[0]);
-                        console.log( dateLi.next("li"));
-                        console.log( dateLi.next("li")[0]);
-                        console.log( dateLi.next("li")[0].className);
                         if(dateLi.next("li")[0].className ==="time-label"||dateLi.next("li")[0].id ==="lastTimeline"){
                            dateLi[0].remove();
                         }
 
                     }else{
-                        $("li#dietNo"+dietNo).remove();
+                        var delLiTag = $("li#dietNo"+dietNo).parents("li");
+                        var tagId = delLiTag.children("div").children("span").attr("id");
+                        $.ajax({
+                            url: serverPath+"diet/getDietByDpNo.do",
+                            data:{
+                                dpNo:tagId
+                            },
+                            async : false
+                        }).done(function (result) {
+                            var source = $("#li-list").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(result);
+                            $('li#'+tagId).html(html);
+                        });
                     }
                 }
             });
@@ -430,11 +429,11 @@
     var notLastPage = true;
     function getDietList(dietPageNo){
         console.log("==========getDietList 호출================")
-        console.log("로그인아이디 : "+getLoginId());
+        console.log("로그인아이디 : "+getLoginId);
         if(notLastPage){
             console.log("===========마지막 페이지가 아니라면 ajax호출  ======dietPageNo : "+dietPageNo);
             $.ajax({
-                url: serverPath+"diet/"+getLoginId()+"/"+ dietPageNo +"/dietList.do",
+                url: serverPath+"diet/"+getLoginId+"/"+ dietPageNo +"/dietList.do",
                 dataType: "json"
                }).done(makeDietList).fail(function (err) {
                    console.log("에러..");
