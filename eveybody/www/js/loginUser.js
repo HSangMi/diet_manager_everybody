@@ -1,20 +1,38 @@
 $(document.body).on("click", "a.scroll1", function () {
-    $("a.scroll1").click(function () {
+    // $("a.scroll1").click(function () {
         $("div.form--login").hide();
         $("div.form--signup").show();
 
-    });
+    // });
 });
 
 $(document.body).on("click", "a.scroll2", function () {
-    $("a.scroll2").click(function () {
+    // $("a.scroll2").click(function () {
         $("div.form--signup").hide();
         $("div.form--login").show();
-    });
+    // });
+});
+//
+$(document.body).on("click", "button.modal1", function () {
+
+    $("input#id").val("");
+    $("input#pw").val("");
+
+    $("input#joinId").val("");
+    $("input#joinName").val("");
+    $("input#joinPw").val("");
+    $("input#joinPwConfirm").val("");
+    $("input#botName").val("");
+    $("input[name='botMode']:radio[value='0']").prop("checked", "true");
+
+    $("div.form--signup").hide();
+    $("div.form--signup2").hide();
+    $("div.form--login").show();
 });
 
+
 $(document.body).on("click", "a.loginBtn", function () {
-    console.log("로그인 버튼누름")
+    console.log("로그인 버튼누름");
 
     var userId = $("input#id").val();
     var pw = $("input#pw").val();
@@ -45,33 +63,54 @@ $(document.body).on("click", "a.loginBtn", function () {
             //window.location.reload();
         }
     });
+
+});
+
+$(document.body).on("click", "a.nextBtn", function () {
+   if($("input#joinId").val()===""){
+       alert("이메일을 입력해주세요");
+   }else if($("input#joinName").val()===""){
+        alert("이름(별명)을 입력해주세요");
+   }else if($("input#joinPw").val()==="" || $("input#joinPwConfirm").val()===""){
+        alert("비밀번호를 입력해주세요");
+   }else if($("input#joinPw").val() !== $("input#joinPwConfirm").val()){
+       alert("비밀번호가 일치하지 않습니다.");
+   }else {
+       $("div.form--signup").hide();
+       $("div.form--signup2").show();
+   }
 });
 
 $(document.body).on("click", "a.joinBtn", function () {
-    $('a.joinBtn').on('click', function (event) {
+    // $('a.joinBtn').on('click', function (event) {
         console.log("회원가입 버튼누름");
-        console.log($("input#joinId").val(), $("input#joinPw").val());
+        // console.log($("input#joinId").val(), $("input#joinPw").val());
         $.ajax({
             url: "http://192.168.0.16:8000/user/signIn.do",
             data: {
                 userId: $("input#joinId").val(),
                 pw: $("input#joinPw").val(),
-                name: $("input#joinName").val()
+                name: $("input#joinName").val(),
+                botName: $("input#botName").val(),
+                mode:$("input[name='botMode']:checked").val()
             },
             type: "POST",
             crossDomain: true
         }).done(function (result) {
             console.dir(result);
             if (result === 'success') {
-                alert("회원가입성공 성공!");
+                alert("EveryBody에 오신걸 환영합니다!");
                 $("div.form--signup").hide();
+                $("div.form--signup2").hide();
                 $("div.form--login").show();
-                $(".modal2").click();
+                $(".modal1").click();
             } else {
                 alert("회원가입하는데 오류가 발생했습니다. 다시 시도해주세요.");
             }
         });
-    });
+
+
+    // });
 });
 
 
@@ -109,7 +148,7 @@ var getLoginId = function () {
 
 
 $(document.body).on("click", "ul>li>a#loginBtn", function () {
-    $("ul>li>a#loginBtn").click(function () {
+    // $("ul>li>a#loginBtn").click(function () {
 
         if (this.innerHTML === "Logout") {
             $.ajax({
@@ -126,6 +165,6 @@ $(document.body).on("click", "ul>li>a#loginBtn", function () {
                 getLoginId();
             });
         }
-    });
+    // });
 });
 
