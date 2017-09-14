@@ -66,10 +66,10 @@ var app = {
                                  }).done(function (result) {
                                      console.log("성공");
                                      console.log(result);
-                                     location.replace("view/mybody/myBody.html");
+                                     location.replace("view/mybody/profileprofile.html");
                                  }).fail(function (err) {
                                      console.dir(err);
-                                     location.replace("view/mybody/myBody.html");
+                                     location.replace("view/mybody/profileprofile.html");
                                  });
                              }, 1000);
                              console.log("3333");
@@ -120,7 +120,7 @@ var app = {
         if(checkMobileDevice()){    // 폰
             var userId = window.localStorage.getItem("user");
             var recentDate = window.localStorage.getItem("recentDate");
-            // self.location = "view/mybody/myBody.html";
+            // self.location = "view/mybody/profileprofile.html";
 
             console.log(userId);
             console.log(recentDate);
