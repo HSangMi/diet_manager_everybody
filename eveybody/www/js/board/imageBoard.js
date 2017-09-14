@@ -50,22 +50,20 @@ var imageBoard = (function () {
                 var regex = new RegExp('\\b' + paramInfo[0] + '\\b=([0-9]+)');
                 renewURL = renewURL.replace(regex, paramInfo[0] + "=" + paramInfo[1]);
             }
-            /*
-            renewURL = renewURL.replace(/\?boardNo=([0-9]+)/gi, '');
 
-            renewURL += '?boardNo=' + boardNo;
-             */
-            history.pushState(null, null, renewURL);
+            history.pushState({test: $("div#tipBoardForm").html()}, null, renewURL);
         },
         /* 게시글 목록 */
         pageList: function (pageNo) {
             $.ajax({
                 url: urlList.contextPath + pageNo + "/" + urlList.list,
-                dataType: "json"
-            }).done(imageBoardModule.makePageList);
-            imageBoardModule.modifyURL("pageNo=" + pageNo);
+                dataType: "json",
+                async: false
+            }).done(function (result) {
+                imageBoardModule.makePageList(result, pageNo);
+            });
         },
-        makePageList: function (result) {
+        makePageList: function (result, pageNo) {
             var data = result.list;
             var temp = result.fileList;
 
@@ -89,6 +87,7 @@ var imageBoard = (function () {
 
             var html = template(data);
             $("#boardArea").append(html);
+            imageBoardModule.modifyURL("pageNo=" + pageNo);
         },
         /* 무한 스크롤 */
         infiniteScroll: function () {
@@ -133,7 +132,6 @@ var imageBoard = (function () {
         },
         /* 상세글 보기 */
         detail: function (boardNo) {
-            imageBoardModule.modifyURL("boardNo=" + boardNo);
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.detail,
                 data: {
@@ -175,6 +173,9 @@ var imageBoard = (function () {
                 });
                 var html = template(data);
                 $("div#tipBoardForm").html(html);
+
+                imageBoardModule.modifyURL("boardNo=" + boardNo);
+
                 // 로그인 한 유저 이이디로 바꾸기.....
                 comment.commentWriteForm("user1");
             });
@@ -253,3 +254,13 @@ var imageBoard = (function () {
 })();
 
 $(window).scroll(imageBoard.infiniteScroll);
+
+
+function test () {
+    $(window).on('popstate', function(event) {
+        var data = event.originalEvent.state;
+        $("div#tipBoardForm").html(data.test);
+    });
+}
+
+test();

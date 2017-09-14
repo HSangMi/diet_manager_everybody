@@ -7,7 +7,8 @@ var friend = (function () {
         "list": "list.do",
         "request": "request.do",
         "confirm": "confirm.do",
-        "delete": "delete.do"
+        "delete": "delete.do",
+        "friendCheck": "friend-check.do"
     };
     var friendModule = {
         init: function () {
@@ -15,7 +16,7 @@ var friend = (function () {
             var template = Handlebars.compile(source);
 
             var html = template();
-            $("div#addFriend").html(html);
+            $("div#profileRow").after(html);
 
             friendModule.bindEvent();
             friendModule.autoComplete();
@@ -144,6 +145,9 @@ var friend = (function () {
                 });
 
                 Handlebars.registerHelper("setAddBtn", function (userId) {
+                    if(friendModule.friendCheck() === 1) {
+
+                    }
                     /* 이미 친구일 경우 처리 */
                     return "친구추가";
                 });
@@ -151,7 +155,25 @@ var friend = (function () {
                 var html = template(data);
                 $("#profileRow").after(html);
 
+                friendModule.friendCheck(friendId);
                 $("#friendInfo").modal();
+            });
+        },
+        friendCheck: function (friendId) {
+            $("#friendAddBtn").attr("disabled", true);
+            $.ajax({
+                url: urlList.contextPath + urlList.friendCheck,
+                data: {
+                    userId: $loginId,
+                    friendId: friendId
+                },
+                type: "post",
+                async: false
+            }).done(function (result) {
+                console.log(result);
+                if(result === "친구 아님") {
+                    $("#friendAddBtn").attr("disabled", false);
+                }
             });
         }
     };

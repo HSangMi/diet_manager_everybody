@@ -4,14 +4,17 @@ var profile = (function () {
         "profile": "profile.do",
         "update": "update.do",
         "alarm": "alarm.do",
-        "updateAlarm": "updateAlarm.do"
+        "updateAlarm": "updateAlarm.do",
+        "water": "water.do",
+        "updateWater": "update-water.do",
+        "deleteWater": "delete-water.do"
     };
     var profileModule = {
         init: function () {
             profileModule.bindEvent();
             profileModule.alarm();
             profileModule.showProfile();
-            profileModule.waterChart();
+            profileModule.waterChart($loginId);
         },
         bindEvent: function () {
             // 알림 설정
@@ -43,6 +46,13 @@ var profile = (function () {
                 } else {
                     $("#profile_Edit").attr("src", URL.createObjectURL(f));
                 }
+            });
+            // 물 그래프
+            $(document.body).on("click", "#drinkBtn", function () {
+                profileModule.updateWater($loginId);
+            });
+            $(document.body).on("click", "#noDrinkBtn", function () {
+                profileModule.deleteWater($loginId);
             });
         },
         /* 사용자 프로필 설정 */
@@ -181,15 +191,56 @@ var profile = (function () {
             }).done();
         },
         /* 물 그래프 */
-        waterChart: function () {
+        waterChart: function (userId) {
+            $.ajax({
+                url: urlList.contextPath + urlList.water,
+                dataType: "json",
+                method: "post",
+                data: {
+                    userId: userId
+                }
+            }).done(profileModule.drawChart);
+        },
+        updateWater: function (userId) {
+            $.ajax({
+                url: urlList.contextPath + urlList.updateWater,
+                dataType: "json",
+                method: "post",
+                data: {
+                    userId: userId
+                }
+            }).done(profileModule.drawChart);
+        },
+        deleteWater: function (userId) {
+            $.ajax({
+                url: urlList.contextPath + urlList.deleteWater,
+                dataType: "json",
+                method: "post",
+                data: {
+                    userId: userId
+                }
+            }).done(profileModule.drawChart);
+        },
+        drawChart: function (result) {
+            if(profileModule.waterChartObj) {
+                profileModule.waterChartObj.destroy();
+                $("#waterCnt").remove();
+                $("div.chart").append("<canvas id=\"waterCnt\" width=\"590\" height=\"295\"></canvas>");
+            }
+            // 총 마실 물
+            var fixWater = 10;
+
+            var data = [result];
+            var needWater = fixWater - result;
+            data.push( needWater < 0 ? 0 : needWater);
             var waterdata = {
                 datasets: [{
-                    data: ["15", "16"],
+                    data: data,
                     backgroundColor: ['#09f5f0', '#e2e1e1']
                 }],
                 labels: ["마신 물", "마셔아 할 물"]
             };
-            new Chart(
+            profileModule.waterChartObj = new Chart(
                 $("#waterCnt"),
                 {
                     type: 'doughnut',
@@ -202,6 +253,7 @@ var profile = (function () {
                     }
                 }
             );
+            $("#drinkCnt").html(result);
         }
     };
 

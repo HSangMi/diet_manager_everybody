@@ -77,24 +77,26 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-tint text-aqua"></i> Water a Day</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
                         </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove">
+                            <i class="fa fa-times"></i>
                         </button>
                     </div>
                 </div>
                 <div class="box-body">
                     <div class="text-center">
                         <div class="chart">
-                            <span style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; ">
-                            3
-                            </span>
+                            <span id="drinkCnt" style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; "></span>
                             <canvas id="waterCnt" width="590" height="295"></canvas>
                         </div>
                     </div>
                 </div>
-                <!-- /.box-body -->
+                <div>
+                    <button type="button" id="drinkBtn">마셨다</button>
+                    <button type="button" id="noDrinkBtn">안마셨다</button>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
@@ -102,11 +104,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-users text-green"></i> 그룹관리 </h3>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-
-                </div>
-                <!-- /.box-body -->
+                <div class="box-body"></div>
             </div>
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -114,24 +112,10 @@
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
-
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <ul class="list-group list-group-unbordered" id="friendListUl">
-
-                        <li class="list-group-item">
-                            <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
-                                     alt="user image">
-                                <span class="username">
-                                    <a href="#">Jonathan Burke Jr.</a>
-                                    <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                                 </span>
-                            </div>
-                            <!-- /.user-block -->
-                        </li>
-                    </ul>
+                    <ul class="list-group list-group-unbordered" id="friendListUl"></ul>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
@@ -155,7 +139,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="addFriend" role="dialog"></div>
 </section>
 
 <script id="profile-template" type="text/x-handlebars-template">
@@ -254,23 +237,25 @@
 </script>
 
 <script id="friend-add-template" type="text/x-handlebars-template">
-    <div class="modal-dialog">
-        <div class="modal-content" style="margin-top: 30%">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">친구 추가</h4>
-            </div>
-            <div class="modal-body">
-                <p>아이디로 검색하기</p>
-                <div class="input-group" id ="searchDiv">
-                    <input type="text" name="search" id="searchIdTxt" class="form-control" placeholder="Search">
-                    <div class="input-group-btn">
-                        <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-plus"></i></button>
+    <div class="modal fade" id="addFriend" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">친구 추가</h4>
+                </div>
+                <div class="modal-body">
+                    <p>아이디로 검색하기</p>
+                    <div class="input-group" id ="searchDiv">
+                        <input type="text" name="search" id="searchIdTxt" class="form-control" placeholder="Search">
+                        <div class="input-group-btn">
+                            <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-plus"></i></button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalCloseBtn">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="modalCloseBtn">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -294,15 +279,29 @@
     <div class="modal fade" id="friendInfo" role="dialog">
         <div class="modal-dialog modal-resize">
             <div class="modal-content" style="margin-top: 30%">
-                <div class="modal-body">
+                <ul class="dropdown-menu modal-body" id="friend-profile-modal">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <img class="user-img-circle" src="{{setProfileImg userId}}" alt="user image">
-                    <h3 class="user-name-area">{{name}}</h3>
-                    <p class="text-muted text-center">{{statMsg}}</p>
-                </div>
-                <button type="button">{{friendCnt}}</button>
-                <button type="button">{{setAddBtn userId}}</button>
-                <button type="button">채팅하기</button>
+                    <li class="user-header" id="friend-profile-header">
+                        <img src="{{setProfileImg userId}}" class="img-circle" id="friend-profile-img" alt="User Image">
+                        <p id="userInfo">
+                            {{name}}
+                            <small id="stat-msg">{{statMsg}}</small>
+                        </p>
+                    </li>
+                    <li class="user-body" id="friend-btn-div">
+                        <div class="row">
+                            <div class="col-xs-4 text-center">
+                                <a href="#" class="friend-btn-a">{{friendCnt}}</a>
+                            </div>
+                            <div class="col-xs-4 text-center" >
+                                <a href="#" class="friend-btn-a" id="friendAddBtn">친구추가</a>
+                            </div>
+                            <div class="col-xs-4 text-center">
+                                <a href="#" class="friend-btn-a">채팅하기</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
