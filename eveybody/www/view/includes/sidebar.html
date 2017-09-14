@@ -36,7 +36,6 @@
 
     function pageLoad (pageUrl, layer) {
         $("div.pagelayer").hide();
-        console.log(openPage);
         if(!openPage[layer]) {
             openPage[layer] = 1;
             $("#" + layer).load(pageUrl, function () {
