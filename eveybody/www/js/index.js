@@ -66,10 +66,10 @@ var app = {
                                  }).done(function (result) {
                                      console.log("성공");
                                      console.log(result);
-                                     location.replace("view/mybody/profileprofile.html");
+                                     location.replace("view/mybody/profile.html");
                                  }).fail(function (err) {
                                      console.dir(err);
-                                     location.replace("view/mybody/profileprofile.html");
+                                     location.replace("view/mybody/profile.html");
                                  });
                              }, 1000);
                              console.log("3333");

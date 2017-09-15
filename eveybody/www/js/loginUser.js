@@ -125,7 +125,7 @@ function checkMobileDevice() {
 }
 
 
-var getLoginId = function () {
+var getLoginId = (function () {
     var userId = "";
     if (!checkMobileDevice()) {
         userId = window.sessionStorage.getItem("user");
@@ -144,7 +144,7 @@ var getLoginId = function () {
             .attr("data-target", "#myModal1");
     }
     return userId;
-};
+})();
 
 
 $(document.body).on("click", "ul>li>a#loginBtn", function () {
