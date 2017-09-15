@@ -7,8 +7,6 @@ var file = (function () {
         "delete": "delete.do"
     };
     var fileModule = {
-        bindEvent: function () {
-        },
         preview: function (path, sysName) {
             return urlList.imagePath + path + "/" + sysName;
         }

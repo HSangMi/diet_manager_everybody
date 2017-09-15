@@ -52,10 +52,6 @@ var comment = (function () {
             var data = {};
             data = result.list;
 
-            console.log("***********");
-            console.dir(result);
-            console.log("***********");
-
             Handlebars.registerHelper("setRegDate", function(regDate) {
                 var date = new Date(regDate);
                 return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " "
@@ -77,7 +73,6 @@ var comment = (function () {
             var html = template(data);
             if (!data.length) {
                 html = "";
-                console.log("댓글 없다!");
                 /*
                 // 첫 번째 페이지가 아니면 이전 페이지로 다시 호출해야 함...
                 if(result.page.pageNo != 1) {

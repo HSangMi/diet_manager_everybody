@@ -51,7 +51,7 @@ var imageBoard = (function () {
                 renewURL = renewURL.replace(regex, paramInfo[0] + "=" + paramInfo[1]);
             }
 
-            history.pushState({test: $("div#tipBoardForm").html()}, null, renewURL);
+            history.pushState({prePage: $("div#tipBoardForm").html()}, null, renewURL);
         },
         /* 게시글 목록 */
         pageList: function (pageNo) {
@@ -255,12 +255,6 @@ var imageBoard = (function () {
 
 $(window).scroll(imageBoard.infiniteScroll);
 
-
-function test () {
-    $(window).on('popstate', function(event) {
-        var data = event.originalEvent.state;
-        $("div#tipBoardForm").html(data.test);
-    });
-}
-
-test();
+$(window).on('popstate', function(event) {
+    $("div#tipBoardForm").html(event.originalEvent.state.prePage);
+});

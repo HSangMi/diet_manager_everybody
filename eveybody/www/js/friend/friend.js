@@ -59,12 +59,18 @@ var friend = (function () {
             });
         },
         /* 친구 요청 */
-        request: function () {
-            var friendId = $("#searchIdTxt").val();
+        request: function (friendId) {
+            console.log("오면 안되는데.. 올듯..");
+            if(!friendId) {
+                friendId = $("#searchIdTxt").val();
+            }
 
             if(friendId === $loginId) {
                 console.log("혹시.. 왕따?...");
-                /* 처리 해줄 것.. */
+                /* 
+                    자신에게 친구 요청하는 경우
+                    처리 해줄 것.. 
+                 */
                 return ;
             }
 
@@ -159,6 +165,7 @@ var friend = (function () {
                 $("#friendInfo").modal();
             });
         },
+        /* 친구 여부 */
         friendCheck: function (friendId) {
             $("#friendAddBtn").attr("disabled", true);
             $.ajax({
@@ -175,6 +182,40 @@ var friend = (function () {
                     $("#friendAddBtn").attr("disabled", false);
                 }
             });
+        },
+        /* 쪽지 modal 띄우기 */
+        sendMsgForm: function (friendId) {
+            $("#friendProfileClose").click();
+            var data = {};
+            data.friendId = friendId;
+
+            var source = $("#send-msg-template").html();
+            var template = Handlebars.compile(source);
+
+            var html = template(data);
+            $("#profileRow").after(html);
+
+            $("#sendMsg").modal();
+        },
+        sendMsg: function (friendId) {
+            /*
+            $.ajax({
+                url: urlList.contextPath + urlList.request,
+                data: {
+                    userId: $loginId,
+                    friendId: friendId,
+                    content: content
+                },
+                type: "post"
+            }).done(function (result) {
+                if(result === "존재하지 않는 아이디 입니다") {
+                    console.log("잘못된 아이디");
+                    return ;
+                }
+                $("#modalCloseBtn").click();
+                $("#searchIdTxt").val("");
+            });
+            */
         }
     };
 
@@ -183,6 +224,9 @@ var friend = (function () {
     return {
         list: friendModule.list,
         delete: friendModule.delete,
-        detail: friendModule.detail
+        detail: friendModule.detail,
+        request: friendModule.request,
+        sendMsgForm: friendModule.sendMsgForm,
+        sendMsg: friendModule.sendMsg,
     }
 })();
