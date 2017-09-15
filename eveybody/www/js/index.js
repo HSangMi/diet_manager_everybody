@@ -13,7 +13,6 @@ var app = {
     onDeviceReady: function() {
         console.log("test");
         var albumIds = [];
-
         // if(loginFlag) {
          function sendPhoto(recentTime, userId) {
              Photos.collections({"collectionMode": "ALBUMS"},
@@ -86,35 +85,45 @@ var app = {
 
         $("a.loginBtn").click(function(){
             console.log("로그인 버튼누름");
+            FCMPlugin.getToken(
+                function(token){
+                    console.log("token :"+ token);
+                    var userId = $("input#id").val();
+                    var pw = $("input#pw").val();
+                    $.ajax({
+                        url: "http://192.168.0.16:8000/user/login.do",
+                        data: {
+                            userId: userId,
+                            pw: pw,
+                            token: token
+                        },
+                        type: "POST",
+                        crossDomain: true,
+                        async:false
+                    }).done(function (result) {
+                        if (result === 'fail') {
+                            alert("입력하신 정보가 존재하지 않습니다.");
+                        } else {
+                            alert("로그인 성공!");
+                            window.localStorage.setItem("user", userId);
+                            var recentDate = window.localStorage.getItem("recentDate");
 
-            var userId = $("input#id").val();
-            var pw = $("input#pw").val();
+                            $(".modal1").click();
+                            if(recentDate !== null && recentDate !== ""){
+                                loginFlag = true;
+                                // 사진 전송
+                                sendPhoto(recentDate, userId);
+                            }
+                        }
+                    });
 
-            $.ajax({
-                url: "http://192.168.0.16:8000/user/login.do",
-                data: {
-                    userId: userId,
-                    pw: pw
+
+
                 },
-                type: "POST",
-                crossDomain: true,
-                async:false
-            }).done(function (result) {
-                if (result === 'fail') {
-                    alert("입력하신 정보가 존재하지 않습니다.");
-                } else {
-                    alert("로그인 성공!");
-                    window.localStorage.setItem("user", userId);
-                    var recentDate = window.localStorage.getItem("recentDate");
-
-                    $(".modal1").click();
-                    if(recentDate !== null && recentDate !== ""){
-                        loginFlag = true;
-                        // 사진 전송
-                        sendPhoto(recentDate, userId);
-                    }
+                function(err){
+                    console.log('error retrieving token: ' + err);
                 }
-            });
+            );
         });
 
         if(checkMobileDevice()){    // 폰
