@@ -2,6 +2,7 @@ var comment = (function () {
     var urlList = {
         "contextPath": "http://192.168.0.16:8000/board/comment/",
         "list": "list.do",
+        "childList": "child-list.do",
         "write": "write.do",
         "update": "update.do",
         "delete": "delete.do"
@@ -9,12 +10,6 @@ var comment = (function () {
     var commentModule = {
         bindEvent: function () {
 
-        },
-        urlParsing: function (name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-            var results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         },
         /* 댓글 쓰기 폼 */
         commentWriteForm: function (userId) {
@@ -37,25 +32,41 @@ var comment = (function () {
             $.ajax({
                 url: urlList.contextPath + urlList.list,
                 data: {
-                    boardNo: commentModule.urlParsing("boardNo"),
+                    boardNo: urlProcess.urlParsing("boardNo"),
                     pageNo: pageNo
                 },
                 dataType: "json"
             }).done(commentModule.makePageList);
         },
         makePageList: function (result) {
+            result.parent = 1;
+            $("#commentListForm").html(commentModule.commentForm(result));
+
+            // 대댓글 확인
+            for(var i = 0; i < result.list.length; i++) {
+                var commentNo = result.list[i].commentNo;
+                $("#add-child-comment-" + commentNo).html("답글 달기");
+                commentModule.childList(commentNo);
+            }
+        },
+        commentForm: function (result) {
             var source = $("#comment-list-template").html();
             var template = Handlebars.compile(source);
 
             var cnoList = [];
 
-            var data = {};
-            data = result.list;
+            var data = result.list;
 
             Handlebars.registerHelper("setRegDate", function(regDate) {
+                var monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+
                 var date = new Date(regDate);
-                return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " "
+                return  monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " "
                     + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            });
+            Handlebars.registerHelper("setUserImg", function(userId) {
+                return profileImg.setUserImg(userId);
             });
             Handlebars.registerHelper("updateAndDelete", function(commentNo, content, userId) {
                 var resultTag = "";
@@ -71,6 +82,7 @@ var comment = (function () {
                 return resultTag;
             });
             var html = template(data);
+
             if (!data.length) {
                 html = "";
                 /*
@@ -81,11 +93,7 @@ var comment = (function () {
                 }
                  */
             }
-
-            $("#commentListForm").html(html);
-            // makeRecomment(cnoList);
-
-            // makeCommentPageLink(result.pageResult, board.boardNo);
+            return html;
         },
         makePageNav: function (page) {
             var html = "";
@@ -125,14 +133,31 @@ var comment = (function () {
                 $("#pagination").html(html);
             }
         },
+        /* 대댓글 처리 */
+        childList: function (commentNo) {
+            $.ajax({
+                url : urlList.contextPath + urlList.childList,
+                data : {
+                    commentNo : commentNo
+                },
+                dataType : "json",
+                type : "post"
+            }).done(function (result) {
+                var data = result.list;
+                if(data.length > 0) {
+                    $("#row" + result.list[0].preCommentNo + " div.media-body").append(commentModule.commentForm(result));
+                }
+            });
+        },
         /* 댓글 쓰기 */
         write: function () {
             var content = $("#commentWriteForm textarea[name='commentContent']");
             $.ajax({
                 url : urlList.contextPath + urlList.write,
                 data : {
-                    boardNo : parseInt(commentModule.urlParsing("boardNo")),
-                    content : content.val()
+                    boardNo : parseInt(urlProcess.urlParsing("boardNo")),
+                    content : content.val(),
+                    userId : getLoginId()
                 },
                 dataType : "json",
                 type : "post"
@@ -142,6 +167,7 @@ var comment = (function () {
     };
     return {
         commentWriteForm: commentModule.commentWriteForm,
-        write: commentModule.write
+        write: commentModule.write,
+        pageList: commentModule.pageList
     }
 })();

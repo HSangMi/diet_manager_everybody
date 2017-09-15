@@ -116,6 +116,8 @@ var imageBoard = (function () {
             var fd = new FormData();
             fd.append("title", $("input#title").val());
             fd.append("content", $("textarea#content").val());
+            fd.append("userId", getLoginId());
+
             for (var i = 0; i < fileEle.files.length; i++) {
                 fd.append("attachFile" + i, fileEle.files[i]);
             }

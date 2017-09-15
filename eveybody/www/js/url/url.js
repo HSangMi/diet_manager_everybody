@@ -6,10 +6,17 @@ var urlProcess = (function () {
             renewURL += pageUrl;
 
             history.pushState({prePage: $("div#" + layer).html(), sideMenu: $("aside.main-sidebar").html(), divName: layer}, null, renewURL);
+        },
+        urlParsing: function (name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            var results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
     };
     return {
-        modifyURL: urlModule.modifyURL
+        modifyURL: urlModule.modifyURL,
+        urlParsing: urlModule.urlParsing
     }
 })();
 

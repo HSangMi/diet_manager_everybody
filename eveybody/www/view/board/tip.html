@@ -22,6 +22,7 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <!-- CUSTOM STYLES -->
     <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/tip-board.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/detail-content.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/comment.css" rel="stylesheet" type="text/css"/>
 
@@ -48,8 +49,7 @@
         <h2> 운동 및 다이어트 tips (에디터만 글올리기 가능)</h2>
         <div id="tipBoardForm">
             <div class="masonry-grid" id="boardArea">
-                <div class="masonry-grid-sizer col-xs-6 col-sm-6 col-md-1"></div>
-                <div class="masonry-grid-item col-xs-6 col-sm-6 col-md-4"></div>
+                <div class="masonry-grid-sizer col-xs-6 col-sm-6 col-md-1" style="display: none;"></div>
             </div>
             <div id="buttonArea">
                 <button type="button" id="showWriteForm">글쓰기</button>
@@ -96,9 +96,9 @@
 <script id="list-template" type="text/x-handlebars-template">
     {{#each .}}
     <div class="masonry-grid-item col-xs-6 col-sm-6 col-md-4">
-        <div class="work">
+        <div class="work img-list">
             <div class="work-overlay">
-                <img class="full-width img-responsive" src="{{setAttachFileImage path sysName}}" alt="Portfolio Image">
+                <img id="list-img" class="full-width img-responsive" src="{{setAttachFileImage path sysName}}" alt="Portfolio Image">
             </div>
             <div class="work-content">
                 <h3 class="color-white margin-b-5"><span>{{title}}<span><span class="text-uppercase margin-l-20">{{userId}}</span></h3>
@@ -184,31 +184,24 @@
 
 <script id="comment-list-template" type="text/x-handlebars-template">
     {{#each .}}
-    <div class="comment">
-        <!-- Comment Avatar -->
-        <div class="comment-avatar">
-            <img src="../../img/logo2.png">
+    <div class="media" id="row{{commentNo}}">
+        <div class="media-left">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
-        <!-- Comment Box -->
-        <div class="comment-box" id="row{{commentNo}}">
-            <div class="comment-text">{{content}}</div>
-            <div class="comment-footer">
-                <div class="comment-info">
-                    <span class="comment-author">{{userId}}</span>
-                    <span class="comment-date">{{setRegDate regDate}}</span>
-                </div>
-                <div class="comment-actions">
-                    <a href="#">Reply</a>
-                </div>
-            </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{userId}} <small><i>Posted on {{{setRegDate regDate}}}</i></small></h4>
+            <p>{{content}}</p> <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
         </div>
     </div>
     {{/each}}
 </script>
 
+<script src="../../js/url/url.js"></script>
+<script src="../../js/friend/profile-img.js"></script>
 <script src="../../js/board/comment.js"></script>
 <script src="../../js/board/file.js"></script>
 <script src="../../js/board/imageBoard.js"></script>
+<script src="../../js/loginUser.js"></script>
 
 </body>
 <!-- END BODY -->
