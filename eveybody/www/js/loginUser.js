@@ -157,13 +157,14 @@ $(document.body).on("click", "ul>li>a#loginBtn", function () {
                 type: "POST",
                 crossDomain: true
             }).done(function (result) {
-                alert("로그아웃 되었습니다.");
+
                 if (!checkMobileDevice()) {
                     window.sessionStorage.removeItem("user");
                 } else {
                     window.localStorage.removeItem("user");
                 }
-                //getLoginId();
+                alert("로그아웃 되었습니다.");
+                getLoginId();
             });
         }
     // });
