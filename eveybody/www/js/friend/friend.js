@@ -60,7 +60,6 @@ var friend = (function () {
         },
         /* 친구 요청 */
         request: function (friendId) {
-            console.log("오면 안되는데.. 올듯..");
             if(!friendId) {
                 friendId = $("#searchIdTxt").val();
             }
