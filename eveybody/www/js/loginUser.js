@@ -56,11 +56,11 @@ $(document.body).on("click", "a.loginBtn", function () {
                 window.localStorage.setItem("user", userId);
             }
 
-            var id = getLoginId();
-            console.log("id = " + id);
-            console.log(result);
+            // var id = getLoginId();
+            // console.log("id = " + id);
+            // console.log(result);
             $(".modal1").click();
-            //window.location.reload();
+            window.location.reload();
         }
     });
 
@@ -125,7 +125,8 @@ function checkMobileDevice() {
 }
 
 
-var getLoginId = (function () {
+// 이걸 함수로 만든게 serve로 실행했을때 ul>li>a를 못찾아서!! ***********
+var getLoginId = function () {
     var userId = "";
     if (!checkMobileDevice()) {
         userId = window.sessionStorage.getItem("user");
@@ -144,7 +145,7 @@ var getLoginId = (function () {
             .attr("data-target", "#myModal1");
     }
     return userId;
-})();
+};
 
 
 $(document.body).on("click", "ul>li>a#loginBtn", function () {
@@ -162,7 +163,7 @@ $(document.body).on("click", "ul>li>a#loginBtn", function () {
                 } else {
                     window.localStorage.removeItem("user");
                 }
-                getLoginId();
+                //getLoginId();
             });
         }
     // });

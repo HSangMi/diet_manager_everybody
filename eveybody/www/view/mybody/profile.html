@@ -223,7 +223,7 @@
         $.ajax({
             url: "http://192.168.0.16:8000/user/updateRecentDate.do",
             data: {
-                userId: getLoginId,
+                userId: $loginId,
                 recentDate: date
             },
             type: "POST",
@@ -233,6 +233,8 @@
             window.localStorage.setItem("recentDate", date.getTime()*1000);
         });
     }
+
+
 </script>
 
 <script id="profile-template" type="text/x-handlebars-template">
