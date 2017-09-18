@@ -5,3 +5,7 @@
 .img-list {
     margin: 30px;
 }
+
+h3.title {
+    display: inline;
+}

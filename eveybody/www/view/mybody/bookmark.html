@@ -7,19 +7,18 @@
             <div class="nav-tabs-custom" style="cursor: move;">
                 <!-- Tabs within a box -->
                 <ul class="nav nav-tabs pull-right ui-sortable-handle">
-                    <li class="active"><a href="#dietTips_bookmark" data-toggle="tab">Diet Tips</a></li>
+                    <li class="active"><a href="#dietTips_bookmark" onclick="bookmark.getBookmark('tip');" data-toggle="tab">Diet Tips</a></li>
                     <li><a href="#workout_bookmark" data-toggle="tab">Workout Video</a></li>
                     <li class="pull-left header"><i class="fa fa-star text-yellow"></i> BookMark</li>
                 </ul>
                 <div class="tab-content no-padding">
                     <!-- 다이어트 팁 북마크 -->
                     <div class="chart tab-pane active" id="dietTips_bookmark" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-
-                      <!-- 한개 블럭-->
+                        <!-- 한개 블럭-->
                         <div class="attachment-block clearfix">
                             <img class="attachment-img" width="200px" height="200px" src="../../dist/img/photo1.png" alt="Attachment Image">
                             <div class="attachment-pushed">
-                                <h4 class="attachment-heading"><a href="http://www.lipsum.com/">[팁]자주 물을 마셔야 건강에 좋다?</a></h4>
+                                <h4 class="attachment-heading"><a href="http://www.lipsum.com/">[팁]{{title}}</a></h4>
                                 <div class="attachment-text">
                                     Description about the attachment can be placed here.
                                     Lorem Ipsum is simply dummy text of the printing and typesetting industry... <a href="#">more</a>
@@ -27,19 +26,7 @@
                             </div>
                         </div>
                         <!-- /.한개블럭 -->
-                      <!-- 한개 블럭-->
-                        <div class="attachment-block clearfix">
-                            <img class="attachment-img" width="200px" height="200px" src="../../dist/img/photo1.png" alt="Attachment Image">
-                            <div class="attachment-pushed">
-                                <h4 class="attachment-heading"><a href="http://www.lipsum.com/">[팁]자주 물을 마셔야 건강에 좋다?</a></h4>
-                                <div class="attachment-text">
-                                    Description about the attachment can be placed here.
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry... <a href="#">more</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.한개블럭 -->
-                      <!-- 한개 블럭-->
+                        <!-- 한개 블럭-->
                         <div class="attachment-block clearfix">
                             <img class="attachment-img" width="200px" height="200px" src="../../dist/img/photo1.png" alt="Attachment Image">
                             <div class="attachment-pushed">
@@ -50,14 +37,9 @@
                             </div>
                         </div>
                         <!-- /.한개블럭 -->
-
-
                     </div>
                     <!-- 다이어트 동영상 북마크-->
                     <div class="chart tab-pane" id="workout_bookmark" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-
-
-
                     </div>
                 </div>
 
@@ -70,3 +52,16 @@
     <!-- end row-->
 </section>
 <!-- /.content -->
+
+<script id="bookmark-tip-template" type="text/x-handlebars-template">
+    <div class="attachment-block clearfix">
+        <img class="attachment-img" width="200px" height="200px" src="../../dist/img/photo1.png" alt="Attachment Image">
+        <div class="attachment-pushed">
+            <h4 class="attachment-heading"><a href="http://www.lipsum.com/">[팁]자주 물을 마셔야 건강에 좋다?</a></h4>
+            <div class="attachment-text">
+                Description about the attachment can be placed here.
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry... <a href="#">more</a>
+            </div>
+        </div>
+    </div>
+</script>

@@ -20,29 +20,24 @@ var imageBoard = (function () {
             });
             // 게시글 수정
             $(document.body).on("click", "#showUpdateForm", function () {
-                imageBoardModule.updateForm(imageBoardModule.urlParsing("boardNo"));
+                imageBoardModule.updateForm(urlProcess.urlParsing("boardNo"));
             });
             $(document.body).on("click", "#updateBtn", function () {
-                imageBoardModule.update(imageBoardModule.urlParsing("boardNo"));
+                imageBoardModule.update(urlProcess.urlParsing("boardNo"));
             });
             // 게시글 삭제
             $(document.body).on("click", "#deleteBtn", function () {
-                imageBoardModule.delete(imageBoardModule.urlParsing("boardNo"));
+                imageBoardModule.delete(urlProcess.urlParsing("boardNo"));
             });
-            return imageBoardModule.urlParsing("boardNo");
-        },
-        urlParsing: function (name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-            var results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+
+            return urlProcess.urlParsing("boardNo");
         },
         /* url 변경 */
         modifyURL: function (param) {
             var renewURL = location.href;
             var paramInfo = param.split("=");
 
-            if ((imageBoardModule.urlParsing(paramInfo[0])) === "") {
+            if ((urlProcess.urlParsing(paramInfo[0])) === "") {
                 renewURL = renewURL.substring(0, renewURL.indexOf("?"));
                 renewURL += "?" + paramInfo[0] + "=" + paramInfo[1];
             }
@@ -91,14 +86,14 @@ var imageBoard = (function () {
         },
         /* 무한 스크롤 */
         infiniteScroll: function () {
-            if(imageBoardModule.urlParsing("boardNo") !== "") {
+            if(urlProcess.urlParsing("boardNo") !== "") {
                 return ;
             }
             var sh = $(window).scrollTop() + $(window).height();
             var dh = $(document).height();
 
             if (sh >= dh - 10) {
-                imageBoardModule.pageList(parseInt(imageBoardModule.urlParsing("pageNo")) + 1);
+                imageBoardModule.pageList(parseInt(urlProcess.urlParsing("pageNo")) + 1);
             }
         },
         /* 게시글 작성 */
@@ -139,7 +134,8 @@ var imageBoard = (function () {
                 data: {
                     boardNo: boardNo
                 },
-                dataType: "json"
+                dataType: "json",
+                async: false
             }).done(function (result) {
                 var data = result.board;
                 data.fileList = result.fileList;
@@ -155,21 +151,7 @@ var imageBoard = (function () {
                     var date = new Date(regDate);
                     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                 });
-                Handlebars.registerHelper("setLike", function (boardNo) {
-                    var likeCnt = 0;
-                    var isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>취소</button>";
-                    $.ajax({
-                        url: urlList.contextPath + boardNo + "/" + urlList.setLike,
-                        dataType: "json",
-                        async: false
-                    }).done(function (result) {
-                        likeCnt = "<span>" + result.likeCnt + "</span>";
-                        if (result.isLike === 0) {
-                            isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>추천</button>";
-                        }
-                    });
-                    return likeCnt + isLike;
-                });
+
                 Handlebars.registerHelper("setAttachFileImage", function(path, sysName) {
                     return file.preview(path, sysName);
                 });
@@ -178,30 +160,23 @@ var imageBoard = (function () {
 
                 imageBoardModule.modifyURL("boardNo=" + boardNo);
 
-                // 로그인 한 유저 이이디로 바꾸기.....
-                comment.commentWriteForm("user1");
+                comment.commentWriteForm(getLoginId());
+                imageBoardModule.setRecomBtn(boardNo);
+                bookmark.setBookmark(boardNo);
             });
         },
-        /* 추천 */
-        doLike: function (boardNo) {
-            console.log("doLike 호출");
-            var isLike = $("#likeBtn").text();
-            $.ajax({
-                url: urlList.contextPath + boardNo + "/" + urlList.like,
-                dataType: "json",
-                data: {
-                    isLike: isLike
-                },
-                async: false
-            }).done(function (result) {
-                $("#likeCnt > span").text(result);
-                if (isLike === "추천") {
-                    $("#likeBtn").text("취소");
-                }
-                else {
-                    $("#likeBtn").text("추천");
-                }
+        setRecomBtn: function (boardNo) {
+            var data = {};
+            data.boardNo = boardNo;
+            var source = $("#recommend-btn-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper("setLike", function (boardNo) {
+                return recommend.setLike(boardNo);
             });
+
+            var html = template(data);
+            $("div.wow.fadeInLeft.animated").append(html);
         },
         /* 수정 */
         updateForm: function (boardNo) {
@@ -239,7 +214,7 @@ var imageBoard = (function () {
         }
     };
 
-    var boardNo = imageBoardModule.urlParsing("boardNo");
+    var boardNo = urlProcess.urlParsing("boardNo");
     if(boardNo !== "") {
         imageBoardModule.detail(boardNo);
     }

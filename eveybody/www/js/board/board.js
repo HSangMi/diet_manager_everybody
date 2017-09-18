@@ -214,16 +214,17 @@ var board = (function () {
         },
         /* 추천 */
         doLike: function (boardNo) {
-            console.log("doLike 호출");
             var isLike = $("#likeBtn").text();
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.like,
                 dataType: "json",
                 data: {
-                    isLike: isLike
+                    isLike: isLike,
+                    userId: getLoginId()
                 },
                 async: false
             }).done(function (result) {
+                /*
                 $("#likeCnt > span").text(result);
                 if (isLike === "추천") {
                     $("#likeBtn").text("취소");
@@ -231,6 +232,7 @@ var board = (function () {
                 else {
                     $("#likeBtn").text("추천");
                 }
+                */
             });
         },
         /* 수정 */

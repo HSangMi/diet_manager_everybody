@@ -18,13 +18,18 @@
     <link href="../../vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
     <!-- THEME STYLES -->
     <link href="../../css/layout.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.css">
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
     <!-- CUSTOM STYLES -->
     <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/tip-board.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/detail-content.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/comment.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/recom-btn.css" rel="stylesheet" type="text/css"/>
 
     <!-- Include Script Source -->
     <script src="../../js/include/handlebars-v4.0.10.js"></script>
@@ -141,7 +146,8 @@
             <div class="row">
                 <div class="col-sm-4 sm-margin-b-50">
                     <div class="wow fadeInLeft animated" data-wow-duration=".3" data-wow-delay=".3s" id="detail-content">
-                        <h3>{{title}}</h3>
+                        <h3 class="title">{{title}}</h3>
+                        <a href="javascript:;" class="bookmark" onclick="bookmark.add({{boardNo}});"><i class="fa fa-star text-yellow"></i></a>
                         <p>{{content}}</p>
                         <a class="link" href="#">Read More</a>
                     </div>
@@ -150,7 +156,6 @@
             <!--// end row -->
         </div>
     </div>
-
     <div id="commentArea">
         <table id="commentWriteForm">
         </table>
@@ -160,6 +165,21 @@
     <div id="pageArea">
         <ul class="pagination" id="pagination">
         </ul>
+    </div>
+</script>
+
+<script id="recommend-btn-template" type="text/x-handlebars-template">
+    <div class="middle-wrapper">
+        <div class="like-wrapper">
+            <a class="like-button" onclick="recommend.doLike('{{boardNo}}');">
+                <span class="like-icon">
+                    <div class="heart-animation-1"></div>
+                    <div class="heart-animation-2"></div>
+                </span>
+                Like
+            </a>
+            <span>{{setLike boardNo}}</span>
+        </div>
     </div>
 </script>
 
@@ -200,6 +220,8 @@
 <script src="../../js/friend/profile-img.js"></script>
 <script src="../../js/board/comment.js"></script>
 <script src="../../js/board/file.js"></script>
+<script src="../../js/board/recommend.js"></script>
+<script src="../../js/board/bookmark.js"></script>
 <script src="../../js/board/imageBoard.js"></script>
 <script src="../../js/loginUser.js"></script>
 
