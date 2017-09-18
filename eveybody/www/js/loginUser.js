@@ -66,20 +66,20 @@ $(document.body).on("click", "a.loginBtn", function () {
 
 });
 
-$(document.body).on("click", "a.nextBtn", function () {
+function checkJoin() {
    if($("input#joinId").val()===""){
-       alert("이메일을 입력해주세요");
+       alert("이메일을 입력해주세요.");
    }else if($("input#joinName").val()===""){
-        alert("이름(별명)을 입력해주세요");
+        alert("이름(별명)을 입력해주세요.");
    }else if($("input#joinPw").val()==="" || $("input#joinPwConfirm").val()===""){
-        alert("비밀번호를 입력해주세요");
+        alert("비밀번호를 입력해주세요.");
+   }else if($("input#chatbotName").val()===""){
+       alert("챗봇이름을 입력해주세요.");
    }else if($("input#joinPw").val() !== $("input#joinPwConfirm").val()){
        alert("비밀번호가 일치하지 않습니다.");
-   }else {
-       $("div.form--signup").hide();
-       $("div.form--signup2").show();
    }
-});
+
+}
 
 $(document.body).on("click", "a.joinBtn", function () {
     // $('a.joinBtn').on('click', function (event) {
@@ -91,11 +91,12 @@ $(document.body).on("click", "a.joinBtn", function () {
                 userId: $("input#joinId").val(),
                 pw: $("input#joinPw").val(),
                 name: $("input#joinName").val(),
-                botName: $("input#botName").val(),
-                mode:$("input[name='botMode']:checked").val()
+                botName: $("input#botName").val()
+                // mode:$("input[name='botMode']:checked").val()
             },
             type: "POST",
-            crossDomain: true
+            crossDomain: true,
+            beforeSend:checkJoin()
         }).done(function (result) {
             console.dir(result);
             if (result === 'success') {

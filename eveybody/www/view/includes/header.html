@@ -113,12 +113,6 @@
                      </p>-->
                 </div>
                 <hr />
-                <!--<p>Or you can Login with one of the following</p>-->
-                <!--<div class="social">-->
-                    <!--<a href="" id ="facebook_id_login"  class="facebook"><i class="icon-facebook"></i></a> <a-->
-                        <!--href="#" id ="naver_id_login" class="twitter">&lt;!&ndash;<i class="icon-twitter"></i>&ndash;&gt;</a> <a-->
-                        <!--href="javascript:checkLoginStateWithKakao()" id="kakao-login-btn" class="google"><i class="icon-google-plus"></i></a>-->
-                <!--</div>-->
                 <p>
                     Don't have an account? <br><a class="scroll1">Register Now &raquo;</a>
                 </p>
@@ -136,19 +130,16 @@
                         <input id="joinPw" class="inputbox password" type="password" placeholder="Password" required />
                         <input id="joinPwConfirm" class="inputbox password" type="password" placeholder="Confirm Password" required />
 
+                        <p> <br>please input your chotbot namme</p>
+                        <input id="chatbotName" class="inputbox name" type="text"  placeholder="Your Chatbot Name" />
+
                         <p>
-                            <a href="#" class="button nextBtn">Next <i class="icon-rocket"></i></a>
+                            <a href="#" class="button joinBtn">Create my Account<i class="icon-rocket"></i></a>
                         </p>
                         <!--<input id="" type="button" class="button" value="Sign up" />-->
                     </form>
                 </div>
                 <hr />
-                <!--<p>Or you can Signup with one of the following</p>-->
-                <!--<div class="social">-->
-                <!--<a href="javascript:checkJoinStateWithFace()" class="facebook"><i class="icon-facebook"></i><span></span></a>-->
-                <!--<a href="#" class="twitter"><i class="icon-twitter"></i><span></span></a>-->
-                <!--<a href="javascript:checkJoinStateWithKakao()" class="google"><i class="icon-google-plus"></i><span></span></a>-->
-                <!--</div>-->
                 <p>
                     <!--<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>-->
                     <a class="scroll2">&laquo;&laquo;Login here</a>
@@ -156,7 +147,7 @@
             </div>
 
 
-            <div class="form form--signup2">
+            <!--<div class="form form&#45;&#45;signup2">
                 <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
                 <h1 class="alpha">Sign Up!</h1>
                 <p>당신을 도와 줄 챗봇을 만들어 보세요.</p>
@@ -174,21 +165,14 @@
                         <p>
                             <a href="#" class="button joinBtn">Create my Account <i class="icon-rocket"></i></a>
                         </p>
-                        <!--<input id="" type="button" class="button" value="Sign up" />-->
                     </form>
                 </div>
                 <hr />
-                <!--<p>Or you can Signup with one of the following</p>-->
-                <!--<div class="social">-->
-                <!--<a href="javascript:checkJoinStateWithFace()" class="facebook"><i class="icon-facebook"></i><span></span></a>-->
-                <!--<a href="#" class="twitter"><i class="icon-twitter"></i><span></span></a>-->
-                <!--<a href="javascript:checkJoinStateWithKakao()" class="google"><i class="icon-google-plus"></i><span></span></a>-->
-                <!--</div>-->
                 <p>
-                    <!--<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>-->
+                    &lt;!&ndash;<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>&ndash;&gt;
                     <a class="scroll3">&laquo;Login here</a>
                 </p>
-            </div>
+            </div>-->
 
         </div>
 
@@ -201,7 +185,7 @@
 <script type="application/javascript">
     (function(){
         $("div.form--signup").hide();
-        $("div.form--signup2").hide();
+//        $("div.form--signup2").hide();
 
         var pathName = location.pathname.substring(17);
         switch(pathName){
@@ -220,5 +204,7 @@
                 $("ul li:nth-child(5)>a").addClass("active");
                 break;
         }
+
+        getLoginId();
     })();
 </script>

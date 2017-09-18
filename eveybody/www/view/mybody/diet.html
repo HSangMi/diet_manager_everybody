@@ -41,7 +41,15 @@
                     <br>
 
                     <p style="display:inline-block;">먹은 양 </p>
-                    <input type="number" id="amount" value="1" name="amount" min="0.5" max="3" step="0.5" onchange="checkAmount();">
+                    <select name="amount" id="amount" class="itemList" onchange="checkAmount(this.value);">
+                        <option value="0.5">0.5</option>
+                        <option value="1.0">1</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2.0">2.0</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3.0">3.0</option>
+                    </select>
+                    <!--<input type="number" id="amount" value="1" name="amount" min="0.5" max="3" step="0.5" onchange="checkAmount();">-->
                     <p style="display:inline-block;" id="amountKcal"></p>
 
                     <br><br>
@@ -106,13 +114,14 @@
 <script id="Diet-list-temp" type="text/x-handlebars-template">
     {{#each .}}
 
-    {{#ifDpNoCheckClone dpNo}}
+    {{#ifTimeCheckClose date}}
     <!--</ul>-->
     </div>
     <div class="timeline-footer"></div>
     </div>
     </li>
-    {{/ifDpNoCheckClone}}
+    {{/ifTimeCheckClose}}
+
 
     {{#ifCheckDate date}}
     <li class="time-label">
@@ -123,16 +132,16 @@
     {{/ifCheckDate}}
 
 
-    {{#ifDpNoCheck dpNo}}
-    <li id="{{dpNo}}">
+    {{#ifTimeCheck date}}
+    <li id="{{makeDpNo dpNo}}">
         <i class="fa fa-cutlery bg-blue"></i>
         <div class="timeline-item">
-            <span class="time" id="{{dpNo}}">{{{makeTotalKcal dpNo}}}</span>
+            <span class="time" id="{{makeDpNo dpNo}}">{{{makeTotalKcal dpNo}}}</span>
             <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>{{prettifyTime date}}</span></h3>
             <div class="timeline-body">
                 <ul class="mailbox-attachments clearfix">
 
-    {{/ifDpNoCheck}}
+    {{/ifTimeCheck}}
 
                     <li id="dietNo{{dietNo}}" >
                         <span class="mailbox-attachment-icon has-img"><img src="data:image/jpeg;base64,{{dataUrl}}" alt="Attachment" ></span>
@@ -147,6 +156,12 @@
                              </span>
                         </div>
                     </li>
+                    {{#if @last}}
+            </div>
+            <div class="timeline-footer"></div>
+        </div>
+    </li>
+    {{/if}}
     {{/each}}
 </script>
 
@@ -155,7 +170,7 @@
     {{#if @first}}
     <i class="fa fa-cutlery bg-blue"></i>
     <div class="timeline-item">
-        <span class="time" id="{{dpNo}}">{{{makeTotalKcal dpNo}}}</span>
+        <span class="time" id="{{makeDpNo dpNo}}">{{{makeTotalKcal dpNo}}}</span>
         <h3 class="timeline-header"><span class="time"><i class="fa fa-clock-o"></i>{{prettifyTime date}}</span></h3>
         <div class="timeline-body">
         <ul class="mailbox-attachments clearfix">
@@ -184,8 +199,9 @@
 
 
 <script type="application/javascript">
-    var $checkDpNo;
     var $checkDate;
+    var $checkTime;
+    var todayCnt = 0;
     Handlebars.registerHelper("prettifyDate", function(timeValue) {
         var dateObj = new Date(timeValue);
         var year = dateObj.getFullYear();
@@ -195,8 +211,14 @@
     });
     Handlebars.registerHelper("prettifyTime", function(timeValue) {
         var dateObj = new Date(timeValue);
-        var hour = dateObj.getHours();
-        var minute = dateObj.getMinutes();
+        var hour = dateObj.getHours()+"";
+        if(hour.length === 1){
+            hour = "0" + hour;
+        }
+        var minute = dateObj.getMinutes()+"";
+        if(minute.length === 1){
+            minute = "0" + minute;
+        }
         return hour+":"+minute;
     });
     Handlebars.registerHelper("makeFoodName",function (fixFood) {
@@ -208,17 +230,23 @@
        return (food.kcal * amount) + " Kcal";
     });
     Handlebars.registerHelper("makeTotalKcal",function (dpNo) {
-       var totalKcal = $.ajax({
+        if(dpNo === 0){
+            dpNo = (dpNo+""+todayCnt);
+        }
+        var totalKcal = $.ajax({
             url: serverPath+"diet/getTotalKcal.do",
             data:{
-                dpNo:dpNo
+                dpNo:dpNo,
+                userId:$loginId
             },
             async : false
         }).done(function (result) {
             return result;
         }).responseText;
+
         return "총 " + totalKcal + "Kcal";
     });
+
     Handlebars.registerHelper('ifCheckDate', function(date,options) {
         var dateObj = new Date(date);
         var year = dateObj.getFullYear();
@@ -232,18 +260,37 @@
             return options.inverse(this);
         }
     });
-    Handlebars.registerHelper('ifDpNoCheck', function(dpNo,options){
-        if($checkDpNo!==dpNo||$checkDpNo === undefined){
-            $checkDpNo = dpNo;
-            return options.fn(this);
-        }else if($checkDpNo === dpNo){
-            return options.inverse(this);
+
+    Handlebars.registerHelper('makeDpNo', function(dpNo) {
+        if(dpNo === 0){
+            return dpNo + "" + todayCnt;
+        }else{
+            return dpNo;
         }
     });
-    Handlebars.registerHelper('ifDpNoCheckClone', function(dpNo,options){
-        if($checkDpNo!==dpNo&&$checkDpNo!==undefined){
+
+    Handlebars.registerHelper('ifTimeCheck', function(date,options){
+        var dateObj = new Date(date);
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        var timeString =  ""+ hour + minute ;
+        if($checkTime===undefined||$checkTime !== timeString){
+            $checkTime = timeString;
+            todayCnt++;
             return options.fn(this);
-        }else if($checkDpNo === dpNo){
+        }else if($checkTime === timeString){
+            return options.inverse(this);
+        }
+
+    });
+    Handlebars.registerHelper('ifTimeCheckClose', function(date,options){
+        var dateObj = new Date(date);
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        var timeString =  ""+ hour + minute ;
+        if($checkTime!==timeString&&$checkTime!==undefined){
+            return options.fn(this);
+        }else if($checkTime === timeString){
             return options.inverse(this);
         }
     });
@@ -295,23 +342,20 @@
         "click",
         "a.foodNameTag",	//매개변수 : 이벤트를 걸 엘리먼트
         function(e){
-//            console.log(e);
-//            console.log(this);
             $(this).addClass("btn-primary").siblings().removeClass("btn-primary");
-            checkAmount();
+            checkAmount($("select#amount :selected").val());
         }
     );
 
-//    $("input#amount").onchange(
-        function checkAmount(){
-        var amount = $("input#amount").val();
+    // 먹은 양 옆의 칼로리
+    function checkAmount(value){
         var no = $("a.foodNameTag.btn-primary")[0].id.substring(1);
         var food = getFood(no);
-        $("p#amountKcal").html((amount*food.kcal)+" kcal");
+        $("p#amountKcal").html((value*food.kcal)+" kcal");
     }
-//    );
+
+    // 모달창 닫을 때
     $("button.close").click(function(){
-        console.log("값초기화");
         $("input#foodSearchInput").val("");
     });
 
@@ -319,7 +363,7 @@
         var answer =  confirm("수정하시겠습니까?");
         var fixFood = $("div#labelsDiv > a.btn-primary")[0];
         var fixFoodNo = fixFood.id.substring(1);
-        var amount = $("input#amount").val();
+        var amount = $("select#amount :selected").val();
 
         if(answer){
             console.log("수정");
@@ -335,10 +379,15 @@
 
                     var editLiTag = $("li#dietNo"+editDietNo).parents("li");
                     var tagId = editLiTag.children("div").children("span").attr("id");
+                    console.log(tagId);
+                    if(tagId.substring(0,1)==="0"){
+                        todayCnt = tagId.substring(1);
+                    }
                      $.ajax({
                         url: serverPath+"diet/getDietByDpNo.do",
                         data:{
-                            dpNo:tagId
+                            dpNo:tagId,
+                            userId:$loginId
                         },
                         async : false
                     }).done(function (result) {
@@ -379,10 +428,14 @@
                     }else{
                         var delLiTag = $("li#dietNo"+dietNo).parents("li");
                         var tagId = delLiTag.children("div").children("span").attr("id");
+                        if(tagId.substring(0,1)==="0"){
+                            todayCnt = tagId.substring(1);
+                        }
                         $.ajax({
                             url: serverPath+"diet/getDietByDpNo.do",
                             data:{
-                                dpNo:tagId
+                                dpNo:tagId,
+                                userId:$loginId
                             },
                             async : false
                         }).done(function (result) {
@@ -415,26 +468,28 @@
         //전체문서길이랑 스크롤 내린게 비슷할때 또 로딩해라..
 
         if(sh >= dh - 10){
-            console.log("=======무한스크롤 로딩=======");
-            dietPageNo++;
-           getDietList(dietPageNo);
-               // $("#imglist").append(
-               //     $("#imglist>div:first-child").clone()
-               // );
-                //실제로는 db에서 가져와야할 부분..
+            if(notLastPage) {
+                dietPageNo++;
+                console.log("=======무한스크롤 로딩=======");
+//                if (dietPageNo <= 3) {
+                    getDietList(dietPageNo);
+//                }
             }
+         }
     });
 
     var dietPageNo = 1;
     var notLastPage = true;
+    var todayPage = false;
     function getDietList(dietPageNo){
-        console.log("==========getDietList 호출================")
-        console.log("로그인아이디 : "+$loginId);
+//        console.log("==========getDietList 호출================")
+//        console.log("로그인아이디 : "+$loginId);
         if(notLastPage){
-            console.log("===========마지막 페이지가 아니라면 ajax호출  ======dietPageNo : "+dietPageNo);
+//            console.log("===========마지막 페이지가 아니라면 ajax호출  ======dietPageNo : "+dietPageNo);
             $.ajax({
                 url: serverPath+"diet/"+$loginId+"/"+ dietPageNo +"/dietList.do",
-                dataType: "json"
+                dataType: "json",
+                async:false
                }).done(makeDietList).fail(function (err) {
                    console.log("에러..");
                     console.dir(err);
@@ -466,7 +521,7 @@
         });
     });
 
-    function makeDietList(result){
+    function makeDietList(result) {
 //        console.log("===============makeDietList 호출됨==============");
         var todayList = result.todayList;
         var dietList = result.dietList;
@@ -476,20 +531,34 @@
 //        console.dir(dietList);
 //        console.log("=====================");
 
-        if(todayList.length ===0 && dietList.length===0 && dietPageNo === 1){
+        if (todayList.length === 0 && dietList.length === 0 && dietPageNo === 1) {
 //            console.log("======= 더이상 등록된 식단이 없는경우==========")
             $("#dietTimeLine").append("<li><div class=\"timeline-item\"><h3 class=\"timeline-header\"><span class=\"time\">"
-                +"등록된 식단이 없습니다.</span></h3></div></li><li><i class=\"fa fa-clock-o bg-gray\"></i></li>");
+                + "등록된 식단이 없습니다.</span></h3></div></li><li><i class=\"fa fa-clock-o bg-gray\"></i></li>");
 
 //                console.log("----notLastPage = false로 변경----")
             notLastPage = false;
-        }else{
+        }
+//        else if(todayList.length === 0 && deitList.length !== 0){
+//            // 오늘 먹은것만 없을때
+//        }
+        else if (todayList.length !== 0 && todayPage === false) {
+            todayPage = true;
+            dietPageNo = 0;
+            $("li#lastTimeline").remove();
+
+            var source = $("#Diet-list-temp").html();
+            var template = Handlebars.compile(source);
+            var html = template(todayList);
+            html += "<li id='lastTimeline'><i class=\"fa fa-clock-o bg-gray\"></i></li>";
+            $('#dietTimeLine').append(html);
+        }
+        else{
 //            console.log("=======등록된식단이있다....====== 템플릿적용==========")
             $("li#lastTimeline").remove();
 
             var source = $("#Diet-list-temp").html();
             var template = Handlebars.compile(source);
-            //console.dir(result);
             var html = template(dietList);
             html += "<li id='lastTimeline'><i class=\"fa fa-clock-o bg-gray\"></i></li>";
             $('#dietTimeLine').append(html);

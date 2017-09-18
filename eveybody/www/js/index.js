@@ -110,7 +110,6 @@ var app = {
 
                             $(".modal1").click();
                             if(recentDate !== null && recentDate !== ""){
-                                loginFlag = true;
                                 // 사진 전송
                                 sendPhoto(recentDate, userId);
                             }
