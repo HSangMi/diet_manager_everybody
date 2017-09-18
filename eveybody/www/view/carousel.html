@@ -181,7 +181,7 @@
 <script src="../plugins/fastclick/fastclick.js"></script>
 <script src="../dist/js/app.min.js"></script>
 <script src="../dist/js/demo.js"></script>
-<script src="../js/loginUser.js" type="text/javascript"></script>
+<!--<script src="../js/loginUser.js" type="text/javascript"></script>-->
 <script type="application/javascript">
     (function(){
         $("div.form--login").hide();
@@ -203,75 +203,67 @@
         var userId = $("input#id").val();
         var pw = $("input#pw").val();
 
-        FCMPlugin.getToken(
-            function(token){
-                console.log("token :"+ token);
-                var userId = $("input#id").val();
-                var pw = $("input#pw").val();
-                $.ajax({
-                    url: "http://192.168.0.16:8000/user/login.do",
-                    data: {
-                        userId: userId,
-                        pw: pw,
-                        token: token
-                    },
-                    type: "POST",
-                    crossDomain: true,
-                    async:false
-                }).done(function (result) {
-                    if (result === 'fail') {
-                        alert("입력하신 정보가 존재하지 않습니다.");
-                    } else {
-                        // 처음 로그인한 유저가 아니라면 사진을 전송해야하는데....
-//                        var recentDate = window.localStorage.getItem("recentDate");
+//        FCMPlugin.getToken(
+//            function(token){
+//                console.log("token :"+ token);
+//                var userId = $("input#id").val();
+//                var pw = $("input#pw").val();
+//                $.ajax({
+//                    url: "http://192.168.0.16:8000/user/login.do",
+//                    data: {
+//                        userId: userId,
+//                        pw: pw,
+//                        token: token
+//                    },
+//                    type: "POST",
+//                    crossDomain: true,
+//                    async:false
+//                }).done(function (result) {
+//                    if (result === 'fail') {
+//                        alert("입력하신 정보가 존재하지 않습니다.");
+//                    } else {
+//                        // 처음 로그인한 유저가 아니라면 사진을 전송해야하는데....
+////                        var recentDate = window.localStorage.getItem("recentDate");
+////
+////                        if(recentDate !== null && recentDate !== ""){
+////                            // 사진 전송
+////                            app.receivedEvent.sendPhoto(recentDate, userId);
+////                        }
 //
-//                        if(recentDate !== null && recentDate !== ""){
-//                            // 사진 전송
-//                            app.receivedEvent.sendPhoto(recentDate, userId);
-//                        }
-
-                        window.localStorage.setItem("user", userId);
-                        window.localStorage.setItem("recentDate", new Date.getTime()*1000);
-                        alert("로그인 성공!");
-                        $(".modal1").click();
-                        location.replace("view/mybody/profile.html");
-
-                    }
-                });
-
-
-
-            },
-            function(err){
-                console.log('error retrieving token: ' + err);
-            }
-        );
-//        $.ajax({
-//            url: "http://192.168.0.16:8000/user/login.do",
-//            data: {
-//                userId: userId,
-//                pw: pw
+//                        window.localStorage.setItem("user", userId);
+//                        window.localStorage.setItem("recentDate", new Date.getTime()*1000);
+//                        alert("로그인 성공!");
+//                        $(".modal1").click();
+//                        location.replace("mybody/profile.html");
+//
+//                    }
+//                });
+//
+//
+//
 //            },
-//            type: "POST",
-//            crossDomain: true
-//        }).done(function (result) {
-//            if (result === 'fail') {
-//                alert("입력하신 정보가 존재하지 않습니다.");
-//            } else {
-//                alert("로그인 성공!");
-//                if (!checkMobileDevice()) {
-//                    window.sessionStorage.setItem("user", userId)
-//                } else {
-//                    window.localStorage.setItem("user", userId);
-//                }
-//
-//                var id = getLoginId();
-//                console.log("id = " + id);
-//                console.log(result);
-//                $(".modal1").click();
-//                location.replace("main/main.html");
+//            function(err){
+//                console.log('error retrieving token: ' + err);
 //            }
-//        });
+//        );
+        $.ajax({
+            url: "http://192.168.0.16:8000/user/login.do",
+            data: {
+                userId: userId,
+                pw: pw
+            },
+            type: "POST",
+            crossDomain: true
+        }).done(function (result) {
+            if (result === 'fail') {
+                alert("입력하신 정보가 존재하지 않습니다.");
+            } else {
+                alert("로그인 성공!");
+                window.sessionStorage.setItem("user", userId)
+                $(".modal1").click();
+                location.replace("mybody/profile.html");
+            }
+        });
     });
 
 

@@ -116,8 +116,6 @@ var app = {
                         }
                     });
 
-
-
                 },
                 function(err){
                     console.log('error retrieving token: ' + err);
@@ -128,20 +126,14 @@ var app = {
         if(checkMobileDevice()){    // 폰
             var userId = window.localStorage.getItem("user");
             var recentDate = window.localStorage.getItem("recentDate");
-            // self.location = "view/mybody/profileprofile.html";
 
             console.log(userId);
             console.log(recentDate);
 
             // 자동로그인 됐을 때
             if(userId !== null && userId !== ""){
-
-                // alert("자동로그인상태");
-                // 사진 전송
-                // local의 recentDate와 userId 넘겨주기
-                sendPhoto(1504234130000, userId);
-
-
+                sendPhoto(recentDate, userId);
+                // sendPhoto(1504234130000, userId);
             }
             // 자동로그인 안 됐을 때
             else{

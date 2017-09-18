@@ -334,7 +334,7 @@
         }
 
         $("#labelsDiv").html(html);
-        $("input#amount").val(amount);
+        $("select#amount").val(amount).prop("selected", true);
         $("#editDiet").modal();
     }
 
@@ -486,6 +486,8 @@
 //        console.log("로그인아이디 : "+$loginId);
         if(notLastPage){
 //            console.log("===========마지막 페이지가 아니라면 ajax호출  ======dietPageNo : "+dietPageNo);
+            console.log("로그인 id : ", $loginId, ", pagetNo : ", dietPageNo);
+
             $.ajax({
                 url: serverPath+"diet/"+$loginId+"/"+ dietPageNo +"/dietList.do",
                 dataType: "json",
