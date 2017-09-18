@@ -46,7 +46,6 @@
         <div class="row margin-b-40">
             <div class="col-sm-6">
                 <h2>Work out Write</h2>
-                <p>genre => 어깨 | 팔 | 복근 | 다리 | 전신 | 스트레칭</p>
             </div>
         </div>
         <!--// end row -->
@@ -55,7 +54,14 @@
             <div class="col-md-5 col-sm-7">
                 <form>
                     <div class="margin-b-10">
-                        <input type="text" class="form-control" placeholder="genre" id="genre">
+                        <select name="genre" id="genre" class="itemList">
+                            <option value="1">팔</option>
+                            <option value="2">어깨</option>
+                            <option value="3">복근</option>
+                            <option value="4">다리</option>
+                            <option value="5">전신</option>
+                            <option value="6">스트레칭</option>
+                        </select>
                     </div>
                     <div class="margin-b-10">
                         <input type="text" class="form-control" placeholder="title" id="title">
@@ -117,24 +123,24 @@
 
     $("button#writeBtn").click(function (){
         var genreVal = "";
-        var genre = $("input#genre").val();
+        var genre = $("select#genre :selected").val();
         switch(genre){
-            case "어깨":
+            case "1":
                 genreVal = "workout-1";
                 break;
-            case "팔":
+            case "2":
                 genreVal = "workout-2";
                 break;
-            case "복근":
+            case "3":
                 genreVal = "workout-3";
                 break;
-            case "다리":
+            case "4":
                 genreVal = "workout-4";
                 break;
-            case "전신":
+            case "5":
                 genreVal = "workout-5";
                 break;
-            case "스트레칭":
+            case "6":
                 genreVal = "workout-6";
                 break;
         }
