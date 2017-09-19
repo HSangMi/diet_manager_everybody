@@ -127,7 +127,7 @@
 
 <script id="workout-list" type="text/x-handlebars-template">
     {{#each .}}
-    <div class="col-sm-4 sm-margin-b-50">
+    <div class="col-sm-4 sm-margin-b-50" >
         <div class="bg-color-white margin-b-20">
             <div class="wow zoomIn animated" data-wow-duration=".3" data-wow-delay=".1s"
                  style="visibility: visible; animation-delay: 0.1s; animation-name: zoomIn;">
@@ -245,7 +245,7 @@
 
         if(sh >= dh - 10) {
             pageNo++;
-            loadList(0, pageNo);
+            loadList(genre, pageNo);
         }
     });
 </script>

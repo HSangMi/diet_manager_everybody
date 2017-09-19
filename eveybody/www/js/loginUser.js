@@ -91,7 +91,7 @@ $(document.body).on("click", "a.joinBtn", function () {
                 userId: $("input#joinId").val(),
                 pw: $("input#joinPw").val(),
                 name: $("input#joinName").val(),
-                botName: $("input#botName").val()
+                botName: $("input#chatbotName").val()
                 // mode:$("input[name='botMode']:checked").val()
             },
             type: "POST",
@@ -165,6 +165,7 @@ $(document.body).on("click", "ul>li>a#loginBtn", function () {
                     window.localStorage.removeItem("user");
                 }
                 alert("로그아웃 되었습니다.");
+                window.location.reload();
                 getLoginId();
             });
         }
