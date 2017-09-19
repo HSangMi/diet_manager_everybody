@@ -3,26 +3,52 @@ var comment = (function () {
         "contextPath": "http://192.168.0.16:8000/board/comment/",
         "list": "list.do",
         "childList": "child-list.do",
+        "select": "selectComment.do",
         "write": "write.do",
         "update": "update.do",
         "delete": "delete.do"
     };
     var commentModule = {
         bindEvent: function () {
-
+            $(document.body).on("click", ".media-body div a[id^='edit']", function () {
+                commentModule.commentUpdateForm(this.id.substring(4));
+            });
+            $(document.body).on("click", ".media-body div a[id^='del']", function () {
+                commentModule.commentDelete(this.id.substring(3));
+            });
+            $(document.body).on("click", ".add-child-comment > a:nth-child(1)", function () {
+                commentModule.childWriteForm(this.id);
+            });
+            $(document.body).on("click", ".add-child-comment > a:nth-child(2)", function () {
+                commentModule.childClose(this.id);
+            });
+            $(document.body).on("click", ".media-body div a[id^='update']", function () {
+                commentModule.commentUpdate(this.id.substring(6));
+            });
+            $(document.body).on("click", ".media-body div a[id^='cancel']", function () {
+                commentModule.commentCancel(this.id.substring(6));
+            });
         },
         /* 댓글 쓰기 폼 */
         commentWriteForm: function (userId) {
-            var source = $("#comment-write-template").html();
-            var template = Handlebars.compile(source);
+            if(userId !== null){
+                var source = $("#comment-write-template").html();
+                var template = Handlebars.compile(source);
 
-            var data = {};
-            data.userId = userId;
+                var data = {};
+                data.userId = userId;
 
-            var html = template(data);
+                Handlebars.registerHelper("setUserImg", function(userId) {
+                    return profileImg.setUserImg(userId);
+                });
+                var html = template(data);
 
-            $("#commentWriteForm").html(html);
-            commentModule.pageList(1);
+                $("#commentWriteForm").html(html);
+                commentModule.pageList(1);
+            }else{
+                $("#commentWriteForm").html("<p>로그인 후 사용가능합니다</p>");
+            }
+
         },
         /* 댓글 보기 */
         pageList: function (pageNo) {
@@ -45,7 +71,9 @@ var comment = (function () {
             // 대댓글 확인
             for(var i = 0; i < result.list.length; i++) {
                 var commentNo = result.list[i].commentNo;
-                $("#add-child-comment-" + commentNo).html("답글 달기");
+                var html = " <a id='"+commentNo+"'>답글 달기</a>";
+                html += "<a  id='"+commentNo+"' style='display:none;'>닫기</a>";
+                $("#add-child-comment-" + commentNo).html(html);
                 commentModule.childList(commentNo);
             }
         },
@@ -68,17 +96,12 @@ var comment = (function () {
             Handlebars.registerHelper("setUserImg", function(userId) {
                 return profileImg.setUserImg(userId);
             });
-            Handlebars.registerHelper("updateAndDelete", function(commentNo, content, userId) {
+            Handlebars.registerHelper("setEditDelBtn", function(userId, commentNo) {
                 var resultTag = "";
-                /*
-                cnoList.push(cno);
-                $.when($connectUserId).done(function (result1) {
-                    if (result1.userId == userId) {
-                        resultTag = "<a href='javascript:commentUpdateForm(" + cno + ", \"" + content + "\", \"" + userId + "\");'>update</a>"
-                                  + "<a href='javascript:commentDelete(" + cno + ");'>delete</a>";
-                    }
-                });
-                 */
+                if(userId === getLoginId()){
+                    resultTag += "<a class='link' id='edit"+commentNo+"' >수정</a> &nbsp; &nbsp; &nbsp;";
+                    resultTag += "<a class='link' id='del"+commentNo+"' >삭제</a>";
+                }
                 return resultTag;
             });
             var html = template(data);
@@ -163,11 +186,174 @@ var comment = (function () {
                 type : "post"
             }).done(commentModule.pageList);
             content.val("");
+        },
+        commentUpdateForm : function(commentNo){
+            $("div[id^='con'] textarea").remove();
+            $("div[id^='con'] p").show();
+
+            $("div[id^='btns'] div:nth-child(2)").remove();
+            $("div[id^='btns'] div:nth-child(1)").show();
+
+
+            var pTag = $("div#con"+commentNo);
+            var content = pTag.children("p").html();
+            var html = "<input class='form-control' id='editContent' value='"+content+"' required/>";
+            pTag.children("p").hide();
+            pTag.append(html);
+
+            html = "<div><a class='link' id='update"+commentNo+"' >저장</a> &nbsp; &nbsp; &nbsp;";
+            html += "<a class='link' id='cancel"+commentNo+"'>취소</a></div>";
+            $("div#btns"+commentNo+" div:nth-child(1)").hide();
+            $("div#btns"+commentNo).append(html);
+
+        },
+        commentUpdate : function(commentNo){
+            var answer = confirm("댓글을 수정하시겠습니까?");
+            if(answer){
+                $.ajax({
+                    url: urlList.contextPath + urlList.update,
+                    data: {
+                        commentNo : commentNo,
+                        content: $("input#editContent").val()
+                    },
+                    dataType: "json",
+                    async:false,
+                    type: "post"
+                }).done(function(result){
+                    if(result === 0) {
+                        commentModule.resetComment(commentNo);
+                    }else {
+                        commentModule.resetComment(result);
+                    }
+                });
+            }
+        },
+        commentCancel : function(commentNo){
+            $("div#con"+commentNo+" textarea").remove();
+            $("div#con"+commentNo+" p").show();
+
+            $("div#btns"+commentNo+" div:nth-child(1)").show();
+            $("div#btns"+commentNo+" div:nth-child(2)").remove();
+        },
+        commentDelete : function(commentNo){
+            console.log("댓글 삭제");
+            console.log(commentNo);
+
+            var answer = confirm("댓글을 삭제하시겠습니까?");
+            if(answer){
+                $.ajax({
+                    url: urlList.contextPath + urlList.delete,
+                    data: {
+                        commentNo : commentNo
+                    },
+                    dataType: "json",
+                    async:false,
+                    type: "post"
+                }).done(function(result){
+                    if(result === 0) {
+                        $("div#row"+commentNo).remove();
+                    }else {
+                        commentModule.resetComment(result);
+                    }
+                });
+            }
+        },
+        /* 대댓글 폼 */
+        childWriteForm : function(commentNo) {
+            console.log("대댓글폼");
+            $("div[id^='child']").remove();
+            $("p[id^='add-child-comment-'] > a:nth-child(1)").show();
+            $("p[id^='add-child-comment-'] > a:nth-child(2)").hide();
+            $("#add-child-comment-" + commentNo + " > a:nth-child(1)").hide();
+            $("#add-child-comment-" + commentNo + " > a:nth-child(2)").show();
+
+            var source = $("#child-write-template").html();
+            var template = Handlebars.compile(source);
+
+            var data = {};
+            data.userId = getLoginId();
+            data.commentNo = commentNo;
+
+            Handlebars.registerHelper("setUserImg", function(userId) {
+                return profileImg.setUserImg(userId);
+            });
+
+            var html = template(data);
+
+            $("#add-child-comment-" + commentNo).append(html);
+
+        },
+        childClose : function(commentNo){
+            $("div#child"+commentNo).remove();
+            $("#add-child-comment-" + commentNo + " > a:nth-child(1)").show();
+            $("#add-child-comment-" + commentNo + " > a:nth-child(2)").hide();
+        },
+        childWrite : function(preCommentNo) {
+            console.log("대댓글 작성 : ", preCommentNo);
+            $.ajax({
+                url: urlList.contextPath + urlList.write,
+                data: {
+                    boardNo: parseInt(urlProcess.urlParsing("boardNo")),
+                    content: $("input#childContent").val(),
+                    userId: getLoginId(),
+                    preCommentNo: preCommentNo
+                },
+                dataType: "json",
+                type: "post"
+            }).done(commentModule.resetComment(preCommentNo));
+
+            $("input#childContent").val("");
+        },
+        resetComment : function(commentNo){
+            $.ajax({
+                url: urlList.contextPath + urlList.select,
+                data: {
+                    commentNo : commentNo
+                },
+                dataType: "json"
+            }).done(function(result){
+                var source = $("#comment-reset-template").html();
+                var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper("setRegDate", function(regDate) {
+                    var monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
+                    var date = new Date(regDate);
+                    return  monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " "
+                        + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                });
+                Handlebars.registerHelper("setUserImg", function(userId) {
+                    return profileImg.setUserImg(userId);
+                });
+                Handlebars.registerHelper("setEditDelBtn", function(userId, commentNo) {
+                    var resultTag = "";
+                    if(userId === getLoginId()){
+                        resultTag += "<a class='link' id='edit"+commentNo+"' >수정</a> &nbsp; &nbsp; &nbsp;";
+                        resultTag += "<a class='link' id='del"+commentNo+"' >삭제</a>";
+                    }
+                    return resultTag;
+                });
+                var html = template(result);
+                $("div#row"+commentNo).html(html);
+
+                html = " <a id='"+commentNo+"'>답글 달기</a>";
+                html += "<a  id='"+commentNo+"' style='display:none;'>닫기</a>";
+                $("#add-child-comment-" + commentNo).html(html);
+                commentModule.childList(commentNo);
+
+                // $("#add-child-comment-"+commentNo+" a:nth-child(1)").trigger("click");
+            });
         }
+
     };
+
+    commentModule.bindEvent();
+
     return {
         commentWriteForm: commentModule.commentWriteForm,
         write: commentModule.write,
-        pageList: commentModule.pageList
+        pageList: commentModule.pageList,
+        childWrite: commentModule.childWrite
     }
 })();

@@ -21,10 +21,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
 
-
     <script src="../../js/include/handlebars-v4.0.10.js"></script>
-
-
     <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
 
     <style>
@@ -34,18 +31,12 @@
     </style>
 
 </head>
-<!-- END HEAD -->
 
 
 <!-- BODY -->
 <body><!--class="skin-blue sidebar-mini" style="height: auto;"-->
-
-    <!--========== HEADER ==========-->
     <header class="header">
     </header>
-    <!--========== End Header======= -->
-
-
 
     <!--========== PAGE LAYOUT ==========-->
 <div class="bg-color-sky-light">
@@ -58,16 +49,24 @@
             <!--</div>-->
         <!--</div>-->
         <!--// end row -->
-
         <div class="row detail">
         </div>
     </div>
 
 
-
-
     <!-- 댓글 -->
-    <div id="commentListForm">
+    <!--<div class="container" id="commentListForm">-->
+    <!--</div>-->
+
+    <div class="container" id="commentArea">
+        <div id="commentWriteForm" style="margin-bottom:20px;">
+        </div>
+        <div id="commentListForm">
+        </div>
+    </div>
+    <div id="pageArea">
+        <ul class="pagination" id="pagination">
+        </ul>
     </div>
 </div>
 
@@ -109,6 +108,7 @@
 <script src="../../js/friend/profile-img.js"></script>
 <script src="../../js/board/file.js"></script>
 <script src="../../js/board/comment.js"></script>
+<script src="../../js/board/recommend.js"></script>
 
 <script type="application/javascript">
     $("header.header").load("../includes/header.html");
@@ -130,6 +130,20 @@
     </div>
 </script>
 
+<script id="comment-write-template" type="text/x-handlebars-template">
+    <div class="media" >
+        <div class="media-left media-middle">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+                <textarea class="form-control" name="commentContent" rows="5" placeholder="Add comment..." required></textarea>
+        </div>
+        <div style="text-align:right;">
+        <a class="btn-theme btn-theme-sm btn-base-bg text-uppercase" href="javascript:comment.write();">Add Comment</a>
+        </div>
+    </div>
+</script>
+
 <script id="comment-list-template" type="text/x-handlebars-template">
     {{#each .}}
     <div class="media" id="row{{commentNo}}">
@@ -137,12 +151,52 @@
             <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{userId}} <small><i>Posted on {{{setRegDate regDate}}}</i></small></h4>
-            <p>{{content}}</p>
+            <h4 class="media-heading">{{userId}}
+                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+                </small>
+            </h4>
+            <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
+            <div id="con{{commentNo}}">
+                <p>{{content}}</p>
+            </div>
+            <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
         </div>
     </div>
     {{/each}}
 </script>
+
+
+<script id="child-write-template" type="text/x-handlebars-template">
+    <div class="media" id="child{{commentNo}}">
+        <div class="media-left media-middle">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+            <input class="form-control" id="childContent" maxlength="300" placeholder="Add comment..." required style="width:85%;"/>
+            <a class="btn-theme btn-theme-sm btn-base-bg text-uppercase" href="javascript:comment.childWrite({{commentNo}});" style="width:12%;padding:20px 10px;">Add</a>
+        </div>
+    </div>
+</script>
+
+<script id="comment-reset-template" type="text/x-handlebars-template">
+        <div class="media-left">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{userId}}
+                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+                </small>
+            </h4>
+            <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
+            <div id="con{{commentNo}}">
+                <p>{{content}}</p>
+            </div>
+            <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
+        </div>
+</script>
+
+
+
 
 <script type="application/javascript">
 
@@ -200,16 +254,13 @@
                 });
                 return iframe;
             });
-
-
-
             var html = template(data);
             $("div.detail").html(html);
         });
     }
 
     loadDetail(boardNo, genre);
-    comment.pageList();
+    comment.commentWriteForm(getLoginId());
 </script>
 
 </body>

@@ -117,36 +117,13 @@
 
         <div class="section" id="section1">
 
-            <!-- 로그인 화면 -->
-            <div class="form form--login">
-                <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
-                <h1 class="alpha">Sign In!</h1>
-                <p>You already have an account? Great! Login here.</p>
-                <div>
-                    <form class="form-wrap">
-                        <input id="id" class="inputbox email" type="text" placeholder="Email id" />
-                        <input id="pw" class="inputbox password" type="password" placeholder="Password" />
-                        <p>
-                            <a  class="button loginBtn">Login <i class="icon-rocket"></i></a>
-                        </p>
-                    </form>
-                    <!-- <p>
-                         Forget password? It's ok. <a class="scroll" href="#section3" data-section="3">Recover here &raquo;</a>
-                     </p>-->
-                </div>
-                <hr />
-                <p>
-                    Don't have an account? <br><a class="scroll1">Register Now &raquo;</a>
-                </p>
-            </div>
-
             <!-- 회원가입 화면 -->
             <div class="form form--signup">
                 <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
                 <h1 class="alpha">Sign Up!</h1>
                 <p>Signup using your Email address</p>
                 <div>
-                    <form class="form-wrap">
+                    <form class="form-wrap" action="return false;">
                         <input id="joinId" class="inputbox email" type="text" placeholder="Email id" />
                         <input id="joinName" class="inputbox name" type="text"  placeholder="Your Name" />
                         <input id="joinPw" class="inputbox password" type="password" placeholder="Password" />
@@ -193,79 +170,38 @@
     });
 
     $(document.body).on("click", "a.scroll2", function () {
-            $("div.form--signup").hide();
-            $("div.form--login").show();
+//            $("div.form--signup").hide();
+//            $("div.form--login").show();
+        window.localStorage.setItem("recentDate", new Date().getTime()*1000);
+        $(".modal1").click();
+
+        location.replace("../index.html");
     });
 
-    $(document.body).on("click", "a.loginBtn", function () {
-        console.log("로그인 버튼누름")
-
-        var userId = $("input#id").val();
-        var pw = $("input#pw").val();
-
-//        FCMPlugin.getToken(
-//            function(token){
-//                console.log("token :"+ token);
-//                var userId = $("input#id").val();
-//                var pw = $("input#pw").val();
-//                $.ajax({
-//                    url: "http://192.168.0.16:8000/user/login.do",
-//                    data: {
-//                        userId: userId,
-//                        pw: pw,
-//                        token: token
-//                    },
-//                    type: "POST",
-//                    crossDomain: true,
-//                    async:false
-//                }).done(function (result) {
-//                    if (result === 'fail') {
-//                        alert("입력하신 정보가 존재하지 않습니다.");
-//                    } else {
-//                        // 처음 로그인한 유저가 아니라면 사진을 전송해야하는데....
-////                        var recentDate = window.localStorage.getItem("recentDate");
-////
-////                        if(recentDate !== null && recentDate !== ""){
-////                            // 사진 전송
-////                            app.receivedEvent.sendPhoto(recentDate, userId);
-////                        }
+//    $(document.body).on("click", "a.loginBtn", function () {
+//        console.log("로그인 버튼누름")
 //
-//                        window.localStorage.setItem("user", userId);
-//                        window.localStorage.setItem("recentDate", new Date.getTime()*1000);
-//                        alert("로그인 성공!");
-//                        $(".modal1").click();
-//                        location.replace("mybody/profile.html");
-//
-//                    }
-//                });
-//
-//
-//
+//        var userId = $("input#id").val();
+//        var pw = $("input#pw").val();
+//        $.ajax({
+//            url: "http://192.168.0.16:8000/user/login.do",
+//            data: {
+//                userId: userId,
+//                pw: pw
 //            },
-//            function(err){
-//                console.log('error retrieving token: ' + err);
+//            type: "POST",
+//            crossDomain: true
+//        }).done(function (result) {
+//            if (result === 'fail') {
+//                alert("입력하신 정보가 존재하지 않습니다.");
+//            } else {
+//                alert("로그인 성공!");
+//                window.sessionStorage.setItem("user", userId)
+//                $(".modal1").click();
+//                location.replace("mybody/profile.html");
 //            }
-//        );
-        $.ajax({
-            url: "http://192.168.0.16:8000/user/login.do",
-            data: {
-                userId: userId,
-                pw: pw
-            },
-            type: "POST",
-            crossDomain: true
-        }).done(function (result) {
-            if (result === 'fail') {
-                alert("입력하신 정보가 존재하지 않습니다.");
-            } else {
-                alert("로그인 성공!");
-                window.sessionStorage.setItem("user", userId)
-                $(".modal1").click();
-                location.replace("mybody/profile.html");
-            }
-        });
-    });
-
+//        });
+//    });
 
 
     function checkJoin() {
@@ -285,28 +221,36 @@
 
     $(document.body).on("click", "a.joinBtn", function () {
             console.log("회원가입 버튼누름");
-            console.log($("input#joinId").val(), $("input#joinPw").val());
             $.ajax({
                 url: "http://192.168.0.16:8000/user/signIn.do",
                 data: {
                     userId: $("input#joinId").val(),
                     pw: $("input#joinPw").val(),
                     name: $("input#joinName").val(),
-                    botName: $("input#botName").val()
+                    botName: $("input#chatbotName").val()
 //                    mode:$("input[name='botMode']:checked").val()
                 },
                 type: "POST",
                 crossDomain: true,
-                beforeSend:checkJoin()
+                async:false,
+                beforeSend :checkJoin,
+                error:function(request,status,error){
+                    console.dir(request);
+                    console.dir(status);
+                    console.dir(error);
+                }
             }).done(function (result) {
                 console.dir(result);
                 if (result === 'success') {
                     alert("회원가입성공 성공!");
 
                     // 회원가입 성공하면 다시 로그인하게 만들고
-                    $("div.form--signup").hide();
-                    $("div.form--login").show();
-//                    $(".modal2").click();
+//                    $("div.form--signup").hide();
+//                    $("div.form--login").show();
+                    window.localStorage.setItem("recentDate", new Date().getTime()*1000);
+                    $(".modal1").click();
+
+                    location.replace("../index.html");
                 } else {
                     alert("회원가입하는데 오류가 발생했습니다. 다시 시도해주세요.");
                 }

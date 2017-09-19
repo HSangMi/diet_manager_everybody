@@ -96,7 +96,7 @@ $(document.body).on("click", "a.joinBtn", function () {
             },
             type: "POST",
             crossDomain: true,
-            beforeSend:checkJoin()
+            beforeSend:checkJoin
         }).done(function (result) {
             console.dir(result);
             if (result === 'success') {
