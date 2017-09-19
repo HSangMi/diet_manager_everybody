@@ -229,7 +229,7 @@ var comment = (function () {
             }
         },
         commentCancel : function(commentNo){
-            $("div#con"+commentNo+" textarea").remove();
+            $("div#con"+commentNo+" input").remove();
             $("div#con"+commentNo+" p").show();
 
             $("div#btns"+commentNo+" div:nth-child(1)").show();
