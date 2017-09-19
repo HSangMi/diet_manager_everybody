@@ -137,10 +137,9 @@
 </script>
 
 <script id="detail-template" type="text/x-handlebars-template">
-    {{#each fileList}}
-        <img class="img-responsive" src="{{setAttachFileImage path sysName}}" alt="Slider Image">
-    {{/each}}
-
+    {{#fileList}}
+    <img class="img-responsive" src="{{setAttachFileImage path sysName}}" alt="Slider Image">
+    {{/fileList}}
     <div class="section-seperator">
         <div class="content-md container">
             <div class="row">

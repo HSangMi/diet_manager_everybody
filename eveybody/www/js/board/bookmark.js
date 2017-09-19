@@ -11,21 +11,47 @@ var bookmark = (function () {
             $.ajax({
                 url: urlList.contextPath + boardGenre + "/" + urlList.get,
                 data: {
-                    userId: getLoginId()
+                    userId: $loginId
                 },
                 dataType: "json",
                 async: false
             }).done(function (result) {
-                if(result === 0) {
-                    $("i.fa.fa-star")
-                        .removeClass("fa-star")
-                        .addClass("fa-star-o");
-                }
-                var source = $("#bookmark-tip-template").html();
+                var source = $("#bookmark-template").html();
                 var template = Handlebars.compile(source);
 
+                var data = {bookmarkList: result.bookmarkList};
+                for(var i = 0; i < result.fileList.length; i++) {
+                    data.bookmarkList[i].path = result.fileList[i].path;
+                    data.bookmarkList[i].sysName = result.fileList[i].sysName;
+                    data.bookmarkList[i].oriName = result.fileList[i].oriName;
+                }
+
+                Handlebars.registerHelper("setImg", function(path, sysName, oriName) {
+                    if(path === null) {
+                        return oriName;
+                    }
+                    return file.preview(path, sysName);
+                });
+                Handlebars.registerHelper("setTitle", function(boardGenre, title) {
+                    if(boardGenre === 2) {
+                        return "[팁]" + title;
+                    }
+                    return "[영상]" + title;
+                });
+                Handlebars.registerHelper("moveTo", function(boardGenre) {
+                    if(boardGenre === 2) {
+                        return "tip";
+                    }
+                    return "work_out_detail";
+                });
+
                 var html = template(data);
-                $("div#dietTips_bookmark").append(html);
+                if(boardGenre === "tip") {
+                    $("div#dietTips_bookmark").html(html);
+                }
+                else {
+                    $("div#workout_bookmark").html(html);
+                }
             });
         },
         setBookmark: function (boardNo) {
