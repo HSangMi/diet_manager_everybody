@@ -48,12 +48,13 @@
     var $LoginuserNchatbot;
     var socket;
     var $divchat =  $("div.direct-chat-messages");
-
+    var notLastPage = true;
     $(document).ready(function () {
         //챗봇채팅가져오기...
         $LoginuserNchatbot = getUserInfo(getChatContent);
         console.log("=======LoginuserNchatbot=======");
         console.dir($LoginuserNchatbot);
+        console.log("===============================");
 //        $("#chatbotDiv h3.box-title").html($LoginuserNchatbot.chatbot[0].botName);
        // $("#chatbotDiv div.box-footer input.chat-input").attr("data-chatRoomNo",$LoginuserNchatbot.chatbot[0].chatRoomNo);
   //      $("#chatbotDiv").attr("id","chatroom"+$LoginuserNchatbot.chatbot[0].chatRoomNo);
@@ -62,7 +63,9 @@
         // 소켓서버에 접속
 
         socket = io.connect('http://192.168.0.30:10005');
+        console.log("===소켓===");
         console.dir(socket);
+        console.log("==========");
         // 유저 아이디 전달...
         socket.emit("login", $loginId);
 
@@ -110,6 +113,7 @@
 
         ////유저이름 + 챗봇챗 가져오는 함수
         function getUserInfo(callback){
+            console.log("getUserInfo호출..");
             var userInfo;
             $.ajax({
                 url: serverPath+"chat/"+$loginId+"/getUserInfo.do",
@@ -134,6 +138,9 @@
 
         /////채팅 목록 가져오는 함수
         function getChatContent(chatPageNo, callback){
+            console.log("getChatContent 호출...");
+            console.log("notLastPage : "+notLastPage);
+            if(notLastPage){
                 $.ajax({
                     url: serverPath + "chat/" + $loginId + "/" + chatPageNo + "/getChatContent.do",
                     dataType: "json"
@@ -145,12 +152,16 @@
                         callback(result);
                     }else{
                         console.log("대화기록이 없음!!");
+                        notLastPage = false;
                         return;
                     }
                 }).fail(function (err) {
                     console.log("getChatContent에러!!");
                     console.dir(err);
                 });
+            }else{
+                console.log("마지막페이지라 더이상 로딩 안하지롱...");
+            }
         }
         //////유저가 참여하고있는 채팅방 리스트 가져오는 함수
  /*       function getChatRoomList(callback){
@@ -193,7 +204,7 @@
             var html;
 //            var chatUserList = [];
             var whoSend;
-            chatContentList.reverse();
+            //chatContentList.reverse();
             for(var i = 0; i<chatContentList.length; i++){
                 whoSend = chatContentList[i].whoSend;
                 if(whoSend===1){
@@ -205,31 +216,11 @@
                     // 챗봇이 보낸 메세지 일때 => 다른 처리 없이 바로 출력..
                     html = chatContentList[i].content;
                 }
-                $("div.direct-chat-messages").append(html);
-                $divchat.scrollTop($divchat[0].scrollHeight);
-                console.log("makeChatContent");
+                $("div.direct-chat-messages").prepend(html);
             }
+           if(chatPageNo===1)$divchat.scrollTop($divchat[0].scrollHeight);
 
         }
-  /*      ////유저정보 받아오는 함수..
-        function getUserInfo(userId){
-            var userInfo;
-            $.ajax({
-                url: serverPath+"chat/"+userId+"/getUserInfo.do",
-                dataType: "json",
-                async : false
-            }).done(function (result) {
-                console.log("유저정보...");
-                console.dir(result);
-                userInfo = result;
-            }).fail(function (err) {
-                console.log("getUserInfo에러!!");
-                console.dir(err);
-            });
-            return userInfo;
-
-        }*/
-
 
     //키버튼...
     function keybtn(question, option) {
@@ -258,25 +249,18 @@
          '<div class="direct-chat-text">' + msg + '</div><br><br><span class="direct-chat-timestamp" style="float:right">' + prettyTime(date) + '</span></div>';
 
       //  return msg;
-
     }
-  /*  //받은 메세지 만들어줌
-    function makeReceiveMsg(sendUser, msg , date){
-        if(sendUser.photo!==null){
-            console.log("프사 없음");
-            sendUser.photo = "../../img/default_user_happy.png"; //디폴트 사진으로 교체
-        }else{
-            sendUser.photo = "http://192.168.0.16:8000/user/setting/"+ sendUser.photo;
+    var chatPageNo=1;
+
+    $divchat.scroll(function(){
+        console.log("스크롤됨..");
+        if($divchat.scrollTop()<10){
+            chatPageNo++;
+            console.log("무한스크롤이벤트...! no : " + chatPageNo);
+            getChatContent(chatPageNo,makeChatContent);
         }
 
-        var rhtml= '<div class="direct-chat-msg"><div class="direct-chat-info clearfix">' +
-            '<span class="direct-chat-name pull-left">' + sendUser.name +
-            '</span></div><img class="direct-chat-img" src="'+ sendUser.photo +'" alt="Message User Image"><div class="direct-chat-text">'+ msg +
-            '</div><br><span class="direct-chat-timestamp">'+prettyTime(date) +'</span></div>';
-        return rhtml;
-    }*/
-
-///타임만들어주는거
+    });
     function prettyTime(timeValue) {
         var dateObj;
         if(!timeValue) dateObj = new Date ();

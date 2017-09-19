@@ -28,11 +28,11 @@
                 </div>
                 <div class="box-footer no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#">육류
+                        <li><a>육류
                             <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
-                        <li><a href="#">탄수화물 <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a>
+                        <li><a>탄수화물 <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a>
                         </li>
-                        <li><a href="#">유제품
+                        <li><a>유제품
                             <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
                     </ul>
                 </div>
@@ -127,15 +127,25 @@
 </section>
 <!-- /.content -->
 <script type="application/javascript">
-
-    setChart();
     $("document").ready(function () {
         //1.로그인 유저 정보가져오기.....
-        console.log("dddd");
+        getPattern($loginId);
+
+
         //2.ajax로 음식 종류 패턴 검색결과 가져오기...dataset 세팅해서!
         setChart();
     });
+    function getPattern(loginId){
+        $.ajax({
+            url: serverPath+"diet/"+loginId+"/getPattern.do",
+            dataType: "json",
+            async : false
+        }).done(function (result) {
 
+
+        });
+
+    }
     function setChart(){
         //pieChart
         var foodkinddata = {
