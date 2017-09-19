@@ -81,7 +81,7 @@ var notification = (function () {
                 }
                 else {
                     // setting default image
-                    returnImg = file.preview("/default-img", "20170905_134208.jpg");
+                    returnImg = file.preview("/default-img", "girl.png");
                 }
             });
             return returnImg;

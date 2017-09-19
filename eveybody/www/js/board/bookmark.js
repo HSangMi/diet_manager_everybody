@@ -6,6 +6,12 @@ var bookmark = (function () {
         "add": "add.do"
     };
     var bookmarkModule = {
+        bindEvent: function () {
+            // 북마크
+            $(document.body).on("click", "a.bookmark-button", function() {
+                $(this).toggleClass('added');
+            });
+        },
         /* 북마크 */
         getBookmark: function (boardGenre) {
             $.ajax({
@@ -63,27 +69,17 @@ var bookmark = (function () {
                 dataType: "json",
                 async: false
             }).done(function (result) {
-                if(result === 0) {
-                    $("i.fa.fa-star")
-                        .removeClass("fa-star")
-                        .addClass("fa-star-o");
+                if(result !== 0) {
+                    $(document).ready(function () {
+                        $("a.bookmark-button").addClass('added');
+                    });
                 }
             });
         },
         add: function (boardNo) {
             var isBookmark = 0;
-            if($("a.bookmark")[0]) {
-                if($("a.bookmark > i.fa-star")[0]) {
-                    $("i.fa.fa-star")
-                        .removeClass("fa-star")
-                        .addClass("fa-star-o");
-                    isBookmark = 1;
-                }
-                else {
-                    $("i.fa.fa-star-o")
-                        .removeClass("fa-star-o")
-                        .addClass("fa-star");
-                }
+            if($("a.bookmark-button.added")[0]) {
+                isBookmark = 1;
             }
             $.ajax({
                 url: urlList.contextPath + boardNo + "/" + urlList.add,
@@ -96,6 +92,7 @@ var bookmark = (function () {
             });
         }
     };
+    bookmarkModule.bindEvent();
     return {
         getBookmark: bookmarkModule.getBookmark,
         setBookmark: bookmarkModule.setBookmark,

@@ -18,7 +18,6 @@
     <link href="../../vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
     <!-- THEME STYLES -->
     <link href="../../css/layout.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="../../dist/css/AdminLTE.css">
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
     <!-- Font Awesome -->
@@ -28,8 +27,8 @@
     <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/tip-board.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/detail-content.css" rel="stylesheet" type="text/css"/>
-    <link href="../../css/comment.css" rel="stylesheet" type="text/css"/>
     <link href="../../css/recom-btn.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/bookmark.css" rel="stylesheet" type="text/css"/>
 
     <!-- Include Script Source -->
     <script src="../../js/include/handlebars-v4.0.10.js"></script>
@@ -137,24 +136,28 @@
 </script>
 
 <script id="detail-template" type="text/x-handlebars-template">
-    {{#fileList}}
-    <img class="img-responsive" src="{{setAttachFileImage path sysName}}" alt="Slider Image">
-    {{/fileList}}
     <div class="section-seperator">
         <div class="content-md container">
             <div class="row">
-                <div class="col-sm-4 sm-margin-b-50">
+                <div class="col-sm-12 sm-margin-b-50">
                     <div class="wow fadeInLeft animated" data-wow-duration=".3" data-wow-delay=".3s" id="detail-content">
                         <h3 class="title">{{title}}</h3>
-                        <a href="javascript:;" class="bookmark" onclick="bookmark.add({{boardNo}});"><i class="fa fa-star text-yellow"></i></a>
-                        <p>{{content}}</p>
+                        <span class="text-uppercase margin-l-20" style="display: block; text-align: right;">
+                            조회수 0 | ♥ <span>{{setLike boardNo}}</span>
+                        </span>
+                        <!--<a href="javascript:;" class="bookmark" onclick="bookmark.add({{boardNo}});"><i class="fa fa-star text-yellow"></i></a>-->
+                        <p id="board-detail-content">{{{content}}}</p>
                         <a class="link" href="#">Read More</a>
-                    </div>
+                        <div class="middle-wrapper"></div>
+                        </div>
                 </div>
             </div>
             <!--// end row -->
         </div>
     </div>
+    {{#fileList}}
+    <img class="img-responsive" src="{{setAttachFileImage path sysName}}" alt="Slider Image">
+    {{/fileList}}
     <div id="commentArea">
         <table id="commentWriteForm">
         </table>
@@ -168,35 +171,39 @@
 </script>
 
 <script id="recommend-btn-template" type="text/x-handlebars-template">
-    <div class="middle-wrapper">
-        <div class="like-wrapper">
-            <a class="like-button" onclick="recommend.doLike('{{boardNo}}');">
-                <span class="like-icon">
-                    <div class="heart-animation-1"></div>
-                    <div class="heart-animation-2"></div>
-                </span>
-                Like
-            </a>
-            <span>{{setLike boardNo}}</span>
-        </div>
+    <div class="like-wrapper">
+        <a class="like-button" onclick="recommend.doLike('{{boardNo}}');">
+            <span class="like-icon">
+                <div class="heart-animation-1"></div>
+                <div class="heart-animation-2"></div>
+            </span>
+            Like
+        </a>
+    </div>
+</script>
+
+<script id="bookmark-btn-template" type="text/x-handlebars-template">
+    <div class="bookmark-wrapper">
+        <a class="bookmark-button" onclick="bookmark.add({{boardNo}});">
+            <span class="bookmark-icon">
+                <div class="star-animation-1"></div>
+                <div class="star-animation-2"></div>
+            </span>
+            Book
+        </a>
     </div>
 </script>
 
 <script id="comment-write-template" type="text/x-handlebars-template">
-    <div class="comments-app" ng-app="commentsApp" ng-controller="CommentsController as cmntCtrl">
-        <div class="comment-form">
-            <!-- Comment Avatar -->
-            <div class="comment-avatar">
-                <img src="../../img/robot.png">
-            </div>
-            <form class="form" name="form" onsubmit="return false;" novalidate>
-                <div class="form-row">
-                    <textarea class="input" name="commentContent" placeholder="Add comment..." required></textarea>
-                </div>
-                <div class="form-row">
-                    <a href="javascript:comment.write();">Add Comment</a>
-                </div>
-            </form>
+    <div class="media" >
+        <div class="media-left media-middle">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+            <textarea class="form-control" name="commentContent" rows="5" placeholder="Add comment..." required></textarea>
+        </div>
+        <div style="text-align:right;">
+            <a class="btn-theme btn-theme-sm btn-base-bg text-uppercase" href="javascript:comment.write();">Add Comment</a>
         </div>
     </div>
 </script>
@@ -208,11 +215,48 @@
             <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{userId}} <small><i>Posted on {{{setRegDate regDate}}}</i></small></h4>
-            <p>{{content}}</p> <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
+            <h4 class="media-heading">{{userId}}
+                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+                </small>
+            </h4>
+            <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
+            <div id="con{{commentNo}}">
+                <p>{{content}}</p>
+            </div>
+            <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
         </div>
-</div>
-{{/each}}
+    </div>
+    {{/each}}
+</script>
+
+
+<script id="child-write-template" type="text/x-handlebars-template">
+    <div class="media" id="child{{commentNo}}">
+        <div class="media-left media-middle">
+            <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+        </div>
+        <div class="media-body">
+            <input class="form-control" id="childContent" maxlength="300" placeholder="Add comment..." required style="width:85%;"/>
+            <a class="btn-theme btn-theme-sm btn-base-bg text-uppercase" href="javascript:comment.childWrite({{commentNo}});" style="width:12%;padding:20px 10px;">Add</a>
+        </div>
+    </div>
+</script>
+
+<script id="comment-reset-template" type="text/x-handlebars-template">
+    <div class="media-left">
+        <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">{{userId}}
+            <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+            </small>
+        </h4>
+        <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
+        <div id="con{{commentNo}}">
+            <p>{{content}}</p>
+        </div>
+        <p class="add-child-comment" id="add-child-comment-{{commentNo}}"></p>
+    </div>
 </script>
 
 <script src="../../js/url/url.js"></script>

@@ -45,7 +45,7 @@ var recommend = (function () {
                 },
                 async: false
             }).done(function (result) {
-                $("div.like-wrapper > span").text(result);
+                $("span.text-uppercase.margin-l-20 > span").text(result);
             });
         }
     };

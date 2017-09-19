@@ -9,3 +9,24 @@
 h3.title {
     display: inline;
 }
+
+p.color-white.margin-b-0 {
+    height: 2.85714286em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 90%;
+}
+
+img.img-responsive {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p#board-detail-content {
+    margin-top: 20px;
+}

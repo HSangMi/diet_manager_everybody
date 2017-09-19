@@ -79,7 +79,7 @@ var profile = (function () {
                 else {
                     // setting default image
                     data.path = "/default-img";
-                    data.sysName = "20170905_134208.jpg";
+                    data.sysName = "girl.png";
                 }
 
                 data.friendCnt = result.friendCnt;
@@ -116,7 +116,7 @@ var profile = (function () {
                 else {
                     // setting default image
                     data.path = "/default-img";
-                    data.sysName = "20170905_134208.jpg";
+                    data.sysName = "girl.png";
                     console.log("프로필 이미지 없음");
                 }
 

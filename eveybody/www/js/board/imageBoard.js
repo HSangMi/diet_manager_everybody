@@ -10,6 +10,24 @@ var imageBoard = (function () {
         "delete": "delete.do"
     };
     var imageBoardModule = {
+        init: function () {
+            $(window).scroll(function () {
+                imageBoard.infiniteScroll();
+            });
+            $(window).on('popstate', function(event) {
+                $("div#tipBoardForm").html(event.originalEvent.state.prePage);
+            });
+
+            var boardNo = urlProcess.urlParsing("boardNo");
+            if(boardNo !== "") {
+                imageBoardModule.detail(boardNo);
+            }
+            else {
+                imageBoardModule.pageList(1);
+            }
+
+            imageBoardModule.bindEvent();
+        },
         bindEvent: function () {
             // 게시글 목록
             $(document.body).on("click", "#showWriteForm", function () {
@@ -55,6 +73,9 @@ var imageBoard = (function () {
                 dataType: "json",
                 async: false
             }).done(function (result) {
+                if(result.list.length <= 0) {
+                    return ;
+                }
                 imageBoardModule.makePageList(result, pageNo);
             });
         },
@@ -91,6 +112,8 @@ var imageBoard = (function () {
             }
             var sh = $(window).scrollTop() + $(window).height();
             var dh = $(document).height();
+
+            console.log("페이지 스크롤!!!!");
 
             if (sh >= dh - 10) {
                 imageBoardModule.pageList(parseInt(urlProcess.urlParsing("pageNo")) + 1);
@@ -151,10 +174,13 @@ var imageBoard = (function () {
                     var date = new Date(regDate);
                     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                 });
-
                 Handlebars.registerHelper("setAttachFileImage", function(path, sysName) {
                     return file.preview(path, sysName);
                 });
+                Handlebars.registerHelper("setLike", function (boardNo) {
+                    return recommend.setLike(boardNo);
+                });
+
                 var html = template(data);
                 $("div#tipBoardForm").html(html);
 
@@ -162,21 +188,29 @@ var imageBoard = (function () {
 
                 comment.commentWriteForm(getLoginId());
                 imageBoardModule.setRecomBtn(boardNo);
-                bookmark.setBookmark(boardNo);
+                imageBoardModule.setBmkBtn(boardNo);
             });
         },
+        /* 추천 버튼 */
         setRecomBtn: function (boardNo) {
             var data = {};
             data.boardNo = boardNo;
             var source = $("#recommend-btn-template").html();
             var template = Handlebars.compile(source);
 
-            Handlebars.registerHelper("setLike", function (boardNo) {
-                return recommend.setLike(boardNo);
-            });
+            var html = template(data);
+            $("div.wow.fadeInLeft.animated > div.middle-wrapper").append(html);
+        },
+        setBmkBtn: function (boardNo) {
+            var data = {};
+            data.boardNo = boardNo;
+            var source = $("#bookmark-btn-template").html();
+            var template = Handlebars.compile(source);
 
             var html = template(data);
-            $("div.wow.fadeInLeft.animated").append(html);
+            $("div.wow.fadeInLeft.animated > div.middle-wrapper").append(html);
+
+            bookmark.setBookmark(boardNo);
         },
         /* 수정 */
         updateForm: function (boardNo) {
@@ -214,14 +248,7 @@ var imageBoard = (function () {
         }
     };
 
-    var boardNo = urlProcess.urlParsing("boardNo");
-    if(boardNo !== "") {
-        imageBoardModule.detail(boardNo);
-    }
-    else {
-        imageBoardModule.pageList(1);
-    }
-    imageBoardModule.bindEvent();
+    imageBoardModule.init();
 
     return {
         infiniteScroll: imageBoardModule.infiniteScroll,
@@ -229,9 +256,3 @@ var imageBoard = (function () {
         detail: imageBoardModule.detail
     }
 })();
-
-$(window).scroll(imageBoard.infiniteScroll);
-
-$(window).on('popstate', function(event) {
-    $("div#tipBoardForm").html(event.originalEvent.state.prePage);
-});
