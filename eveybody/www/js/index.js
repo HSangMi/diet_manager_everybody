@@ -144,7 +144,7 @@ var app = {
                 }
             }
         }else {
-            window.sessionStorage.setItem("recentDate", new Date().getTime() * 1000);
+            window.sessionStorage.setItem("recentDate", new Date().getTime());
             self.location="view/main/main.html";
         }
 

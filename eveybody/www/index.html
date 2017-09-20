@@ -67,7 +67,7 @@
                 $("button#loginModal").hide();
 
                 if(!checkMobileDevice()){
-                    window.sessionStorage.setItem("recentDate", new Date().getTime() * 1000);
+                    window.sessionStorage.setItem("recentDate", new Date().getTime());
                     self.location="view/main/main.html";
                 }
             })();

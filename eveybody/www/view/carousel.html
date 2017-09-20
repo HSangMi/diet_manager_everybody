@@ -172,7 +172,7 @@
     $(document.body).on("click", "a.scroll2", function () {
 //            $("div.form--signup").hide();
 //            $("div.form--login").show();
-        window.localStorage.setItem("recentDate", new Date().getTime()*1000);
+        window.localStorage.setItem("recentDate", new Date().getTime());
         $(".modal1").click();
 
         location.replace("../index.html");
