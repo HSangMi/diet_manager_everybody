@@ -5,12 +5,14 @@ var notification = (function () {
         "profile": "profile.do",
         "notification": "notification.do",
         "requestTime": "request-time.do",
-        "confirm": "confirm.do"
+        "confirm": "confirm.do",
+        "showMsg": "show-msg.do"
     };
     /* 알림 체크 */
     var notificationModule = {
         init: function () {
             notificationModule.notification();
+            notificationModule.message();
         },
         notification: function () {
             $.ajax({
@@ -33,19 +35,53 @@ var notification = (function () {
                 });
 
                 Handlebars.registerHelper("setProfileImg", function (friendId) {
-                    return notificationModule.setFriendPhoto(friendId);
+                    return profileImg.setUserImg(friendId);
                 });
-
                 Handlebars.registerHelper("setProfileInfo", function (friendId) {
                     return notificationModule.setFriendInfo(friendId);
                 });
-
                 Handlebars.registerHelper("setTime", function (friendId) {
                     return notificationModule.setRequestTime(friendId);
                 });
 
                 var html = template(data);
                 $("#friendRequest").html(html);
+            });
+        },
+        message: function () {
+            $.ajax({
+                type: "post",
+                url: urlList.contextPath + urlList.showMsg,
+                dataType: "json",
+                data: {
+                    friendId: $loginId
+                }
+            }).done(function (result) {
+                console.log(result);
+
+                var source = $("#receive-message-template").html();
+                var template = Handlebars.compile(source);
+
+                var data = result.msgList;
+                data.messageCnt = result.msgList.length;
+
+                Handlebars.registerHelper("setMessageCnt", function (messageCnt) {
+                    if(messageCnt !== 0) {
+                        return "<span class=\"label label-warning\">" + messageCnt + "</span>";
+                    }
+                });
+                Handlebars.registerHelper("setProfileImg", function (friendId) {
+                    return profileImg.setUserImg(friendId);
+                });
+                Handlebars.registerHelper("setProfileInfo", function (friendId) {
+                    return notificationModule.setFriendInfo(friendId);
+                });
+                Handlebars.registerHelper("setTime", function (regDate) {
+                    return notificationModule.setTimeFlow(regDate);
+                });
+
+                var html = template(data);
+                $("#receiveMessage").html(html);
             });
         },
         confirm: function (friendId, check) {
@@ -61,30 +97,6 @@ var notification = (function () {
                 notificationModule.notification();
                 friend.list();
             });
-        },
-        setFriendPhoto: function (friendId) {
-            var returnImg = "";
-            $.ajax({
-                url: urlList.contextProfilePath + urlList.profile,
-                dataType: "json",
-                async: false,
-                method: "post",
-                data: {
-                    userId : friendId
-                }
-            }).done(function (result) {
-                var data = result;
-
-                if(data.userPhoto) {
-                    var photoTemp = data.userPhoto;
-                    returnImg = file.preview(photoTemp.path, photoTemp.sysName);
-                }
-                else {
-                    // setting default image
-                    returnImg = file.preview("/default-img", "girl.png");
-                }
-            });
-            return returnImg;
         },
         setFriendInfo: function (friendId) {
             var returnVal = "";
@@ -113,23 +125,30 @@ var notification = (function () {
                     friendId: friendId
                 }
             }).done(function (result) {
-                var date = new Date(result);
-                var timeDifference = Math.floor( (new Date().getTime() - date.getTime()) / 1000 );
-                returnVal = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-
-                if(timeDifference < 60) {
-                    returnVal = Math.floor(timeDifference) + "초 전";
-                }
-                else if(timeDifference < (60 * 60)) {
-                    returnVal = Math.floor( (timeDifference / 60) ) + "분 전";
-                }
-                else if(timeDifference < (60 * 60 * 24)) {
-                    returnVal = Math.floor( (timeDifference / (60 * 60)) ) + "시간 전";
-                }
-                else if(timeDifference < (60 * 60 * 24 * 3)) {
-                    returnVal = Math.floor( (timeDifference / (60 * 60 * 24)) ) + "일 전";
-                }
+                returnVal = notificationModule.setTimeFlow(result);
             });
+            return returnVal;
+        },
+        setTimeFlow: function (result) {
+            var returnVal = "";
+
+            var date = new Date(result);
+            var timeDifference = Math.floor( (new Date().getTime() - date.getTime()) / 1000 );
+            returnVal = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+            if(timeDifference < 60) {
+                returnVal = Math.floor(timeDifference) + "초 전";
+            }
+            else if(timeDifference < (60 * 60)) {
+                returnVal = Math.floor( (timeDifference / 60) ) + "분 전";
+            }
+            else if(timeDifference < (60 * 60 * 24)) {
+                returnVal = Math.floor( (timeDifference / (60 * 60)) ) + "시간 전";
+            }
+            else if(timeDifference < (60 * 60 * 24 * 3)) {
+                returnVal = Math.floor( (timeDifference / (60 * 60 * 24)) ) + "일 전";
+            }
+
             return returnVal;
         }
     };
@@ -138,6 +157,7 @@ var notification = (function () {
     return {
         confirm: notificationModule.confirm,
         setFriendPhoto: notificationModule.setFriendPhoto,
-        setFriendInfo: notificationModule.setFriendInfo
+        setFriendInfo: notificationModule.setFriendInfo,
+        message: notificationModule.message
     }
 })();

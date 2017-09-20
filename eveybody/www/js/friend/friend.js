@@ -1,14 +1,16 @@
 var friend = (function () {
     var urlList = {
         "contextPath": "http://192.168.0.16:8000/friend/",
-        "profile": "profile.do",
         "contextProfilePath": "http://192.168.0.16:8000/user/setting/",
+        "profile": "profile.do",
         "autocomplete": "autocomplete.do",
         "list": "list.do",
         "request": "request.do",
         "confirm": "confirm.do",
         "delete": "delete.do",
-        "friendCheck": "friend-check.do"
+        "friendCheck": "friend-check.do",
+        "sendMsg": "send-msg.do",
+        "readMsg": "read-msg.do"
     };
     var friendModule = {
         init: function () {
@@ -104,7 +106,7 @@ var friend = (function () {
                 var data = result;
 
                 Handlebars.registerHelper("setProfileImg", function (friendId) {
-                    return notification.setFriendPhoto(friendId);
+                    return profileImg.setUserImg(friendId);
                 });
 
                 Handlebars.registerHelper("setProfileInfo", function (friendId) {
@@ -150,8 +152,8 @@ var friend = (function () {
                 });
 
                 Handlebars.registerHelper("setAddBtn", function (userId) {
-                    if(friendModule.friendCheck() === 1) {
-
+                    if(friendModule.friendCheck(userId) === 1) {
+                        return "그룹초대";
                     }
                     /* 이미 친구일 경우 처리 */
                     return "친구추가";
@@ -166,7 +168,7 @@ var friend = (function () {
         },
         /* 친구 여부 */
         friendCheck: function (friendId) {
-            $("#friendAddBtn").attr("disabled", true);
+            var returnVal = 1;
             $.ajax({
                 url: urlList.contextPath + urlList.friendCheck,
                 data: {
@@ -176,11 +178,11 @@ var friend = (function () {
                 type: "post",
                 async: false
             }).done(function (result) {
-                console.log(result);
                 if(result === "친구 아님") {
-                    $("#friendAddBtn").attr("disabled", false);
+                    returnVal = 0;
                 }
             });
+            return returnVal;
         },
         /* 쪽지 modal 띄우기 */
         sendMsgForm: function (friendId) {
@@ -196,25 +198,33 @@ var friend = (function () {
 
             $("#sendMsg").modal();
         },
+        /* 메세지 보내기 */
         sendMsg: function (friendId) {
-            /*
             $.ajax({
-                url: urlList.contextPath + urlList.request,
+                url: urlList.contextPath + urlList.sendMsg,
                 data: {
                     userId: $loginId,
                     friendId: friendId,
-                    content: content
+                    content: $("#sendMsgTxt").val()
                 },
                 type: "post"
-            }).done(function (result) {
-                if(result === "존재하지 않는 아이디 입니다") {
-                    console.log("잘못된 아이디");
-                    return ;
-                }
-                $("#modalCloseBtn").click();
-                $("#searchIdTxt").val("");
+            }).done(function () {
+                console.log("insert 완료");
+                notification.message();
             });
-            */
+        },
+        /* 메세지 읽기 */
+        readMsg: function (msgNo) {
+            $.ajax({
+                url: urlList.contextPath + urlList.readMsg,
+                data: {
+                    msgNo: msgNo
+                },
+                type: "post"
+            }).done(function () {
+                console.log("update 완료");
+                notification.message();
+            });
         }
     };
 
@@ -227,5 +237,6 @@ var friend = (function () {
         request: friendModule.request,
         sendMsgForm: friendModule.sendMsgForm,
         sendMsg: friendModule.sendMsg,
+        readMsg: friendModule.readMsg
     }
 })();

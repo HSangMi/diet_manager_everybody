@@ -408,7 +408,7 @@
             <img class="img-circle img-bordered-sm" src="{{setProfileImg friendId}}" alt="user image">
             <span class="username">
                 <a href="javascript:friend.detail('{{friendId}}');">{{setProfileInfo friendId}}</a>
-                <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times" onclick="friend.delete('{{friendId}}')"></i></a>
+                <a href="javacript:;" class="pull-right btn-box-tool"><i class="fa fa-times" onclick="friend.delete('{{friendId}}')"></i></a>
             </span>
         </div>
     </li>
@@ -431,10 +431,10 @@
                     <li class="user-body" id="friend-btn-div">
                         <div class="row">
                             <div class="col-xs-4 text-center">
-                                <a href="#" class="friend-btn-a">{{friendCnt}}</a>
+                                <a href="#" class="friend-btn-a">{{friendCnt}}명</a>
                             </div>
                             <div class="col-xs-4 text-center" >
-                                <a href="javascript:friend.request('{{userId}}');" class="friend-btn-a" id="friendAddBtn">친구추가</a>
+                                <a href="javascript:friend.request('{{userId}}');" class="friend-btn-a" id="friendAddBtn">{{setAddBtn userId}}</a>
                             </div>
                             <div class="col-xs-4 text-center">
                                 <a href="javascript:friend.sendMsgForm('{{userId}}');" class="friend-btn-a" id="sendMsgBtn">쪽지보내기</a>
@@ -464,7 +464,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="sendMsg2FriendBtn" onclick="friend.sendMsg({{friendId}})">Send</button>
+                    <button type="button" class="btn btn-default" id="sendMsg2FriendBtn" onclick="friend.sendMsg('{{friendId}}')"><i class="fa fa-send-o"></i>Send</button>
                 </div>
             </div>
         </div>
@@ -478,5 +478,6 @@
 <script src="../../js/board/bookmark.js"></script>
 <script src="../../js/profile/profile.js"></script>
 <script src="../../js/friend/friend.js"></script>
+<script src="../../js/friend/profile-img.js"></script>
 
 </html>
