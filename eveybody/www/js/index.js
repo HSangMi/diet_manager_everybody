@@ -132,8 +132,8 @@ var app = {
 
             // 자동로그인 됐을 때
             if(userId !== null && userId !== ""){
-                // sendPhoto(recentDate, userId);
-                sendPhoto(1504310400000, userId);
+                sendPhoto(recentDate, userId);
+                // sendPhoto(1504310400000, userId);
             }
             // 자동로그인 안 됐을 때
             else{
