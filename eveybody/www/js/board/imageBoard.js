@@ -113,8 +113,6 @@ var imageBoard = (function () {
             var sh = $(window).scrollTop() + $(window).height();
             var dh = $(document).height();
 
-            console.log("페이지 스크롤!!!!");
-
             if (sh >= dh - 10) {
                 imageBoardModule.pageList(parseInt(urlProcess.urlParsing("pageNo")) + 1);
             }
