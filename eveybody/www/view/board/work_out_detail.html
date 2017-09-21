@@ -22,7 +22,11 @@
     <link rel="shortcut icon" href="favicon.ico"/>
 
     <script src="../../js/include/handlebars-v4.0.10.js"></script>
+
+    <!-- CUSTOM STYLES -->
     <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/recom-btn.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/bookmark.css" rel="stylesheet" type="text/css"/>
 
     <style>
         div.wow {
@@ -108,6 +112,7 @@
 <script src="../../js/board/file.js"></script>
 <script src="../../js/board/comment.js"></script>
 <script src="../../js/board/recommend.js"></script>
+<script src="../../js/board/bookmark.js"></script>
 
 <script type="application/javascript">
     $("header.header").load("../includes/header.html");
@@ -123,9 +128,36 @@
                 {{{setVideo boardNo}}}
             </div>
         </div>
-        <span class="text-uppercase margin-l-20">조회수 {{viewCnt}} | ♥ {{{setLike boardNo}}}</span>
+        <span class="text-uppercase margin-l-20">
+            조회수 {{viewCnt}} | ♥ <span>{{{setLike boardNo}}}</span>
+        </span>
         <a class="link" >{{setRegDate regDate}}</a>
         <p>{{{content}}}</p>
+        <div class="middle-wrapper"></div>
+    </div>
+</script>
+
+<script id="recommend-btn-template" type="text/x-handlebars-template">
+    <div class="like-wrapper">
+        <a class="like-button" onclick="recommend.doLike('{{boardNo}}');">
+            <span class="like-icon">
+                <div class="heart-animation-1"></div>
+                <div class="heart-animation-2"></div>
+            </span>
+            Like
+        </a>
+    </div>
+</script>
+
+<script id="bookmark-btn-template" type="text/x-handlebars-template">
+    <div class="bookmark-wrapper">
+        <a class="bookmark-button" onclick="bookmark.add({{boardNo}});">
+            <span class="bookmark-icon">
+                <div class="star-animation-1"></div>
+                <div class="star-animation-2"></div>
+            </span>
+            Book
+        </a>
     </div>
 </script>
 
@@ -225,19 +257,7 @@
                 return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
             });
             Handlebars.registerHelper("setLike", function (boardNo) {
-                var likeCnt = 0;
-//                var isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>취소</button>";
-//                $.ajax({
-//                    url: urlList.contextPath + boardNo + "/" + urlList.setLike,
-//                    dataType: "json",
-//                    async: false
-//                }).done(function (result) {
-//                    likeCnt = "<span>" + result.likeCnt + "</span>";
-//                    if (result.isLike === 0) {
-//                        isLike = "<button type='button' id='likeBtn' onclick='board.doLike(" + boardNo + ");'>추천</button>";
-//                    }
-//                });
-                return likeCnt;
+                return recommend.setLike(boardNo);
             });
             Handlebars.registerHelper("setVideo", function(boardNo){
                 var iframe = "";
@@ -253,10 +273,39 @@
                 });
                 return iframe;
             });
+
             var html = template(data);
             $("div.detail").html(html);
+
+            //////////////////////
+            setRecomBtn(boardNo);
+            setBmkBtn(boardNo);
+            //////////////////////
         });
     }
+
+    ///////////////////////////
+    function setRecomBtn (boardNo) {
+        var data = {};
+        data.boardNo = boardNo;
+        var source = $("#recommend-btn-template").html();
+        var template = Handlebars.compile(source);
+
+        var html = template(data);
+        $("div.middle-wrapper").append(html);
+    }
+    function setBmkBtn (boardNo) {
+        var data = {};
+        data.boardNo = boardNo;
+        var source = $("#bookmark-btn-template").html();
+        var template = Handlebars.compile(source);
+
+        var html = template(data);
+        $("div.middle-wrapper").append(html);
+
+        bookmark.setBookmark(boardNo);
+    }
+    ///////////////////////////
 
     loadDetail(boardNo, genre);
     comment.commentWriteForm(getLoginId());
