@@ -161,3 +161,4 @@ var notification = (function () {
         message: notificationModule.message
     }
 })();
+
