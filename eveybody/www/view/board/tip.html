@@ -95,6 +95,12 @@
 <script type="application/javascript">
     $("header.header").load("../includes/header.html");
     $("footer.footer").load("../includes/footer.html");
+
+    (function(){
+        if(getLoginId()!=='admin'){
+            $("div#buttonArea").hide();
+        }
+    })();
 </script>
 
 <script id="list-template" type="text/x-handlebars-template">
