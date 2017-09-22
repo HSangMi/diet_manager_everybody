@@ -51,7 +51,7 @@ var recommend = (function () {
                 },
                 async: false
             }).done(function (result) {
-                $("span.text-uppercase.margin-l-20 > span").text("♥ " + result);
+                $("span.text-uppercase.margin-l-20 > span:nth-child(2)").text(result);
             });
             }else {
                 alert("로그인 후 사용가능합니다.");
