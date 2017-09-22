@@ -143,7 +143,7 @@
                     <div class="wow fadeInLeft animated" data-wow-duration=".3" data-wow-delay=".3s" id="detail-content">
                         <h3 class="title">{{title}}</h3>
                         <span class="text-uppercase margin-l-20" style="display: block; text-align: right;">
-                            조회수 0 | ♥ <span>{{setLike boardNo}}</span>
+                            <span style="color:red;">♥ {{setLike boardNo}}</span>
                         </span>
                         <!--<a href="javascript:;" class="bookmark" onclick="bookmark.add({{boardNo}});"><i class="fa fa-star text-yellow"></i></a>-->
                         <p id="board-detail-content">{{{content}}}</p>
@@ -214,8 +214,8 @@
             <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{userId}}
-                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+            <h4 class="media-heading" style="min-height:10px!important;">{{userId}}
+                <small><i>{{{setRegDate regDate}}}&nbsp;&nbsp;</i>
                 </small>
             </h4>
             <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
@@ -246,8 +246,8 @@
         <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
     </div>
     <div class="media-body">
-        <h4 class="media-heading">{{userId}}
-            <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+        <h4 class="media-heading" style="min-height:10px!important;">{{userId}}
+            <small><i>{{{setRegDate regDate}}}&nbsp;&nbsp;</i>
             </small>
         </h4>
         <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>

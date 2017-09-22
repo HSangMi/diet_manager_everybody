@@ -128,10 +128,10 @@
                 {{{setVideo boardNo}}}
             </div>
         </div>
-        <span class="text-uppercase margin-l-20">
-            조회수 {{viewCnt}} | ♥ <span>{{{setLike boardNo}}}</span>
-        </span>
         <a class="link" >{{setRegDate regDate}}</a>
+        <span class="text-uppercase margin-l-20">
+            <span style="color:red;">♥ {{{setLike boardNo}}}</span>
+        </span>
         <p>{{{content}}}</p>
         <div class="middle-wrapper"></div>
     </div>
@@ -139,7 +139,7 @@
 
 <script id="recommend-btn-template" type="text/x-handlebars-template">
     <div class="like-wrapper">
-        <a class="like-button" onclick="recommend.doLike('{{boardNo}}');">
+        <a class="like-button" onclick="recommend.doLike({{boardNo}});">
             <span class="like-icon">
                 <div class="heart-animation-1"></div>
                 <div class="heart-animation-2"></div>
@@ -182,8 +182,8 @@
             <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{userId}}
-                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+            <h4 class="media-heading" style="min-height:10px!important;">{{userId}}
+                <small><i>{{{setRegDate regDate}}}&nbsp;&nbsp;</i>
                 </small>
             </h4>
             <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
@@ -214,8 +214,8 @@
             <img src="{{setUserImg userId}}" class="media-object" style="width:45px">
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{userId}}
-                <small><i>Posted on {{{setRegDate regDate}}}&nbsp;&nbsp;</i>
+            <h4 class="media-heading" style="min-height:10px!important;">{{userId}}
+                <small><i>{{{setRegDate regDate}}}&nbsp;&nbsp;</i>
                 </small>
             </h4>
             <div id="btns{{commentNo}}"><div>{{{setEditDelBtn userId commentNo}}}</div></div>
@@ -293,6 +293,8 @@
 
         var html = template(data);
         $("div.middle-wrapper").append(html);
+
+        recommend.setLike(boardNo);
     }
     function setBmkBtn (boardNo) {
         var data = {};
@@ -309,6 +311,7 @@
 
     loadDetail(boardNo, genre);
     comment.commentWriteForm(getLoginId());
+
 </script>
 
 </body>

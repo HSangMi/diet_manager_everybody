@@ -198,6 +198,8 @@ var imageBoard = (function () {
 
             var html = template(data);
             $("div.wow.fadeInLeft.animated > div.middle-wrapper").append(html);
+
+            recommend.setLike(boardNo);
         },
         setBmkBtn: function (boardNo) {
             var data = {};

@@ -220,9 +220,12 @@ var comment = (function () {
                     async:false,
                     type: "post"
                 }).done(function(result){
+                    console.log(result);
                     if(result === 0) {
+                        console.log("부모댓글이 없음");
                         commentModule.resetComment(commentNo);
                     }else {
+                        console.log("부모댓글이 있음");
                         commentModule.resetComment(result);
                     }
                 });
