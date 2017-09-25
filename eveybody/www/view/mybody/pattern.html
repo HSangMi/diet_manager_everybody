@@ -184,22 +184,29 @@
             animation: { animateScale: true, animateRotate: true }
         }});
 
-//        var foodkinddata = {
-//            datasets:[{data:[1,2,3,4,5], backgroundColor: ['tomato', 'orange', '#c5f171', '#8fdc86', '#648af8']}],
-//            labels:['기타','유제품','밥류','면류','육류']
-//        };
-//        console.log("##############3#####");
-//        console.dir(foodkinddata);
-//        console.dir(foodkinddata.datasets[0].data);
-//        console.dir(foodkinddata.labels);
 
+        var kcalBackgroundColor = ['tomato', 'orange', '#8fdc86','#c5f171','#648af8'];
+        var kcalDataSet = [];
+        for(var i = 0;i < foodKcalData.kcalOfWeek.length; i++){
+            var data = {
+                label: (i+1)+'끼',
+                backgroundColor: kcalBackgroundColor[i],
+                data: foodKcalData.kcalOfWeek[i]
+            };
+            kcalDataSet.push(data);
+        }
+
+//        var foodcaldata = {
+//            labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+//            datasets:   [
+//                {label:'아침', backgroundColor:'tomato', data:foodKcalData.breakfast},
+//                {label:'점심', backgroundColor:'orange',  data:foodKcalData.lunch},
+//                {label:'저녁', backgroundColor:'#8fdc86', data:foodKcalData.dinner}
+//            ]
+//        };
         var foodcaldata = {
             labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-            datasets:   [
-                {label:'아침', backgroundColor:'tomato', data:foodKcalData.breakfast},
-                {label:'점심', backgroundColor:'orange',  data:foodKcalData.lunch},
-                {label:'저녁', backgroundColor:'#8fdc86', data:foodKcalData.dinner}
-            ]
+            datasets: kcalDataSet
         };
         new Chart( $("#calroChart"), {
             type: 'bar',
@@ -211,14 +218,6 @@
                 }
             }
         });
-//        var foodcaldata = {
-//            labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-//            datasets:   [
-//                {label: '아침', backgroundColor: 'tomato', data: [ 350,  450, 390, 600,502, 510]},
-//                {label: '점심',  backgroundColor: 'orange',  data: [  650, 560, 505, 0,  540, 605]},
-//                {label: '저녁',  backgroundColor: '#8fdc86', data: [ 400, 350, 504, 550, 340, 650]}
-//            ]
-//        };
 
 
         console.dir(timeData);
@@ -239,8 +238,8 @@
                 borderColor: 'tomato',
                 data: breakfastList[i],
                 fill: false,
-                pointRadius: 5,
-                pointHoverRadius: 10,
+                pointRadius: 2,
+                pointHoverRadius: 5,
                 showLine: false // no line shown
             };
             timeDataSet.push(data);
@@ -252,8 +251,8 @@
                 borderColor: 'orange',
                 data: lunchList[i],
                 fill: false,
-                pointRadius: 5,
-                pointHoverRadius: 10,
+                pointRadius: 2,
+                pointHoverRadius: 5,
                 showLine: false // no line shown
             };
             timeDataSet.push(data);
@@ -265,8 +264,8 @@
                 borderColor: 'greenyellow',
                 data: dinnerList[i],
                 fill: false,
-                pointRadius: 5,
-                pointHoverRadius: 10,
+                pointRadius: 2,
+                pointHoverRadius: 5,
                 showLine: false // no line shown
             };
             timeDataSet.push(data);
