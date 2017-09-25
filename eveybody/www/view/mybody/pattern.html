@@ -26,19 +26,13 @@
                       <canvas id="foodkindPieChart" style="height: 295px; width: 590px;" height="295" width="590"></canvas>
                     </div>
                 </div>
-                <div class="box-footer no-padding">
+                <div class="box-footer no-padding kindOfFood">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a>육류
-                            <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
-                        <li><a>탄수화물 <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a>
-                        </li>
-                        <li><a>유제품
-                            <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
+                        <!-- 여기에 분석 말 -->
                     </ul>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /.box -->
+
             <!-- BAR CHART -->
             <div class="box box-success">
                 <div class="box-header with-border">
@@ -55,24 +49,21 @@
                         <canvas id="calroChart" style="height: 277px; width: 590px;" height="277" width="590"></canvas>
                     </div>
                 </div>
-                <div class="box-footer no-padding">
+                <div class="box-footer no-padding kcalForWeek">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#" class="text-red"> 지난주보다 과식하는 경향이있어요
-                            <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
+                        <!-- 여기에 분석 말 -->
                     </ul>
                 </div>
-                <!-- /.box-body -->
             </div>
             <!-- /.box -->
-
         </div>
-        <!-- /.col (LEFT) -->
+
+
         <div class="col-md-6">
             <!-- LINE CHART -->
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">Time Flot  to ate</h3>
-
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
@@ -84,15 +75,12 @@
                         <canvas id="timePatChart" style="height: 301px; width: 590px;" height="301" width="590"></canvas>
                     </div>
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer no-padding">
+                <div class="box-footer no-padding timeToEat">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#" class="text-green">규칙적인 식생활을 가지고 있어요!<span class="pull-right text-green"><i class="fa fa-smile-o"></i></span></a>
-                        </li>
+                        <!-- 여기에 분석 말 -->
                     </ul>
                 </div>
             </div>
-            <!-- /.box -->
 
             <!-- AREA CHART -->
             <div class="box box-primary">
@@ -109,7 +97,6 @@
                         <canvas id="weightChart" style="height: 301px; width: 590px;" height="301" width="590"></canvas>
                     </div>
                 </div>
-                <!-- /.box-body -->
                 <div class="box-footer no-padding">
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="#" class="text-green">건강해요 ! <span class="pull-right text-green"><i class="fa fa-smile-o"></i></span></a>
@@ -117,22 +104,13 @@
                     </ul>
                 </div>
             </div>
-            <!-- /.box -->
 
         </div>
-        <!-- /.col (RIGHT) -->
     </div>
-    <!-- /.row -->
-
 </section>
 <!-- /.content -->
 <script type="application/javascript">
     $("document").ready(function () {
-        //1.로그인 유저 정보가져오기.....
-//        getPattern($loginId);
-
-
-        //2.ajax로 음식 종류 패턴 검색결과 가져오기...dataset 세팅해서!
 
         $.ajax({
             url:"http://192.168.0.16:8000/diet/getPattern.do",
@@ -150,7 +128,6 @@
             setChart(result.foodKindData, result.foodKcalData, result.timeData);
         });
 
-
     });
 
 //    function getPattern(loginId){
@@ -164,11 +141,8 @@
 //        });
 
 //    }
+
     function setChart(foodKindData, foodKcalData, timeData, weightData){
-//        var foodkinddata = foodKindData;
-//        var foodcaldata = foodKcalData;
-//        var timeconfig = timeData;
-//        var weightconfig = weightData;
 
         var foodkinddata = {
             datasets : [{
@@ -185,6 +159,7 @@
         }});
 
 
+        if(foodKcalData !== null){
         var kcalBackgroundColor = ['tomato', 'orange', '#8fdc86','#c5f171','#648af8'];
         var kcalDataSet = [];
         for(var i = 0;i < foodKcalData.kcalOfWeek.length; i++){
@@ -204,6 +179,8 @@
 //                {label:'저녁', backgroundColor:'#8fdc86', data:foodKcalData.dinner}
 //            ]
 //        };
+
+
         var foodcaldata = {
             labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
             datasets: kcalDataSet
@@ -218,7 +195,7 @@
                 }
             }
         });
-
+        }
 
         console.dir(timeData);
         console.dir(timeData.breakfast);
@@ -345,5 +322,21 @@
         };
         new Chart( $("#weightChart"),weightconfig);
 
+
+        setText();
     }
+
+    function setText(){
+        // yellow, green, red
+        var html = "<li><a>음식종류<span class='pull-right text-red'><i class='fa fa-angle-down'></i> 얼마</span></a></li>";
+        $("div.kindOfFood > ul").html(html);
+
+        html = "<li><a class='text-red'> 지난주보다 어떠하다 <span class='pull-right text-red'><i class='fa fa-angle-down'></i> 얼마큼</span></a></li>";
+        $("div.kcalForWeek > ul").html(html);
+
+        html = "<li><a class='text-green'>good job!<span class='pull-right text-green'><i class='fa fa-smile-o'></i></span></a></li>";
+        $("div.timeToEat > ul").html(html);
+    }
+
+
 </script>

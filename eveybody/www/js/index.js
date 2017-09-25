@@ -133,6 +133,7 @@ var app = {
             // 자동로그인 됐을 때
             if(userId !== null && userId !== ""){
                 sendPhoto(recentDate, userId);
+                //1505835041000 / 1504310400000
                 // sendPhoto(1504310400000, userId);
             }
             // 자동로그인 안 됐을 때
