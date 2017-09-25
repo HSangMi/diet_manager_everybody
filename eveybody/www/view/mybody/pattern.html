@@ -129,103 +129,197 @@
 <script type="application/javascript">
     $("document").ready(function () {
         //1.로그인 유저 정보가져오기.....
-        getPattern($loginId);
+//        getPattern($loginId);
 
 
         //2.ajax로 음식 종류 패턴 검색결과 가져오기...dataset 세팅해서!
-        setChart();
-    });
-    function getPattern(loginId){
+
         $.ajax({
-            url: serverPath+"diet/"+loginId+"/getPattern.do",
-            dataType: "json",
-            async : false
-        }).done(function (result) {
+            url:"http://192.168.0.16:8000/diet/getPattern.do",
+            data:{
+                userId : $loginId
+            },
+            type:"post",
+            crossDomain:true,
+            dataType:"json"
+        }).done(function(result){
+            console.log("##############3#####");
+            console.dir(result);
+            console.dir(result.foodKindData);
 
-
+            setChart(result.foodKindData, result.foodKcalData, result.timeData);
         });
 
-    }
-    function setChart(){
-        //pieChart
+
+    });
+
+//    function getPattern(loginId){
+//        $.ajax({
+//            url: serverPath+"diet/"+loginId+"/getPattern.do",
+//            dataType: "json",
+//            async : false
+//        }).done(function (result) {
+//
+//
+//        });
+
+//    }
+    function setChart(foodKindData, foodKcalData, timeData, weightData){
+//        var foodkinddata = foodKindData;
+//        var foodcaldata = foodKcalData;
+//        var timeconfig = timeData;
+//        var weightconfig = weightData;
+
         var foodkinddata = {
-            datasets:[{data:[10,20,30,40,50], backgroundColor: ['tomato', 'orange', '#c5f171', '#8fdc86', '#648af8']}],
-            labels:['기타','유제품','밥류','면류','육류']
-        };
-        var foodcaldata = {
-            labels: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
-            datasets:   [{label: '아침', backgroundColor: 'tomato', data: [ 350,  450, 390, 600,502, 510, 260]},
-                {label: '점심',  backgroundColor: 'orange',  data: [  650, 560, 505, 605,  540, 605, 580]},
-                {label: '저녁',  backgroundColor: '#8fdc86', data: [ 400, 350, 504, 550, 340, 650, 640]}
-            ]
+            datasets : [{
+                data : foodKindData.data,
+                backgroundColor : ['tomato', 'orange', '#c5f171', '#8fdc86', '#648af8', 'black', 'blue', 'pink']
+            }],
+            labels : foodKindData.labels
         };
         new Chart($("#foodkindPieChart"),{type:'doughnut', data:foodkinddata, options: {
             responsive: true,
-            legend: { position: 'right', },
-            title: {display: false, },
+            legend: { position: 'right'},
+            title: {display: false},
             animation: { animateScale: true, animateRotate: true }
         }});
-       new Chart( $("#calroChart"), {
+
+
+        var kcalBackgroundColor = ['tomato', 'orange', '#8fdc86','#c5f171','#648af8'];
+        var kcalDataSet = [];
+        for(var i = 0;i < foodKcalData.kcalOfWeek.length; i++){
+            var data = {
+                label: (i+1)+'끼',
+                backgroundColor: kcalBackgroundColor[i],
+                data: foodKcalData.kcalOfWeek[i]
+            };
+            kcalDataSet.push(data);
+        }
+
+//        var foodcaldata = {
+//            labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+//            datasets:   [
+//                {label:'아침', backgroundColor:'tomato', data:foodKcalData.breakfast},
+//                {label:'점심', backgroundColor:'orange',  data:foodKcalData.lunch},
+//                {label:'저녁', backgroundColor:'#8fdc86', data:foodKcalData.dinner}
+//            ]
+//        };
+        var foodcaldata = {
+            labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+            datasets: kcalDataSet
+        };
+        new Chart( $("#calroChart"), {
             type: 'bar',
             data: foodcaldata,
             options: {
                 title:{ display:false }, tooltips: { mode: 'index', intersect: false },
-                responsive: true, legend: { position: false, },
-                scales: { xAxes: [{ stacked: true, }], yAxes: [{ stacked: true }]
+                responsive: true, legend: { position: false },
+                scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }]
                 }
             }
         });
-            var timeconfig = {
-                type: 'line',
-                data: {
-                    labels: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
-                    datasets: [{
-                        label: "1st-1",
-                        backgroundColor: 'tomato',
-                        borderColor: 'tomato',
-                        data: [7, 7.5, 8, 7.8, 7.3, 9.5, 10.2],
-                        fill: false,
-                        pointRadius: 5,
-                        pointHoverRadius: 10,
-                        showLine: false // no line shown
-                    },
-                    {
-                        label: "1st-2",
-                        backgroundColor: 'orange',
-                        borderColor: 'orange',
-                        data: [12.3, 12.5, 13.5, 12.8, 13.2, 14.3, 15.0],
-                        fill: false,
-                        pointRadius: 5,
-                        pointHoverRadius: 10,
-                        showLine: false // no line shown
-                    },
-                    {
-                        label: "1st-3",
-                        backgroundColor: 'greenyellow',
-                        borderColor: 'greenyellow',
-                        data: [18.6, 18.9, 19.2, 18.5, 19.5, 20.5, 19.6],
-                        fill: false,
-                        pointRadius: 5,
-                        pointHoverRadius: 10,
-                        showLine: false // no line shown
-                    }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    title:{
-                        display:false,
-                    },
-                    legend: {
-                        display: false
-                    },
-                    elements: {
-                        point: {
-                            pointStyle: 'rectRot'
-                        }
+
+
+        console.dir(timeData);
+        console.dir(timeData.breakfast);
+        console.dir(timeData.lunch);
+        console.dir(timeData.dinner);
+
+        var breakfastList = timeData.breakfast;
+        var lunchList = timeData.lunch;
+        var dinnerList = timeData.dinner;
+
+        var timeDataSet = [];
+
+        for(var i = 0;i < breakfastList.length; i++){
+            var data = {
+                label: "아침",
+                backgroundColor: 'tomato',
+                borderColor: 'tomato',
+                data: breakfastList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+        for(var i = 0;i < lunchList.length; i++){
+            var data = {
+                label: "점심",
+                backgroundColor: 'orange',
+                borderColor: 'orange',
+                data: lunchList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+        for(var i = 0;i < dinnerList.length; i++){
+            var data = {
+                label: "저녁",
+                backgroundColor: 'greenyellow',
+                borderColor: 'greenyellow',
+                data: dinnerList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+
+       var timeconfig = {
+            type: 'line',
+            data: {
+                labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+                datasets: timeDataSet
+//                    [{
+//                    label: "1st-2",
+//                    backgroundColor: 'tomato',
+//                    borderColor: 'tomato',
+//                    data: [7, 7.5, 8, 7.8, null, 9.5, 10.2],
+//                    fill: false,
+//                    pointRadius: 5,
+//                    pointHoverRadius: 10,
+//                    showLine: false // no line shown
+//                },
+//                {
+//                    label: "1st-2",
+//                    backgroundColor: 'orange',
+//                    borderColor: 'orange',
+//                    data: [12.3, 12.5, 13.5, 12.8, 13.2, 14.3, 15.0],
+//                    fill: false,
+//                    pointRadius: 5,
+//                    pointHoverRadius: 10,
+//                    showLine: false // no line shown
+//                },
+//                {
+//                    label: "1st-3",
+//                    backgroundColor: 'greenyellow',
+//                    borderColor: 'greenyellow',
+//                    data: [18.6, 18.9, 19.2, 18.5, 19.5, 20.5, 19.6],
+//                    fill: false,
+//                    pointRadius: 5,
+//                    pointHoverRadius: 10,
+//                    showLine: false // no line shown
+//                }
+//                ]
+            },
+            options: {
+                responsive : true,
+                title :{ display:false },
+                legend: {
+                    display : false,
+                    elements : {
+                        point : { pointStyle : 'rectRot' }
                     }
                 }
-            };
+            }
+       };
+
         new Chart( $("#timePatChart"),timeconfig);
 
         var weightconfig = {
@@ -244,13 +338,9 @@
                 }]
             },
             options: {
-                responsive: true,
-                title: {
-                    display: false,
-                },
-                legend: {
-                    display: false
-                }
+                responsive : true,
+                title : { display: false },
+                legend : { display: false}
             }
         };
         new Chart( $("#weightChart"),weightconfig);

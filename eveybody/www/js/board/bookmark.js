@@ -9,7 +9,9 @@ var bookmark = (function () {
         bindEvent: function () {
             // 북마크
             $(document.body).on("click", "a.bookmark-button", function() {
-                $(this).toggleClass('added');
+                if(getLoginId()!==null){
+                    $(this).toggleClass('added');
+                }
             });
         },
         /* 북마크 */
@@ -77,6 +79,7 @@ var bookmark = (function () {
             });
         },
         add: function (boardNo) {
+            if(getLoginId()!==null){
             var isBookmark = 0;
             if($("a.bookmark-button.added")[0]) {
                 isBookmark = 1;
@@ -90,6 +93,9 @@ var bookmark = (function () {
                 },
                 async: false
             });
+            }else {
+                alert("로그인 후 사용가능합니다.");
+            }
         }
     };
     bookmarkModule.bindEvent();

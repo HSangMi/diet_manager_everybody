@@ -43,11 +43,11 @@
                     <p style="display:inline-block;">먹은 양 </p>
                     <select name="amount" id="amount" class="itemList" onchange="checkAmount(this.value);">
                         <option value="0.5">0.5</option>
-                        <option value="1.0">1</option>
+                        <option value="1">1.0</option>
                         <option value="1.5">1.5</option>
-                        <option value="2.0">2.0</option>
+                        <option value="2">2.0</option>
                         <option value="2.5">2.5</option>
-                        <option value="3.0">3.0</option>
+                        <option value="3">3.0</option>
                     </select>
                     <!--<input type="number" id="amount" value="1" name="amount" min="0.5" max="3" step="0.5" onchange="checkAmount();">-->
                     <p style="display:inline-block;" id="amountKcal"></p>
@@ -199,6 +199,8 @@
 
 
 <script type="application/javascript">
+    var currentDate;
+    var openCheck = false;
     var $checkDate;
     var $checkTime;
     var todayCnt = 0;
@@ -274,12 +276,35 @@
         var hour = dateObj.getHours();
         var minute = dateObj.getMinutes();
         var timeString =  ""+ hour + minute ;
-        if($checkTime===undefined||$checkTime !== timeString){
+//        if($checkTime===undefined||$checkTime !== timeString){
+//            $checkTime = timeString;
+//            currentDate = dateObj;
+//            todayCnt++;
+//            return options.fn(this);
+//        }else if($checkTime === timeString){
+//            return options.inverse(this);
+//        }
+        if(currentDate===undefined){
             $checkTime = timeString;
+            currentDate = dateObj;
             todayCnt++;
+//            console.log("udefined 열기");
             return options.fn(this);
-        }else if($checkTime === timeString){
-            return options.inverse(this);
+        }else {
+            var subTime = currentDate.getTime() - dateObj.getTime();
+            if(subTime === 0 && !openCheck){
+//                console.log("열기");
+                openCheck = true;
+                return options.fn(this);
+            }
+            else if(subTime <= 30 * 60 * 1000) {
+//                console.log("30분 이전 열기 x");
+                return options.inverse(this);
+            }else{
+//                currentDate = dateObj;
+//                console.log("30분 초과 열기 o");
+                return options.fn(this);
+            }
         }
 
     });
@@ -288,11 +313,32 @@
         var hour = dateObj.getHours();
         var minute = dateObj.getMinutes();
         var timeString =  ""+ hour + minute ;
-        if($checkTime!==timeString&&$checkTime!==undefined){
-            return options.fn(this);
-        }else if($checkTime === timeString){
+//        if($checkTime!==timeString&&$checkTime!==undefined){
+//            return options.fn(this);
+//        }else if($checkTime === timeString){
+//            return options.inverse(this);
+//        }
+        if(currentDate===undefined){
+            $checkTime = timeString;
+            currentDate = dateObj;
+//            todayCnt++;
+//            console.log("udefined 닫기");
+
             return options.inverse(this);
+        }else {
+            var subTime = currentDate.getTime() - dateObj.getTime();
+            if(subTime <= 30 * 60 * 1000) {
+//                console.log("30분 이전 닫기 x");
+                return options.inverse(this);
+            }else{
+                currentDate = dateObj;
+                todayCnt++;
+                openCheck = false;
+//                console.log("30분 초과 닫기 o");
+                return options.fn(this);
+            }
         }
+
     });
 
     function getFood(foodNo) {
@@ -416,12 +462,19 @@
                 if(result==="success"){
                     alert("삭제완료!");
 
+
+                    console.dir($("li#dietNo"+dietNo).parent().children("li"));
                     if($("li#dietNo"+dietNo).parent().children("li").length === 1){
 
+                        console.log("시간에 한개");
                         var timeLi = $("li#dietNo"+dietNo).parents("li");
+
+                        console.dir(timeLi);
                         var dateLi = timeLi.prev("li");
+                        console.dir(dateLi);
                         timeLi[0].remove();
                         if(dateLi.next("li")[0].className ==="time-label"||dateLi.next("li")[0].id ==="lastTimeline"){
+                            console.log("날짜에 한개");
                            dateLi[0].remove();
                         }
 
