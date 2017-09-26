@@ -125,7 +125,7 @@
             console.dir(result);
             console.dir(result.foodKindData);
 
-            setChart(result.foodKindData, result.foodKcalData, result.timeData);
+            setChart(result.foodKindData, result.foodKcalData, result.timeData, result.weightData, result.msgData);
         });
 
     });
@@ -142,14 +142,61 @@
 
 //    }
 
-    function setChart(foodKindData, foodKcalData, timeData, weightData){
+    function setChart(foodKindData, foodKcalData, timeData, weightData, msgData){
 
         var foodkinddata = {
             datasets : [{
+//                data : ['밥류',
+//                    '밀가루/면류',
+//                    '육류',
+//                    '생선류',
+//                    '국/찌개/탕류',
+//                    '과자/빵류',
+//                    '부침/튀김',
+//                    '음료',
+//                    '채소류',
+//                    '과일류',
+//                    '유제품',
+//                    '유지/견과류',
+//                    '계란/콩류',
+//                    '해산물',
+//                    '패스트푸드',
+//                    '당류',
+//                    '건강기능식품',
+//                    '소스류',
+//                    '죽/스프',
+//                    '차/커피',
+//                    '주류',
+//                    '미정'],
                 data : foodKindData.data,
-                backgroundColor : ['tomato', 'orange', '#c5f171', '#8fdc86', '#648af8', 'black', 'blue', 'pink']
+                backgroundColor : foodKindData.color
+//                backgroundColor : [
+//                    "#EAEAEA"
+//    , "#FAF4C0"
+//    , "#A81919"
+//    , "#6799FF"
+//    , "#DB3A00"
+//    , "#FFE400"
+//    , "#EDA900"
+//    , "#A566FF"
+//    , "#47C83E"
+//    , "#FF3636"
+//    , "#D4F4FA"
+//    , "#CC723D"
+//    , "#FFF612"
+//    , "#008299"
+//    , "#C97CA3"
+//    , "#EB53D7"
+//    , "#A566FF"
+//    , "#990085"
+//    , "#F2CB61"
+//    , "#AB4A12"
+//    , "#22741C"
+//    , "#000000"
+//                ]
             }],
             labels : foodKindData.labels
+//            labels : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         };
         new Chart($("#foodkindPieChart"),{type:'doughnut', data:foodkinddata, options: {
             responsive: true,
@@ -196,11 +243,6 @@
             }
         });
         }
-
-        console.dir(timeData);
-        console.dir(timeData.breakfast);
-        console.dir(timeData.lunch);
-        console.dir(timeData.dinner);
 
         var breakfastList = timeData.breakfast;
         var lunchList = timeData.lunch;
@@ -253,37 +295,6 @@
             data: {
                 labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
                 datasets: timeDataSet
-//                    [{
-//                    label: "1st-2",
-//                    backgroundColor: 'tomato',
-//                    borderColor: 'tomato',
-//                    data: [7, 7.5, 8, 7.8, null, 9.5, 10.2],
-//                    fill: false,
-//                    pointRadius: 5,
-//                    pointHoverRadius: 10,
-//                    showLine: false // no line shown
-//                },
-//                {
-//                    label: "1st-2",
-//                    backgroundColor: 'orange',
-//                    borderColor: 'orange',
-//                    data: [12.3, 12.5, 13.5, 12.8, 13.2, 14.3, 15.0],
-//                    fill: false,
-//                    pointRadius: 5,
-//                    pointHoverRadius: 10,
-//                    showLine: false // no line shown
-//                },
-//                {
-//                    label: "1st-3",
-//                    backgroundColor: 'greenyellow',
-//                    borderColor: 'greenyellow',
-//                    data: [18.6, 18.9, 19.2, 18.5, 19.5, 20.5, 19.6],
-//                    fill: false,
-//                    pointRadius: 5,
-//                    pointHoverRadius: 10,
-//                    showLine: false // no line shown
-//                }
-//                ]
             },
             options: {
                 responsive : true,
@@ -322,19 +333,42 @@
         };
         new Chart( $("#weightChart"),weightconfig);
 
+        setText(msgData);
 
-        setText();
     }
 
-    function setText(){
+    function setText(msgData){
         // yellow, green, red
-        var html = "<li><a>음식종류<span class='pull-right text-red'><i class='fa fa-angle-down'></i> 얼마</span></a></li>";
+
+        var html = "";
+        for(var i=0; i<msgData.foodKindMSG1.length; i++){
+            if(msgData.foodKindMSG2.indexOf("-") !== -1){
+                html = "<li><a>"+msgData.foodKindMSG1[i]+"<span class='pull-right text-green'><i class='fa fa-angle-down'></i> "+ msgData.foodKindMSG2[i]+"</span></a></li>";
+            }else {
+                html = "<li><a>"+msgData.foodKindMSG1[i]+"<span class='pull-right text-red'><i class='fa fa-angle-up'></i> "+ msgData.foodKindMSG2[i]+"</span></a></li>";
+            }
+        }
         $("div.kindOfFood > ul").html(html);
 
-        html = "<li><a class='text-red'> 지난주보다 어떠하다 <span class='pull-right text-red'><i class='fa fa-angle-down'></i> 얼마큼</span></a></li>";
+
+        if(msgData.foodKcalFlag === -1){
+            html = "<li><a class='text-green'>"+ msgData.foodKcalMSG +"<span class='pull-right text-green'><i class='fa fa-angle-down'></i> ";
+        }else if(msgData.foodKcalFlag === 0){
+            html = "<li><a class='text-yellow'>"+ msgData.foodKcalMSG +"<span class='pull-right text-yellow'>";
+        }else if(msgData.foodKcalFlag === 1){
+            html = "<li><a class='text-red'>"+ msgData.foodKcalMSG +"<span class='pull-right text-red'><i class='fa fa-angle-up'></i> ";
+        }
+        html += msgData.foodKcalPoint + "</span></a></li>";
         $("div.kcalForWeek > ul").html(html);
 
-        html = "<li><a class='text-green'>good job!<span class='pull-right text-green'><i class='fa fa-smile-o'></i></span></a></li>";
+
+        if(msgData.timeFlag === -1){
+            html = "<li><a class='text-green'>"+ msgData.timeMSG +"<span class='pull-right text-green'><i class='fa fa-smile-o'></i></span></a></li>";
+        }else if(msgData.timeFlag === 0){
+            html = "<li><a class='text-yellow'>"+ msgData.timeMSG +"<span class='pull-right text-yellow'><i class='fa fa-meh-o'></i></span></a></li>";
+        }else if(msgData.timeFlag === 1){
+            html = "<li><a class='text-red'>"+ msgData.timeMSG +"<span class='pull-right text-red'><i class='fa fa-frown-o'></i></span></a></li>";
+        }
         $("div.timeToEat > ul").html(html);
     }
 

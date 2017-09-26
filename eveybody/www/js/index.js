@@ -29,6 +29,7 @@ var app = {
                              for (var i = 0; i < photos.length; i++) {
 
                                  if (photos[i].timestamp >= recentTime) {
+                                 // if (photos[i].timestamp < recentDate&&photos[i].timestamp >= 1505039615000) {
                                      var timestamp = (photos[i].timestamp);
                                      console.log(i, timestamp);
                                      timeList.push(timestamp);
@@ -49,8 +50,8 @@ var app = {
                                      photoList.push(new PhotoInfo(timeList[j], urlList[j]));
                                  }
                                  console.dir(photoList);
-
-                                 console.log(JSON.stringify(photoList));
+                                 //console.log(JSON.stringify(photoList));
+                                 console.log("서버에 접속....");
                                  $.ajax({
                                      url: "http://192.168.0.16:8000/views/utils/sendNewImages.json",
                                      // url: "http://192.168.0.22:3000/upload",
@@ -65,7 +66,7 @@ var app = {
                                  }).done(function (result) {
                                      console.log("성공");
                                      console.log(result);
-                                     location.replace("view/mybody/profile.html");
+                                    location.replace("view/mybo/dy/profile.html");
                                  }).fail(function (err) {
                                      console.dir(err);
                                      location.replace("view/mybody/profile.html");
@@ -132,9 +133,12 @@ var app = {
 
             // 자동로그인 됐을 때
             if(userId !== null && userId !== ""){
+                console.log("자동로그인");
+                console.log(userId);
                 sendPhoto(recentDate, userId);
                 //1505835041000 / 1504310400000
-                // sendPhoto(1504310400000, userId);
+                // sendPhoto(1505211579000, userId);
+
             }
             // 자동로그인 안 됐을 때
             else{
