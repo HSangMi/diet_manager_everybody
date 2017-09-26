@@ -31,7 +31,7 @@ a {
 }
 
 .bookmark-button.added {
-    color: #f39c12;
+    color: #ffbe43;
     border-color: currentColor;
     filter: grayscale(0);
 }

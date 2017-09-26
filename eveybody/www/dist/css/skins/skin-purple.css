@@ -59,7 +59,7 @@
 .skin-purple .wrapper,
 .skin-purple .main-sidebar,
 .skin-purple .left-side {
-  background-color: #222d32;
+  background-color: #647f9d;
 }
 .skin-purple .user-panel > .info,
 .skin-purple .user-panel > .info > a {
@@ -67,7 +67,7 @@
 }
 .skin-purple .sidebar-menu > li.header {
   color: #4b646f;
-  background: #1a2226;
+  background: #546980;
 }
 .skin-purple .sidebar-menu > li > a {
   border-left: 3px solid transparent;
@@ -75,7 +75,7 @@
 .skin-purple .sidebar-menu > li:hover > a,
 .skin-purple .sidebar-menu > li.active > a {
   color: #ffffff;
-  background: #1e282c;
+  background: #4e5f73;
   border-left-color: #605ca8;
 }
 .skin-purple .sidebar-menu > li > .treeview-menu {
@@ -83,7 +83,7 @@
   background: #2c3b41;
 }
 .skin-purple .sidebar a {
-  color: #b8c7ce;
+  color: #f5f9ff;
 }
 .skin-purple .sidebar a:hover {
   text-decoration: none;

@@ -344,7 +344,7 @@
 }
 .btn-google {
   color: #ffffff;
-  background-color: #dd4b39;
+  background-color: #ff6c5a;
   border-color: rgba(0, 0, 0, 0.2);
 }
 .btn-google:focus,
@@ -371,7 +371,7 @@
   background-image: none;
 }
 .btn-google .badge {
-  color: #dd4b39;
+  color: #ff6c5a;
   background-color: #ffffff;
 }
 .btn-instagram {

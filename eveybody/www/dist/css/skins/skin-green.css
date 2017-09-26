@@ -3,7 +3,7 @@
  * -----------
  */
 .skin-green .main-header .navbar {
-  background-color: #00a65a;
+  background-color: #00c575;
 }
 .skin-green .main-header .navbar .nav > li > a {
   color: #ffffff;
@@ -51,7 +51,7 @@
   background-color: #008749;
 }
 .skin-green .main-header li.user-header {
-  background-color: #00a65a;
+  background-color: #00c575;
 }
 .skin-green .content-header {
   background: transparent;
@@ -59,7 +59,7 @@
 .skin-green .wrapper,
 .skin-green .main-sidebar,
 .skin-green .left-side {
-  background-color: #222d32;
+  background-color: #647f9d;
 }
 .skin-green .user-panel > .info,
 .skin-green .user-panel > .info > a {
@@ -67,7 +67,7 @@
 }
 .skin-green .sidebar-menu > li.header {
   color: #4b646f;
-  background: #1a2226;
+  background: #546980;
 }
 .skin-green .sidebar-menu > li > a {
   border-left: 3px solid transparent;
@@ -75,15 +75,15 @@
 .skin-green .sidebar-menu > li:hover > a,
 .skin-green .sidebar-menu > li.active > a {
   color: #ffffff;
-  background: #1e282c;
-  border-left-color: #00a65a;
+  background: #4e5f73;
+  border-left-color: #00c575;
 }
 .skin-green .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
   background: #2c3b41;
 }
 .skin-green .sidebar a {
-  color: #b8c7ce;
+  color: #f5f9ff;
 }
 .skin-green .sidebar a:hover {
   text-decoration: none;
