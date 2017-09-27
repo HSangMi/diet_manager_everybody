@@ -49,6 +49,8 @@ var profile = (function () {
             });
             // 물 그래프
             $(document.body).on("click", "#drinkBtn", function () {
+                console.log("gdgsdg");
+                console.log($loginId);
                 profileModule.updateWater($loginId);
             });
             $(document.body).on("click", "#noDrinkBtn", function () {
@@ -71,6 +73,12 @@ var profile = (function () {
 
                 var data = result.userInfo;
                 var photoTemp = result.userPhoto;
+
+
+                var dateCnt = Math.floor((new Date().getTime() - new Date(data.joinDate).getTime())/(1000*60*60*24))+1;
+
+                console.log("날짜 차이..."+ dateCnt);
+                $("#howLongUse").html("EB와 함께한지 "+ dateCnt+"일");
 
                 if(photoTemp) {
                     data.path = photoTemp.path;
