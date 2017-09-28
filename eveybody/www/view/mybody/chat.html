@@ -68,6 +68,11 @@
         console.log("==========");
         // 유저 아이디 전달...
         socket.emit("login", $loginId);
+        //만약 알림이 있다면...
+        if($noticeContent!==""){
+            socket.emit("notice", {"userId": $loginId, "content": $noticeContent});
+            $noticeContent = "";
+        }
 
         socket.on("msg", function (data) {
             console.log("서버에서 응답");
