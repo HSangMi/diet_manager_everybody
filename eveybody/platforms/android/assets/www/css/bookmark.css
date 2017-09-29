@@ -1,0 +1,223 @@
+a {
+    cursor: pointer;
+}
+
+.middle-wrapper {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: -webkit-right;
+}
+
+.bookmark-wrapper {
+    justify-content: space-around;
+    flex-flow: row wrap;
+    display: inline-block;
+}
+
+.bookmark-button {
+    border: 2px solid #c7c7c7;
+    border-radius: 40px;
+    padding: 0.45rem 0.75rem;
+    color: #878787;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: grayscale(100%);
+    user-select: none;
+}
+
+.bookmark-button.added {
+    color: #ffbe43;
+    border-color: currentColor;
+    filter: grayscale(0);
+}
+
+.bookmark-button:hover {
+    border-color: currentColor;
+}
+
+.bookmark-icon {
+    width: 18px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    margin-right: 0.25em;
+    font-size: 2rem;
+    background: url('../img/star.png') no-repeat center;
+    background-size: 100%;
+    animation: starUnlike 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.added .bookmark-icon {
+    animation: starPulse 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.added .bookmark-icon [class^="star-animation-"] {
+    background: url('../img/star.png') no-repeat center;
+    background-size: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 14px;
+    opacity: 0;
+}
+
+.added .bookmark-icon [class^="star-animation-"]::before, .added .bookmark-icon [class^="star-animation-"]::after {
+    content: '';
+    background: inherit;
+    background-size: 100%;
+    width: inherit;
+    height: inherit;
+    display: inherit;
+    position: relative;
+    top: inherit;
+    left: inherit;
+    opacity: 0;
+}
+
+.added .bookmark-icon .star-animation-1 {
+    animation: starFloatMain-1 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.added .bookmark-icon .star-animation-1::before, .added .bookmark-icon .star-animation-1::after {
+    width: 12px;
+    height: 10px;
+    visibility: hidden;
+}
+
+.added .bookmark-icon .star-animation-1::before {
+    opacity: 0.6;
+    animation: starFloatSub-1 1s 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.added .bookmark-icon .star-animation-1::after {
+    animation: starFloatSub-2 1s 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    opacity: 0.75;
+}
+
+.added .bookmark-icon .star-animation-2 {
+    animation: starFloatMain-2 1s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.added .bookmark-icon .star-animation-2::before, .added .bookmark-icon .star-animation-2::after {
+    width: 10px;
+    height: 8px;
+    visibility: hidden;
+}
+
+.added .bookmark-icon .star-animation-2::before {
+    animation: starFloatSub-3 1s 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    opacity: 0.25;
+}
+
+.added .bookmark-icon .star-animation-2::after {
+    animation: starFloatSub-4 1s 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    opacity: 0.4;
+}
+
+@keyframes starPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+}
+
+@keyframes starUnlike {
+    50% {
+        transform: scale(0.75);
+    }
+}
+
+@keyframes starFloatMain-1 {
+    0% {
+        opacity: 0;
+        transform: translate(0) rotate(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(0, -25px) rotate(-20deg);
+    }
+}
+
+@keyframes starFloatMain-2 {
+    0% {
+        opacity: 0;
+        transform: translate(0) rotate(0) scale(0);
+    }
+    50% {
+        opacity: 0.9;
+        transform: translate(-10px, -38px) rotate(25deg) scale(1);
+    }
+}
+
+@keyframes starFloatSub-1 {
+    0% {
+        visibility: hidden;
+        transform: translate(0) rotate(0);
+    }
+    50% {
+        visibility: visible;
+        transform: translate(13px, -13px) rotate(30deg);
+    }
+}
+
+@keyframes starFloatSub-2 {
+    0% {
+        visibility: hidden;
+        transform: translate(0) rotate(0);
+    }
+    50% {
+        visibility: visible;
+        transform: translate(18px, -10px) rotate(55deg);
+    }
+}
+
+@keyframes starFloatSub-3 {
+    0% {
+        visibility: hidden;
+        transform: translate(0) rotate(0);
+    }
+    50% {
+        visibility: visible;
+        transform: translate(-10px, -10px) rotate(-40deg);
+    }
+    100% {
+        transform: translate(-50px, 0);
+    }
+}
+
+@keyframes starFloatSub-4 {
+    0% {
+        visibility: hidden;
+        transform: translate(0) rotate(0);
+    }
+    50% {
+        visibility: visible;
+        transform: translate(2px, -18px) rotate(-25deg);
+    }
+}
+
+
+div.attachment-text {
+    height: 2.85714286em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 90%;
+}
+
+div.chart.tab-pane {
+    cursor: default;
+}

@@ -1,0 +1,40 @@
+.tools {
+    display: none;
+    float: right;
+    color: rgba(0, 0, 0, 0.34);
+    position: absolute;
+    left: 85%;
+    z-index: 999;
+    margin-top: 22px;
+}
+
+.tools > .fa,
+.tools > .glyphicon,
+.tools > .ion {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+li > a:hover .tools {
+    display: inline-block;
+}
+
+.tools > i:hover {
+    color: #00c575;
+}
+
+a#messageInfo > .tools {
+    left: 90%;
+}
+
+a#messageInfo > p.msg {
+    height: 1.42857143em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin-right: 20px;
+}

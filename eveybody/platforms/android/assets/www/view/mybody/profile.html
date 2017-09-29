@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | Starter</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.css">
+    <link rel="stylesheet" href="../../dist/css/skins/skin-blue.min.css">
+    <!-- EVERYBODY CUSTOM STYLES -->
+    <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/switch.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/auto-complete.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/tools.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/friend-profile.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/bookmark.css" rel="stylesheet" type="text/css"/>
+    <!-- Import EVERYBODY require Script -->
+    <script src="../../plugins/chartjs/Chart.min.js"></script>
+    <script src="http://192.168.0.30:10005/socket.io/socket.io.js"></script>
+    <!-- Include Script Source -->
+    <script src="../../js/include/handlebars-v4.0.10.js"></script>
+    <script src="../../js/include/jquery.min.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <!-- Main Header -->
+        <header class="main-header"></header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar"></aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div id="profileLayer" class="pagelayer">
+                <section class="content">
+                    <!-- Your Page Content Here -->
+                    <div class="row" id="profileRow">
+                        <div class="col-md-3">
+                            <!-- Profile Image -->
+                            <div id="profileDiv" class="box box-primary"></div>
+
+                            <!-- /.info-box -->
+                            <div class="info-box bg-red">
+                                <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
+                                <div class="info-box-content">
+                                    <span id= "howLongUse" class="info-box-number">EB와 함께한지 1일</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                    <span class="progress-description">우리 모두 함께해요 ^_^</span>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                            <div id="todoStateDiv">
+
+                            </div>
+                            <div class="info-box bg-green">
+                                <span class="info-box-icon"><i class="fa fa-tachometer"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">현재 몸무게 입력하기</span>
+                                    <span class="info-box-number">
+                                        <input type="text" style="background: none; color: white; outline-color: transparent;border: none" placeholder="몸무게를 입력하세요">
+                                        <a href="#" style="color: white"><i class="fa fa-mail-forward pull-right"></i></a>
+                                    </span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                    <span class="progress-description">몸무게 변화를 눈으로 확인하세요!</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!------------         할일           ------- ---->
+                        <div class="col-md-3">
+                            <div class="box box-primary">
+                                <div class="box-header ui-sortable-handle" style="cursor: move;">
+                                    <i class="ion ion-clipboard"></i>
+                                    <h3 class="box-title">To Do List</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" onclick="editTodoList()" class="btn btn-box-tool">
+                                            <i class="fa fa-gear text-gray"> </i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="form-group">
+                                    <ul id = "todoListUL" class="todo-list ui-sortable">
+                                    </ul>
+                                    <ul id = "editTodoListUL" class="todo-list ui-sortable">
+                                    </ul>
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer no-padding">
+                                    <ul id="todoFooter" class="nav nav-pills nav-stacked">
+                                        <li><a class="text-center" id = "addTodoBtn"> 목표 추가 <i class="fa fa-user-plus text-blue"></i></a></li>
+                                        <li style="display:none"><a class="text-center" href="javascript:getTodoList();"> 변경 완료 <i class="fa fa-user-plus text-blue"></i></a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+             <!------------      ////////   할일           ------- ---->
+
+                            <div class="box box-info">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><i class="fa fa-tint text-aqua"></i> Water a Day</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div class="text-center">
+                                        <div class="chart">
+                                            <span id="drinkCnt" style="position: absolute; vertical-align: middle; margin-left: -3%; font-style: normal;margin-top:19%; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 4vw; line-height: normal; font-family: Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; "></span>
+                                            <canvas id="waterCnt" width="590" height="295"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"  class="btn btn-info btn-flat" style="width: 47%;" id="drinkBtn"> + 1 잔</button>
+                                    <button type="button"  class="btn btn-info btn-flat" style="width: 47%;" id="noDrinkBtn"> - 1 잔</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><i class="fa fa-heart text-red"></i> 친구관리 </h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <ul class="list-group list-group-unbordered" id="friendListUl"></ul>
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer no-padding">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li><a href="javascript:;" class="text-center" id="addFriendBtn"> 친구 추가 &emsp; <i class="fa fa-user-plus text-blue"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- About Me Box -->
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><i class="fa fa-gear text-gray"></i> 환경설정 </h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="settingAlarm">
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="patternLayer" class="pagelayer"></div>
+            <div id="dietLayer" class="pagelayer"></div>
+            <div id="chatLayer" class="pagelayer"></div>
+            <div id="bookmarkLayer" class="pagelayer"></div>
+            <div id="settingLayer" class="pagelayer"></div>
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer"></footer>
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="notifiModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="margin-top: 30vh">
+                <div class="modal-body">
+                    <br>
+                    <div class="chat">
+                        <div class="item">
+                            <img src="../../img/robot.png" alt="user image">
+                            <p class="message" id="noticeContent">
+                            <a href="#" class="name" id = "noticeBotNameA">
+                            </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="noticeFooter">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./wrapper -->
+</body>
+<!-- REQUIRED JS SCRIPTS -->
+<!-- jQuery 2.2.3
+<script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+ -->
+<!--
+<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.12/jquery-ui.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.mobile/1.0.1/jquery.mobile-1.0.1.min.js" type="text/javascript"></script>
+-->
+<!-- Bootstrap 3.3.6 -->
+<script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/app.min.js"></script>
+<script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
+<!-- My Script Source -->
+<script type="text/javascript" src="../../cordova.js"></script>
+<script src="../../js/loginUser.js" type="text/javascript"></script>
+<script src="../../js/fcmNotice.js" type="text/javascript"></script>
+
+<script type="application/javascript">
+    $("header.main-header").load("../includes/header2.html");
+    $("footer.main-footer").load("../includes/footer2.html");
+    $("aside.main-sidebar").load("../includes/sidebar.html");
+
+    ///////전역변수////////
+    var serverPath = "http://192.168.0.16:8000/";
+    var $loginId= (!checkMobileDevice()?window.sessionStorage.getItem("user"):window.localStorage.getItem("user"));
+    var $chatbot =   getChatbot($loginId);
+    var $noticeContent = "";
+    console.log("a뭔데!!!!!!!!!!1"+$loginId);
+
+    function getChatbot($loginId) {
+        console.log("들어옴..");
+        console.log($loginId);
+        var chatbotResult;
+        $.ajax({
+            url:serverPath +"chat/"+ $loginId + "/getChatbot.do",
+            async: false
+        }).done(function (result) {
+            console.log("결과: ");
+            console.log(result);
+            chatbotResult = result;
+        });
+        return chatbotResult;
+    }
+    console.log($chatbot);
+    console.log("-------------------");
+    /////////////////////
+
+    function checkMobileDevice() {
+        var mobileKeyWords = ['Android', 'iPhone', 'iPod', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson'];
+        for (var info in mobileKeyWords) {
+            if (navigator.userAgent.match(mobileKeyWords[info]) !== null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    if(checkMobileDevice()) {
+        var date = new Date();
+        $.ajax({
+            url: "http://192.168.0.16:8000/user/updateRecentDate.do",
+            data: {
+                userId: $loginId,
+                recentDate: date
+            },
+            type: "POST",
+            async: false,
+            crossDomain: true
+        }).done(function (result) {
+            window.localStorage.setItem("recentDate", date.getTime());
+        });
+    }
+
+
+</script>
+
+<script id="profile-template" type="text/x-handlebars-template">
+    <div class="box-header with-border">
+        <h3 class="box-title">Profile</h3>
+        <div class="box-tools pull-right">
+            <button type="button" onclick="profile.updateForm()" class="btn btn-box-tool"><i
+                    class="fa fa-gear"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-profile" id="box-profile">
+        <img class="profile-user-img img-responsive img-circle" src="{{setProfileImg path sysName}}"
+             alt="User profile picture">
+        <h3 class="profile-username text-center">{{name}}</h3>
+        <p class="text-muted text-center">{{statMsg}}</p>
+        <ul class="list-group list-group-unbordered">
+            <li class="list-group-item">
+                <b>Friends</b> <a class="pull-right">{{friendCnt}}명</a>
+            </li>
+            <li class="list-group-item">
+                <b>body spec</b> <a class="pull-right">{{tall}}/{{weight}}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script id="update-template" type="text/x-handlebars-template">
+    <div class="box-header with-border">
+        <h3 class="box-title">Edit Profile</h3>
+        <div class="box-tools pull-right">
+            <button onclick="profile.showProfile()" type="button" class="btn btn-box-tool"><i
+                    class="fa fa-close"></i></button>
+            <button onclick="profile.update()" type="button" class="btn btn-box-tool"><i
+                    class="fa fa-check"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-profile">
+        <img id="profile_Edit" class="profile-user-img img-responsive img-circle" src = "{{setProfileImg path sysName}}" alt = "User profile picture" >
+        <p id="insertImg" class="pull-right">
+            사진 변경<i class="fa fa-gear"></i>
+        </p>
+        <form class="form-horizontal">
+            <input id="attachFile" type="file" style="display: none;" >
+            <div class="form-group" >
+                <label for="inputName" class="col-sm-2 control-label"> Name </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputName" placeholder="닉네임" value="{{name}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Status Message </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="statMsg" placeholder="상태메세지" value="{{statMsg}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Tall </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="tall" placeholder="키" value="{{tall}}">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for= "inputName" class="col-sm-2 control-label" > Weight </label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="weight" placeholder="몸무게" value="{{weight}}">
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script id="alarm-template" type="text/x-handlebars-template">
+    <ul class="list-group list-group-unbordered">
+        <li class="list-group-item">
+            <b>Push 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="pushA" class='switch' {{setChecked pushA}}/>
+                <label for="pushA"></label>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <b>물마시기 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="waterA" class='switch' {{setChecked waterA}}/>
+                <label for="waterA"></label>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <b>몸무게 입력 메세지 알림</b>
+            <a class="pull-right">
+                <input type="checkbox" id="weightA" class='switch' {{setChecked weightA}}/>
+                <label for="weightA"></label>
+            </a>
+        </li>
+    </ul>
+</script>
+
+<script id="friend-add-template" type="text/x-handlebars-template">
+    <div class="modal fade" id="addFriend" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">친구 추가</h4>
+                </div>
+                <div class="modal-body">
+                    <p>아이디로 검색하기</p>
+                    <div class="input-group" id ="searchDiv">
+                        <input type="text" name="search" id="searchIdTxt" class="form-control" placeholder="Search">
+                        <div class="input-group-btn">
+                            <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="modalCloseBtn">Close</button>
+                </div>
+                #518acc </div>
+        </div>
+    </div>
+</script>
+
+<script id="friend-list-template" type="text/x-handlebars-template">
+    {{#each .}}
+    <li class="list-group-item">
+        <div class="user-block">
+            <img class="img-circle img-bordered-sm" src="{{setProfileImg friendId}}" alt="user image">
+            <span class="username">
+                <a href="javascript:friend.detail('{{friendId}}');">{{setProfileInfo friendId}}</a>
+                <a href="javacript:;" class="pull-right btn-box-tool"><i class="fa fa-times" onclick="friend.delete('{{friendId}}')"></i></a>
+            </span>
+        </div>
+    </li>
+    {{/each}}
+</script>
+
+<script id="friend-detail-template" type="text/x-handlebars-template">
+    <div class="modal fade" id="friendInfo" role="dialog">
+        <div class="modal-dialog modal-resize">
+            <div class="modal-content" style="margin-top: 30%">
+                <ul class="dropdown-menu modal-body" id="friend-profile-modal">
+                    <button type="button" class="close" data-dismiss="modal" id="friendProfileClose">&times;</button>
+                    <li class="user-header" id="friend-profile-header">
+                        <img src="{{setProfileImg userId}}" class="img-circle" id="friend-profile-img" alt="User Image">
+                        <p id="userInfo">
+                            {{name}}
+                            <small id="stat-msg">{{statMsg}}</small>
+                        </p>
+                    </li>
+                    <li class="user-body" id="friend-btn-div">
+                        <div class="row">
+                            <div class="col-xs-4 text-center">
+                                <a href="#" class="friend-btn-a">{{friendCnt}}명</a>
+                            </div>
+                            <div class="col-xs-4 text-center" >
+                                <a href="javascript:friend.request('{{userId}}');" class="friend-btn-a" id="friendAddBtn">{{setAddBtn userId}}</a>
+                            </div>
+                            <div class="col-xs-4 text-center">
+                                <a href="javascript:friend.sendMsgForm('{{userId}}');" class="friend-btn-a" id="sendMsgBtn">쪽지보내기</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="send-msg-template" type="text/x-handlebars-template">
+    <div class="modal fade" id="sendMsg" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">쪽지 보내기</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group" id ="sendMsg2Friend">
+                        보낼 사람 <input type="text" name="search" id="sendMsg2" class="form-control"  value="{{friendId}}" readonly>
+                        <br>
+                        <textarea onresize="return false;" name="content" id="sendMsgTxt" class="form-control"
+                                  placeholder="Input text to send" rows="10" cols="50"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="sendMsg2FriendBtn" onclick="friend.sendMsg('{{friendId}}')"><i class="fa fa-send-o"></i>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="todo-list-temp" type="text/x-handlebars-template">
+        {{#each .}}
+            <li id="todoList{{todoNo}}" class ="check">
+                <span class="handle">
+                    <i class="fa fa-circle-o text-aqua"></i>
+                </span>
+                <span class="text">{{todoContent}}</span>
+                    <span class="pull-right">
+                        <label for="input{{todoNo}}">
+                            <input id="input{{todoNo}}" onclick="todoCheck({{todoNo}})" type="checkbox" {{checkTodayDo doToday}} class="minimal">
+                        </label>
+                </span>
+            </li>
+        {{/each}}
+</script>
+
+<script id="todo-state-temp" type="text/x-handlebars-template">
+        {{#each .}}
+            <div class="info-box {{selectBg @key}}">
+                <span class="info-box-icon"><i class="fa fa-hand-peace-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">{{todoContent}}</span>
+                    <span class="info-box-number">{{doDateCount}}일 째</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{makePercentDo doDateCount}}%"></div>
+                    </div>
+                    <span class="progress-description">{{makePercentDo doDateCount}}% in 30 Days</span>
+                </div>
+            </div>
+        {{/each}}
+</script>
+<script id="todo-list-edit-temp" type="text/x-handlebars-template">
+    {{#each .}}
+    <li id="editTodo{{todoNo}}" class ="check">
+                <span class="handle">
+                    <i class="fa fa-circle-o text-aqua"></i>
+                </span>
+        <span class="text">{{todoContent}}</span>
+        <span class="pull-right">
+                        <label for="input{{todoNo}}">
+                            <a href="javascript:deleteTodo('{{todoNo}}')" style ="margin:3px;"> <i class="fa fa-close text-red"></i></a>
+                        </label>
+                </span>
+    </li>
+    {{/each}}
+</script>
+<script>
+    function editTodoList(){
+        console.log("수정하러들어옴...");
+        if($todoList.length!==0){
+            var source = $("#todo-list-edit-temp").html();
+            var template = Handlebars.compile(source);
+            var html = template($todoList);
+            $("#editTodoListUL").html(html);
+            $("#todoListUL").hide();
+            $("#editTodoListUL").show();
+
+            $("#todoFooter>li:eq(0)").hide();
+            $("#todoFooter>li:eq(1)").show();
+        }else{
+            console.log("수정할 목표가 없습니다!");
+        }
+    }
+
+    Handlebars.registerHelper('makePercentDo', function(doDateCount){
+         return Math.round(doDateCount*100/30);
+    });
+    Handlebars.registerHelper('checkTodayDo', function(doToday){
+        if(doToday===1){
+            return "checked";
+        }else{
+            return null;
+        }
+    });
+    Handlebars.registerHelper('selectBg', function(key){
+        if(key%2===0){
+            return "bg-yellow";
+        }else{
+            return "bg-aqua";
+        }
+    });
+    function todoCheck(todoNo) {
+        var check = $("#input"+todoNo).prop("checked");
+        console.log("테스트");
+        console.log("----------");
+        console.log(todoNo);
+        console.log(check);
+        console.log("----------");
+        $.ajax({
+            url:serverPath +"user/toDo/"+ $loginId + "/"+ todoNo + "/"+ check + "/setTodo.do",
+            async: false
+        }).done(function (result){
+            makeTodoState(result);
+            console.log("목표설정 완료!");
+            //makeTodoList(result);
+        });
+
+    }
+    getTodoList();
+    var $todoList;
+    function getTodoList() {
+        $("#todoListUL").show();
+        $("#editTodoListUL").hide();
+        $("#todoFooter>li:eq(0)").show();
+        $("#todoFooter>li:eq(1)").hide();
+        $.ajax({
+            url:serverPath +"user/toDo/"+ $loginId + "/getTodoList.do",
+            async: false
+        }).done(function (result) {
+            makeTodoList(result);
+            makeTodoState(result);
+            $todoList = result;
+        });
+    }
+    function makeTodoList(result){
+        if(result.length!==0){
+            var source = $("#todo-list-temp").html();
+            var template = Handlebars.compile(source);
+            var html = template(result);
+            $("#todoListUL").html(html);
+        }else{
+            $("#todoListUL").html("등록한 목표가 없습니다!");
+        }
+    }
+    function makeTodoState(result){
+        console.log("makeTodoSate....");
+        if(result.length!==0){
+            var source = $("#todo-state-temp").html();
+            var template = Handlebars.compile(source);
+            var html = template(result);
+            $("#todoStateDiv").html(html);
+        }else{
+            console.log("목표없음");
+           // $("#todoListUL").html("등록한 목표가 없습니다!");
+        }
+    }
+
+    $("#addTodoBtn").on("click",function () {
+        console.log("오잉...");
+        var html = '<li class="newTodoLI"> <span class="handle"><i class="fa fa-circle-o text-aqua"></i></i></span>' +
+            '<span class="text"><input type="text" autofocus="autofocus" style="background: none; outline-color: transparent;border: none" placeholder="몸무게를 입력하세요"></span>' +
+            '<span class="pull-right"><a href="javascript:addTodoSubmit()" style="margin:3px"><i class="fa fa-check"></i></a>' +
+            '<a href="javascript:addTodoCancle()" style ="margin:3px;"> <i class="fa fa-close"></i></a></span></li>';
+        if($(".newTodoLI").length===0){
+            $("#todoListUL").append(html);
+        }
+    });
+
+    function addTodoCancle(){
+        console.log("취소...");
+        $(".newTodoLI").remove();
+    }
+
+    function addTodoSubmit(){
+        console.log("제출...");
+        var newtodo = $(".newTodoLI input").val();
+        $.ajax({
+            url:serverPath +"user/toDo/"+ $loginId + "/"+ newtodo + "/addNewTodo.do",
+            async: false
+        }).done(function (result) {
+            $todoList=result;
+            console.log("결과: ");
+            console.log(result);
+            makeTodoList(result);
+        });
+    }
+
+    function updateTodo(todoNo){
+        console.log("수정...");
+        var todoContent = $(".updateTodoLI input").val();
+        $.ajax({
+            url:serverPath +"user/toDo/"+ $loginId + "/"+ todoNo +"/"+todoContent + "/updateTodo.do",
+            async: false
+        }).done(function (result) {
+            console.log("결과: ");
+            console.log(result);
+            makeTodoList(result);
+        });
+    }
+    function deleteTodo(todoNo){
+        console.log("목표삭제...");
+        $.ajax({
+            url:serverPath +"user/toDo/"+ $loginId + "/"+ todoNo + "/deleteTodo.do",
+            async: false
+        }).done(function (result) {
+            console.log("결과: ");
+            console.log(result);
+            $("#editTodo"+todoNo).hide();
+        });
+    }
+
+
+/*
+    Handlebars.registerHelper('ifTimeCheck', function(date,options){
+        var dateObj = new Date(date);
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        var timeString =  ""+ hour + minute ;
+        if($checkTime===undefined||$checkTime !== timeString){
+            $checkTime = timeString;
+            todayCnt++;
+            return options.fn(this);
+        }else if($checkTime === timeString){
+            return options.inverse(this);
+        }
+
+    });
+    Handlebars.registerHelper('ifTimeCheckClose', function(date,options){
+        var dateObj = new Date(date);
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        var timeString =  ""+ hour + minute ;
+        if($checkTime!==timeString&&$checkTime!==undefined){
+            return options.fn(this);
+        }else if($checkTime === timeString){
+            return options.inverse(this);
+        }
+    });*/
+
+
+</script>
+
+<!-- My Script Source -->
+<!--<script src="../../js/loginUser.js" type="text/javascript"></script>-->
+<script src="../../js/url/url.js"></script>
+<script src="../../js/board/file.js"></script>
+<script src="../../js/board/bookmark.js"></script>
+<script src="../../js/profile/profile.js"></script>
+<script src="../../js/friend/friend.js"></script>
+<script src="../../js/friend/profile-img.js"></script>
+
+
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+    <title>Metronic "Acidus" Frontend Freebie</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet" type="text/css">
+    <link href="../../vendor/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <!-- PAGE LEVEL PLUGIN STYLES -->
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
+    <!-- THEME STYLES -->
+    <link href="../../css/layout.css" rel="stylesheet" type="text/css"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+
+    <script src="../../js/include/handlebars-v4.0.10.js"></script>
+
+
+    <link href="../../css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../css/button.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+        div.wow {
+            visibility: visible !important;
+        }
+    </style>
+</head>
+<!-- END HEAD -->
+
+
+<!-- BODY -->
+<body><!--class="skin-blue sidebar-mini" style="height: auto;"-->
+
+<!--========== HEADER ==========-->
+<header class="header">
+</header>
+<!--========== End Header======= -->
+
+
+<!--========== PAGE LAYOUT ==========-->
+
+
+
+<div class="bg-color-sky-light">
+    <div class="content-md container">
+        <div class="row margin-b-40">
+            <div class="col-sm-6">
+                <h2>WORK OUT</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna
+                    aliqua enim minim veniam exercitation</p>
+            </div>
+        </div>
+        <!--// end row -->
+
+
+        <label class="Chevron">
+            <select name="itemList" id="itemList" class="itemList">
+                <option value="0">전체</option>
+                <option value="1">팔</option>
+                <option value="2">어깨</option>
+                <option value="3">복근</option>
+                <option value="4">다리</option>
+                <option value="5">전신</option>
+                <option value="6">스트레칭</option>
+            </select>
+        </label>
+        <button type="button" id="search" class="btn-theme btn-theme-sm btn-base-bg text-uppercase">찾기</button>
+
+        <button type="button" id="writeBtn" class="btn-theme btn-theme-sm btn-base-bg text-uppercase">글쓰기</button>
+
+        <div class="row list">
+            <!-- Team -->
+            <!-- End Team -->
+
+            <!-- End Team -->
+        </div>
+        <!--// end row -->
+    </div>
+</div>
+
+
+<!-- End Work -->
+
+<!--========== FOOTER ==========-->
+<footer class="footer">
+</footer>
+<!--========== END FOOTER ==========-->
+<!-- Back To Top -->
+<a href="javascript:void(0);" class="js-back-to-top back-to-top">Top</a>
+
+<!-- JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- CORE PLUGINS -->
+<script src="../../vendor/jquery.min.js" type="text/javascript"></script>
+<script src="../../vendor/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="../../vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+<!-- PAGE LEVEL PLUGINS -->
+<script src="../../vendor/jquery.easing.js" type="text/javascript"></script>
+<script src="../../vendor/jquery.back-to-top.js" type="text/javascript"></script>
+<script src="../../vendor/jquery.smooth-scroll.js" type="text/javascript"></script>
+<script src="../../vendor/jquery.wow.min.js" type="text/javascript"></script>
+<script src="../../vendor/swiper/js/swiper.jquery.min.js" type="text/javascript"></script>
+<script src="../../vendor/masonry/jquery.masonry.pkgd.min.js" type="text/javascript"></script>
+<script src="../../vendor/masonry/imagesloaded.pkgd.min.js" type="text/javascript"></script>
+
+<!-- PAGE LEVEL SCRIPTS -->
+<script src="../../js/layout.js" type="text/javascript"></script>
+<script src="../../js/components/wow.min.js" type="text/javascript"></script>
+<script src="../../js/components/swiper.min.js" type="text/javascript"></script>
+<script src="../../js/components/masonry.min.js" type="text/javascript"></script>
+<script src="../../js/loginUser.js" type="text/javascript"></script>
+<script src="../../js/components/button.js" type="text/javascript"></script>
+<script src="../../js/board/recommend.js" type="text/javascript"></script>
+
+<script type="application/javascript">
+    $("header.header").load("../includes/header.html");
+    $("footer.footer").load("../includes/footer.html");
+</script>
+
+
+<script id="workout-list" type="text/x-handlebars-template">
+    {{#each .}}
+    <div class="col-sm-4 sm-margin-b-50" >
+        <div class="bg-color-white margin-b-20">
+            <div class="wow zoomIn animated" data-wow-duration=".3" data-wow-delay=".1s"
+                 style="visibility: visible; animation-delay: 0.1s; animation-name: zoomIn;">
+                <a href="work_out_detail.html?boardNo={{boardNo}}"><img class="img-responsive" src="{{{setThumbnail boardNo}}}" alt="Team Image"></a>
+            </div>
+        </div>
+        <a class="link" href="#">{{setRegDate regDate}}</a>
+        <span class="text-uppercase margin-l-20" style="color:black;">
+            <span style="color:red;"> ❤ </span> {{{setLike boardNo}}}</span>
+        <h4>
+            <a href="work_out_detail.html?boardNo={{boardNo}}">{{title}}</a> <br>
+        </h4>
+
+    </div>
+    {{/each}}
+</script>
+
+
+<script type="application/javascript">
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    var pageNo = 1;
+    var genre = getParameterByName("genre");
+    if(genre==="" || genre===null){
+        genre = 0;
+    }
+
+    (function () {
+        if (getLoginId() !== "admin") {
+            $("button#writeBtn").hide();
+        }
+    })();
+
+
+    $("button#writeBtn").on("click", function () {
+        location.href = "work_out_write.html";
+    });
+
+
+    $("button#search").on("click", function () {
+        genre = $("#itemList option:selected").val();
+        location.href = "work_out.html?genre="+genre;
+    });
+
+
+    function loadList(genre, pageNo) {
+        var boardGenre = "workout-" + genre;
+        $.ajax({
+            url: "http://192.168.0.16:8000/board/workout/listOfworkout.do",
+            data: {
+                boardGenre: boardGenre,
+                pageNo:pageNo
+            },
+            dataType: "json"
+        }).done(function (result) {
+            var data = result.list;
+
+            var source = $("#workout-list").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper("setRegDate", function (regDate) {
+                var date = new Date(regDate);
+                return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            });
+            Handlebars.registerHelper("setLike", function (boardNo) {
+                return recommend.setLike(boardNo);
+            });
+            Handlebars.registerHelper("setThumbnail", function (boardNo) {
+                var imgSRC = "#";
+                $.ajax({
+                    url: "http://192.168.0.16:8000/board/workout/thumbnail.do",
+                    data: {
+                        boardNo: boardNo
+                    },
+                    type: "post",
+                    async: false
+                }).done(function (result) {
+                    imgSRC = result;
+                });
+
+                return imgSRC;
+            });
+
+            var html = template(data);
+            if(pageNo === 1) {
+                $("div.list").html(html);
+            }else
+                $("div.list").append(html);
+        });
+    }
+
+    loadList(genre, pageNo);
+    $("#itemList").val(genre).prop("selected", true);
+
+    $(window).scroll(function () {
+        var sh = $(window).scrollTop() + $(window).height();
+        var dh = $(document).height();
+
+        if(sh >= dh - 10) {
+            pageNo++;
+            loadList(genre, pageNo);
+        }
+    });
+</script>
+
+</body>
+<!-- END BODY -->
+</html>

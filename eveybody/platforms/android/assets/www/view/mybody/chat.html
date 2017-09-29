@@ -1,0 +1,279 @@
+<!-- Main content -->
+<section id="chatSection" class="content">
+    <div class="row">
+        <!-- Chatbox 1 -->
+        <div id="chatbotDiv" class="col-md-6">
+            <div class="box box-primary direct-chat direct-chat-primary">
+                <div class="box-header with-border">
+                    <!-- 채팅 상대 이름-->
+                    <h3 class="box-title"> Diet Bot </h3>
+                    <div class="box-tools pull-right">
+                        <!-- 신규메세지 -->
+                        <span data-toggle="tooltip" title="" class="badge bg-light-blue" data-original-title="3 New Messages">3</span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="display: block;">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+
+
+                    </div>
+                    <!--/.direct-chat-messages-->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer" style="display: block;">
+                    <form class="chat-form">
+                        <div class="input-group" >
+                            <input type="text" name="message" placeholder="Type Message ..." data-chatRoomNo="chatbot" class="form-control chat-input" required>
+                            <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-flat">Send</button>
+                                    </span>
+                        </div>
+                        <div class ="input-group-btn" style="display: none">
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </div>
+
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script type="application/javascript">
+    var $LoginuserNchatbot;
+    var socket;
+    var $divchat =  $("div.direct-chat-messages");
+    var notLastPage = true;
+    $(document).ready(function () {
+        //챗봇채팅가져오기...
+        $LoginuserNchatbot = getUserInfo(getChatContent);
+        console.log("=======LoginuserNchatbot=======");
+        console.dir($LoginuserNchatbot);
+        console.log("===============================");
+//        $("#chatbotDiv h3.box-title").html($LoginuserNchatbot.chatbot[0].botName);
+       // $("#chatbotDiv div.box-footer input.chat-input").attr("data-chatRoomNo",$LoginuserNchatbot.chatbot[0].chatRoomNo);
+  //      $("#chatbotDiv").attr("id","chatroom"+$LoginuserNchatbot.chatbot[0].chatRoomNo);
+        //채팅 리스트 가져오기...
+       // getChatRoomList(makeChatDiv);
+        // 소켓서버에 접속
+
+        socket = io.connect('http://192.168.0.30:10005');
+        console.log("===소켓===");
+        console.dir(socket);
+        console.log("==========");
+        // 유저 아이디 전달...
+        socket.emit("login", $loginId);
+        //만약 알림이 있다면...
+        if($noticeContent!==""){
+            socket.emit("notice", {"userId": $loginId, "content": $noticeContent});
+            $noticeContent = "";
+        }
+
+        socket.on("msg", function (data) {
+            console.log("서버에서 응답");
+                if (data.indexOf("btn") == 0) {
+                    //키버튼
+                    var key = data.substring(3);
+                    $("div.input-group-btn").html(key).show();
+                    $("div.input-group").hide();
+                } else if (data.indexOf("msg") == 0) {
+                    //url
+                } else {
+                    //text
+                    console.log("일반텍스트 문장 들어옴..");
+                    $("div.direct-chat-messages").append(data);
+                    $divchat.scrollTop($divchat[0].scrollHeight);
+                }
+        });
+
+        //메세지 보내기 눌렀을때..
+        $("form.chat-form").submit(function(){
+           console.log("D");
+            var $input = $(this).find("input.chat-input");
+            console.log("메세제 보내기 버튼 클릭!!");
+            var $msg = $input.val();
+            $input.val("");
+            $("div.direct-chat-messages").append(makeSendMsg($LoginuserNchatbot,$msg));
+
+            $divchat.scrollTop($divchat[0].scrollHeight);
+            socket.emit("msg", {recvId:"chatbot", sendId: $loginId, msg: $msg});
+            return false;
+        });
+
+
+    });
+    /*DB에서 대화목록 가져오는 ajax호출...
+     0. 유저의 닉네임과, 봇네임, 봇채팅방 넘버,,
+     1. 챗봇 대화기록 가져오기...(제일 위에)
+
+     2. 유저id에 해당하는 채팅방 번호로 채팅방 이름....
+        (닫은 채팅방으로 보여주기...);
+            => 채팅방을 + 로 열었을때, 또 다른 ajax 호출 해서 친구 대화목록 가져오기...
+     */
+
+        ////유저이름 + 챗봇챗 가져오는 함수
+        function getUserInfo(callback){
+            console.log("getUserInfo호출..");
+            var userInfo;
+            $.ajax({
+                url: serverPath+"chat/"+$loginId+"/getUserInfo.do",
+                dataType: "json",
+                async :false
+            }).done(function (result) {
+                console.log("유저정보가져오기.....");
+                console.dir(result);
+                userInfo= result;
+                //챗봇과 대화가 처음이 아니라면 기존 대화목록 로딩..
+//                if(result.chatbot[0].chatRoomNo!==null){
+                    console.log(result);
+                    //여기서 콜백은 getChatContent
+                    callback(1, makeChatContent);
+//                }
+            }).fail(function (err) {
+                console.log("getUserInfoNChatbot에러!!");
+                console.dir(err);
+            });
+            return userInfo;
+        }
+
+        /////채팅 목록 가져오는 함수
+        function getChatContent(chatPageNo, callback){
+            console.log("getChatContent 호출...");
+            console.log("notLastPage : "+notLastPage);
+            if(notLastPage){
+                $.ajax({
+                    url: serverPath + "chat/" + $loginId + "/" + chatPageNo + "/getChatContent.do",
+                    dataType: "json"
+                }).done(function (result) {
+                    console.log("채팅 컨텐트 가져오기..$$$$$$$$$$.");
+                    console.log(result);
+                    if(result.chatContentList.length!==0){
+                        console.log("callback :  makeChatContent호출...");
+                        callback(result);
+                    }else{
+                        console.log("대화기록이 없음!!");
+                        notLastPage = false;
+                        return;
+                    }
+                }).fail(function (err) {
+                    console.log("getChatContent에러!!");
+                    console.dir(err);
+                });
+            }else{
+                console.log("마지막페이지라 더이상 로딩 안하지롱...");
+            }
+        }
+        //////유저가 참여하고있는 채팅방 리스트 가져오는 함수
+ /*       function getChatRoomList(callback){
+            console.log("getChatRoomList 호출됨....");
+            $.ajax({
+                url: serverPath+"chat/"+$loginId+"/getChatRoomList.do",
+                dataType: "json"
+            }).done(function (result) {
+                console.log("채팅방 리스트 가져오기...");
+                console.dir(result);
+                console.log("callback : makeChatDiv 호출...");
+                callback(result);
+            }).fail(function (err) {
+                console.log("에러!!");
+                console.dir(err);
+            });
+        }*/
+/*
+        function makeChatDiv(chatRoomList){
+            if(chatRoomList.length!==0){
+                console.log("채팅목록이 있어요!!^^");
+                for(var i = 0; i<chatRoomList.length;i++){
+                    var divhtml ='<div id="chatRoom'+  chatRoomList[i].chatRoomNo +'" class="col-md-6"><div class="box box-primary direct-chat direct-chat-primary collapsed-box"><div class="box-header with-border"><h3 class="box-title">'+ chatRoomList[i].chatRoomName +
+                        '</h3><div class="box-tools pull-right"><span data-toggle="tooltip" title="" class="badge bg-light-blue" data-original-title="3 New Messages">3' +
+                        '</span><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button><button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>' +
+                        '</div></div>' + //box Header
+                        '<div class="box-body" style="display: none;"><div class="direct-chat-messages"></div><!--/.direct-chat-messages--> </div>'+ //box body
+                        '<div class="box-footer" style="display: none;"><form class="chat-form" action="#" method="post"><div class="input-group-btn" style="display: none"></div><div class="input-group">'+
+                        '<input type="text" name="message" placeholder="Type Message ..." class="form-control chat-input" required=""><span class="input-group-btn"><button type="submit" class="btn btn-primary btn-flat">Send</button>'+
+                        '</span></div></form> </div>  <!-- /.box-footer--> </div></div>';
+                    $("#chatSection>div.row").append(divhtml);
+                }
+            }
+            console.log("채팅목록호출완료!!");
+        }*/
+        function makeChatContent(result) {
+            console.log("makeChatContent 실행중!!!!");
+            var chatContentList = result.chatContentList;
+//            var chatRoomNo = result.chatRoomNo;
+            var html;
+//            var chatUserList = [];
+            var whoSend;
+            //chatContentList.reverse();
+            for(var i = 0; i<chatContentList.length; i++){
+                whoSend = chatContentList[i].whoSend;
+                if(whoSend===1){
+                    //내가보낸 메세지일때
+                    var loginUser = { "name" : $LoginuserNchatbot.name, "photo" : $LoginuserNchatbot.photo};
+                   html = makeSendMsg(loginUser, chatContentList[i].content, chatContentList[i].regDate);
+                        //user안에 있어야할것 : user.name , user.photo
+                }else if(whoSend===0) {
+                    // 챗봇이 보낸 메세지 일때 => 다른 처리 없이 바로 출력..
+                    html = chatContentList[i].content;
+                }
+                $("div.direct-chat-messages").prepend(html);
+            }
+           if(chatPageNo===1)$divchat.scrollTop($divchat[0].scrollHeight);
+
+        }
+
+    //키버튼...
+    function keybtn(question, option) {
+        $("div.input-group>input").val($("div.input-group-btn>button:eq("+option+")").html());
+        //  $("div.input-group-btn>button:eq(${option})").html()
+        $("form.chat-form").submit();
+        $("div.input-group-btn").html("").hide();
+        $("div.input-group").show();
+    }
+
+
+    //보낼메세지 만들어줌
+    function makeSendMsg(user, msg, date){
+        //user가 가지고 있어야 할 정보
+        console.log("makeSendMsg");
+        console.log(user);
+     if(user.photo===null){
+            console.log("프사 없음");
+          user.photo =  "/default-img/girl.png"; //디폴트 사진으로 교체
+        }else{
+           console.log("프사있음.");
+        }
+        console.log("날짜!~!");
+        console.log(prettyTime(date));
+   return '<div class="direct-chat-msg right"><div class="direct-chat-info clearfix"><span class="direct-chat-name pull-right">' + user.name + '</div><img class="direct-chat-img" src="http://192.168.0.16:8888/kr.co.imageserver/upload'+ user.photo +'" alt="Message User Image">' +
+         '<div class="direct-chat-text">' + msg + '</div><br><br><span class="direct-chat-timestamp" style="float:right">' + prettyTime(date) + '</span></div>';
+
+      //  return msg;
+    }
+    var chatPageNo=1;
+
+    $divchat.scroll(function(){
+        console.log("스크롤됨..");
+        if($divchat.scrollTop()<10){
+            chatPageNo++;
+            console.log("무한스크롤이벤트...! no : " + chatPageNo);
+            getChatContent(chatPageNo,makeChatContent);
+        }
+
+    });
+    function prettyTime(timeValue) {
+        var dateObj;
+        if(!timeValue) dateObj = new Date ();
+        else dateObj = new Date(timeValue);
+        var month = dateObj.getMonth() + 1;
+        var date = dateObj.getDate();
+        var hour = dateObj.getHours();
+        var minute = dateObj.getMinutes();
+        return month + "/" + date + " "+hour+":"+minute;
+    }
+</script>

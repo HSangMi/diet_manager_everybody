@@ -1,0 +1,479 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Pattern
+        <small>Optional description</small>
+    </h1>
+</section>
+
+
+
+<section class="content">
+    <!-- Your Page Content Here -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="nav-tabs-custom" style="cursor: move;">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class="active"><a href="#pieChartToday" onclick="" data-toggle="tab">오늘</a></li>
+                    <li><a href="#pieChartYesterday" onclick="javascript:getYesterday();" data-toggle="tab">어제</a></li>
+                    <li><a href="#pieChartThisWeek" onclick="javascript:getThisWeek();" data-toggle="tab">이번주</a></li>
+                    <li><a href="#pieChartLastWeek" onclick="javascript:getLastWeek();" data-toggle="tab">저번주</a></li>
+                    <li class="pull-left header"><i class="fa fa-star text-yellow"></i>음식종류</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- 하루치 영양소  북마크 -->
+                    <div class="chart tab-pane active" id="pieChartToday" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="pieChartTodayCanvas" style="height: 295px; width: 590px;" height="400" width="590"></canvas>
+                            </div>
+                        </div>
+                        <div class="box-footer no-padding pieChartTodayText">
+                            <ul class="nav nav-pills nav-stacked">
+                                <!-- 여기에 분석 말 -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="pieChartYesterday" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="pieChartYesterdayCanvas" style="height: 295px; width: 590px;" height="400" width="590"></canvas>
+                            </div>
+                        </div>
+                        <div class="box-footer no-padding pieChartYesterdayText">
+                            <ul class="nav nav-pills nav-stacked">
+                                <!-- 여기에 분석 말 -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="pieChartThisWeek" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="pieChartThisWeekCanvas" style="height: 295px; width: 590px;" height="400" width="590"></canvas>
+                            </div>
+                        </div>
+                        <div class="box-footer no-padding pieChartThisWeekText">
+                            <ul class="nav nav-pills nav-stacked">
+                                <!-- 여기에 분석 말 -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="pieChartLastWeek" style="position: relative; min-height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="pieChartLastWeekCanvas" style="height: 295px; width: 590px;" height="400" width="590"></canvas>
+                            </div>
+                        </div>
+                        <div class="box-footer no-padding pieChartLastWeekText">
+                            <ul class="nav nav-pills nav-stacked">
+                                <!-- 여기에 분석 말 -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <!-- end row-->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+
+        <div class="col-md-6">
+            <!-- LINE CHART -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">kcal for a week</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="calroChart" style="height: 277px; width: 590px;" height="277" width="590"></canvas>
+                    </div>
+                </div>
+                <div class="box-footer no-padding kcalForWeek">
+                    <ul class="nav nav-pills nav-stacked">
+                        <!-- 여기에 분석 말 -->
+                    </ul>
+                </div>
+
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Time Flot  to ate</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="chart">
+                            <canvas id="timePatChart" style="height: 301px; width: 590px;" height="301" width="590"></canvas>
+                        </div>
+                    </div>
+                    <div class="box-footer no-padding timeToEat">
+                        <ul class="nav nav-pills nav-stacked">
+                            <!-- 여기에 분석 말 -->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+
+<!-- /.content -->
+<script type="application/javascript">
+    $("document").ready(function () {
+
+        $.ajax({
+            url:"http://192.168.0.16:8000/diet/getPattern.do",
+            data:{
+                userId : $loginId
+            },
+            type:"post",
+            crossDomain:true,
+            dataType:"json"
+        }).done(function(result){
+            console.log("##############3#####");
+            console.dir(result);
+            console.dir(result.foodKindData);
+
+            setChart(result.foodKindData, result.foodKcalData, result.timeData, result.weightData, result.msgData);
+        });
+
+    });
+
+    function getYesterday(){
+        $.ajax({
+            url:"http://192.168.0.16:8000/diet/getKindYesterday.do",
+            data:{ userId : $loginId},
+            type:"post",
+            crossDomain:true,
+            dataType:"json"
+        }).done(function(result){
+            pieChart(result.foodKindData, $("#pieChartYesterdayCanvas"));
+
+            var html = setKindText(result.foodKindMSG1, result.foodKindMSG2);
+            $("div.pieChartYesterdayText > ul").html(html);
+        });
+    }
+
+    function getThisWeek(){
+        $.ajax({
+            url:"http://192.168.0.16:8000/diet/getKindThisWeek.do",
+            data:{ userId : $loginId},
+            type:"post",
+            crossDomain:true,
+            dataType:"json"
+        }).done(function(result){
+//            var foodkinddata = {
+//                datasets : [{
+//                    data : result.foodKindData.data,
+//                    backgroundColor : result.foodKindData.color
+//                }],
+//                labels : result.foodKindData.labels
+//            };
+//
+//            new Chart($("#pieChartThisWeekCanvas"),{type:'doughnut', data:foodkinddata, options: {
+//                responsive: true,
+//                legend: { position: 'right'},
+//                title: {display: false},
+//                animation: { animateScale: true, animateRotate: true }
+//            }});
+            console.dir(result);
+            pieChart(result.foodKindData, $("#pieChartThisWeekCanvas"));
+
+            var html = setKindText(result.foodKindMSG1, result.foodKindMSG2);
+            $("div.pieChartThisWeekText > ul").html(html);
+
+        });
+    }
+
+    function getLastWeek(){
+        $.ajax({
+            url:"http://192.168.0.16:8000/diet/getKindLastWeek.do",
+            data:{ userId : $loginId},
+            type:"post",
+            crossDomain:true,
+            dataType:"json"
+        }).done(function(result){
+//            var foodkinddata = {
+//                datasets : [{
+//                    data : foodKindData.data,
+//                    backgroundColor : foodKindData.color
+//                }],
+//                labels : foodKindData.labels
+//            };
+//
+//            new Chart($("#pieChartLastWeekCanvas"),{type:'doughnut', data:foodkinddata, options: {
+//                responsive: true,
+//                legend: { position: 'right'},
+//                title: {display: false},
+//                animation: { animateScale: true, animateRotate: true }
+//            }});
+
+            pieChart(result.foodKindData, $("#pieChartLastWeekCanvas"));
+
+            var html = setKindText(result.foodKindMSG1, result.foodKindMSG2);
+            $("div.pieChartLastWeekText > ul").html(html);
+        });
+    }
+
+
+
+    function pieChart(chartData, element){
+            var foodkinddata = {
+                datasets : [{
+                    data : chartData.data,
+                    backgroundColor : chartData.color
+                }],
+                labels : chartData.labels
+            };
+
+            new Chart(element,{type:'doughnut', data:foodkinddata, options: {
+                responsive: true,
+                legend: { position: 'right'},
+                title: {display: false},
+                animation: { animateScale: true, animateRotate: true }
+            }});
+    }
+
+    function setChart(foodKindData, foodKcalData, timeData, weightData, msgData){
+
+        var foodkinddata = {
+            datasets : [{
+//                data : ['밥류',
+//                    '밀가루/면류',
+//                    '육류',
+//                    '생선류',
+//                    '국/찌개/탕류',
+//                    '과자/빵류',
+//                    '부침/튀김',
+//                    '음료',
+//                    '채소류',
+//                    '과일류',
+//                    '유제품',
+//                    '유지/견과류',
+//                    '계란/콩류',
+//                    '해산물',
+//                    '패스트푸드',
+//                    '당류',
+//                    '건강기능식품',
+//                    '소스류',
+//                    '죽/스프',
+//                    '차/커피',
+//                    '주류',
+//                    '미정'],
+                data : foodKindData.data,
+                backgroundColor : foodKindData.color
+//                backgroundColor : [
+//                    "#EAEAEA"
+//    , "#FAF4C0"
+//    , "#A81919"
+//    , "#6799FF"
+//    , "#DB3A00"
+//    , "#FFE400"
+//    , "#EDA900"
+//    , "#A566FF"
+//    , "#47C83E"
+//    , "#FF3636"
+//    , "#D4F4FA"
+//    , "#CC723D"
+//    , "#FFF612"
+//    , "#008299"
+//    , "#C97CA3"
+//    , "#EB53D7"
+//    , "#A566FF"
+//    , "#990085"
+//    , "#F2CB61"
+//    , "#AB4A12"
+//    , "#22741C"
+//    , "#000000"
+//                ]
+            }],
+            labels : foodKindData.labels
+//            labels : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        };
+
+        pieChart(foodKindData, $("#pieChartTodayCanvas"));
+
+        if(foodKcalData !== null){
+        var kcalBackgroundColor = ['tomato', 'orange', '#8fdc86','#c5f171','#648af8'];
+        var kcalDataSet = [];
+        for(var i = 0;i < foodKcalData.kcalOfWeek.length; i++){
+            var data = {
+                label: (i+1)+'끼',
+                backgroundColor: kcalBackgroundColor[i],
+                data: foodKcalData.kcalOfWeek[i]
+            };
+            kcalDataSet.push(data);
+        }
+
+        var foodcaldata = {
+            labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+            datasets: kcalDataSet
+        };
+        new Chart( $("#calroChart"), {
+            type: 'bar',
+            data: foodcaldata,
+            options: {
+                title:{ display:false }, tooltips: { mode: 'index', intersect: false },
+                responsive: true, legend: { position: false },
+                scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }]
+                }
+            }
+        });
+        }
+
+        var breakfastList = timeData.breakfast;
+        var lunchList = timeData.lunch;
+        var dinnerList = timeData.dinner;
+
+        var timeDataSet = [];
+
+        for(var i = 0;i < breakfastList.length; i++){
+            var data = {
+                label: "아침",
+                backgroundColor: 'tomato',
+                borderColor: 'tomato',
+                data: breakfastList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+        for(var i = 0;i < lunchList.length; i++){
+            var data = {
+                label: "점심",
+                backgroundColor: 'orange',
+                borderColor: 'orange',
+                data: lunchList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+        for(var i = 0;i < dinnerList.length; i++){
+            var data = {
+                label: "저녁",
+                backgroundColor: 'greenyellow',
+                borderColor: 'greenyellow',
+                data: dinnerList[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+                showLine: false // no line shown
+            };
+            timeDataSet.push(data);
+        }
+
+       var timeconfig = {
+            type: 'line',
+            data: {
+                labels: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+                datasets: timeDataSet
+            },
+            options: {
+                responsive : true,
+                title :{ display:false },
+                legend: {
+                    display : false,
+                    elements : {
+                        point : { pointStyle : 'rectRot' }
+                    }
+                }
+            }
+       };
+
+        new Chart( $("#timePatChart"),timeconfig);
+
+        var weightconfig = {
+            type: 'line',
+            data: {
+                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+                datasets: [{
+                    label: '1st Week',
+                   // steppedLine: details.steppedLine,
+                    data: [55,55.5,54.5,53.5,54.5,54],
+                    borderColor: 'skyblue',
+                    fill: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    showLine: true // no line shown
+                }]
+            },
+            options: {
+                responsive : true,
+                title : { display: false },
+                legend : { display: false}
+            }
+        };
+        new Chart( $("#weightChart"),weightconfig);
+
+        setText(msgData);
+
+    }
+
+    function setKindText(msgLabel, msgData){
+        var html = "";
+        for(var i=0; i<msgLabel.length; i++){
+            if(msgData[i].indexOf("-") !== -1){
+                html += "<li><a>"+msgLabel[i]+"<span class='pull-right text-green'><i class='fa fa-angle-down'></i> "+ msgData[i]+"</span></a></li>";
+            }else {
+                html += "<li><a>"+msgLabel[i]+"<span class='pull-right text-red'><i class='fa fa-angle-up'></i> "+ msgData[i]+"</span></a></li>";
+            }
+        }
+
+        return html;
+    }
+
+    function setText(msgData){
+        // yellow, green, red
+
+        var html = setKindText(msgData.foodKindMSG1, msgData.foodKindMSG2);
+        $("div.pieChartTodayText > ul").html(html);
+
+        if(msgData.foodKcalFlag === -1){
+            html = "<li><a class='text-green'>"+ msgData.foodKcalMSG +"<span class='pull-right text-green'><i class='fa fa-angle-down'></i> ";
+        }else if(msgData.foodKcalFlag === 0){
+            html = "<li><a class='text-yellow'>"+ msgData.foodKcalMSG +"<span class='pull-right text-yellow'>";
+        }else if(msgData.foodKcalFlag === 1){
+            html = "<li><a class='text-red'>"+ msgData.foodKcalMSG +"<span class='pull-right text-red'><i class='fa fa-angle-up'></i> ";
+        }
+        html += msgData.foodKcalPoint + "</span></a></li>";
+        $("div.kcalForWeek > ul").html(html);
+
+
+        if(msgData.timeFlag === -1){
+            html = "<li><a class='text-green'>"+ msgData.timeMSG +"<span class='pull-right text-green'><i class='fa fa-smile-o'></i></span></a></li>";
+        }else if(msgData.timeFlag === 0){
+            html = "<li><a class='text-yellow'>"+ msgData.timeMSG +"<span class='pull-right text-yellow'><i class='fa fa-meh-o'></i></span></a></li>";
+        }else if(msgData.timeFlag === 1){
+            html = "<li><a class='text-red'>"+ msgData.timeMSG +"<span class='pull-right text-red'><i class='fa fa-frown-o'></i></span></a></li>";
+        }
+        $("div.timeToEat > ul").html(html);
+    }
+
+
+</script>

@@ -1,0 +1,5 @@
+#detail-content {
+    visibility: visible !important;
+    animation-delay: 0.3s !important;
+    animation-name: fadeInLeft !important;
+}

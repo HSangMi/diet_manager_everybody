@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | General UI</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">-->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <link href="../css/login.css" rel="stylesheet" type="text/css"/>
+
+    <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
+    <style>
+        .color-palette {
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+        }
+
+        .color-palette-set {
+            margin-bottom: 15px;
+        }
+
+        .color-palette span {
+            display: none;
+            font-size: 12px;
+        }
+
+        .color-palette:hover span {
+            display: block;
+        }
+
+        .color-palette-box h4 {
+            position: absolute;
+            top: 100%;
+            left: 25px;
+            margin-top: -40px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            display: block;
+            z-index: 7;
+        }
+    </style>
+</head>
+<body >
+<div class="wrapper">
+
+
+    <div >
+
+        <section class="content">
+
+            <!--<div class="row">-->
+                <div class="col-md-6">
+                    <div class="box box-solid">
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <img src="../img/cc1.jpg" alt="First slide">
+
+                                        <div class="carousel-caption">
+                                            First Slide
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <img src="../img/cc2.jpg" alt="Second slide">
+
+                                        <div class="carousel-caption">
+                                            Second Slide
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <img src="../img/cc3.jpg" alt="Third slide">
+
+
+                                        <div class="carousel-caption">
+                                            Third Slide     ...
+                                            <a class="nav-item-child" data-toggle="modal" data-target="#myModal1" id = "loginBtn" >시작하기</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                    <span class="fa fa-angle-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                    <span class="fa fa-angle-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            <!--</div>-->
+
+        </section>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+
+
+        <div class="section" id="section1">
+
+            <!-- 회원가입 화면 -->
+            <div class="form form--signup">
+                <button type="button" class="close modal1" data-dismiss="modal">&times;</button>
+                <h1 class="alpha">Sign Up!</h1>
+                <p>Signup using your Email address</p>
+                <div>
+                    <form class="form-wrap" action="return false;">
+                        <input id="joinId" class="inputbox email" type="text" placeholder="Email id" />
+                        <input id="joinName" class="inputbox name" type="text"  placeholder="Your Name" />
+                        <input id="joinPw" class="inputbox password" type="password" placeholder="Password" />
+                        <input id="joinPwConfirm" class="inputbox password" type="password" placeholder="Confirm Password" />
+
+                        <p> <br>please input your chotbot namme</p>
+                        <input id="chatbotName" class="inputbox name" type="text"  placeholder="Your Chatbot Name" />
+
+                        <p>
+                            <a href="#" class="button joinBtn">Create my Account <i class="icon-rocket"></i></a>
+                        </p>
+                        <!--<input id="" type="button" class="button" value="Sign up" />-->
+                    </form>
+                </div>
+                <hr />
+                <p>
+                    <!--<a class="scroll" href="#section1" data-section="1">&laquo;Login here</a>-->
+                    <a class="scroll2">&laquo;Login here</a>
+                </p>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/fastclick/fastclick.js"></script>
+<script src="../dist/js/app.min.js"></script>
+<script src="../dist/js/demo.js"></script>
+<!--<script src="../js/loginUser.js" type="text/javascript"></script>-->
+<script type="application/javascript">
+    (function(){
+        $("div.form--login").hide();
+    })();
+
+    $(document.body).on("click", "a.scroll1", function () {
+            $("div.form--login").hide();
+            $("div.form--signup").show();
+    });
+
+    $(document.body).on("click", "a.scroll2", function () {
+//            $("div.form--signup").hide();
+//            $("div.form--login").show();
+        window.localStorage.setItem("recentDate", new Date().getTime());
+        $(".modal1").click();
+
+        location.replace("../index.html");
+    });
+
+//    $(document.body).on("click", "a.loginBtn", function () {
+//        console.log("로그인 버튼누름")
+//
+//        var userId = $("input#id").val();
+//        var pw = $("input#pw").val();
+//        $.ajax({
+//            url: "http://192.168.0.16:8000/user/login.do",
+//            data: {
+//                userId: userId,
+//                pw: pw
+//            },
+//            type: "POST",
+//            crossDomain: true
+//        }).done(function (result) {
+//            if (result === 'fail') {
+//                alert("입력하신 정보가 존재하지 않습니다.");
+//            } else {
+//                alert("로그인 성공!");
+//                window.sessionStorage.setItem("user", userId)
+//                $(".modal1").click();
+//                location.replace("mybody/profile.html");
+//            }
+//        });
+//    });
+
+
+    function checkJoin() {
+        if($("input#joinId").val()===""){
+            alert("이메일을 입력해주세요.");
+        }else if($("input#joinName").val()===""){
+            alert("이름(별명)을 입력해주세요.");
+        }else if($("input#joinPw").val()==="" || $("input#joinPwConfirm").val()===""){
+            alert("비밀번호를 입력해주세요.");
+        }else if($("input#chatbotName").val()===""){
+            alert("챗봇이름을 입력해주세요.");
+        }else if($("input#joinPw").val() !== $("input#joinPwConfirm").val()){
+            alert("비밀번호가 일치하지 않습니다.");
+        }
+
+    }
+
+    $(document.body).on("click", "a.joinBtn", function () {
+            console.log("회원가입 버튼누름");
+            $.ajax({
+                url: "http://192.168.0.16:8000/user/signIn.do",
+                data: {
+                    userId: $("input#joinId").val(),
+                    pw: $("input#joinPw").val(),
+                    name: $("input#joinName").val(),
+                    botName: $("input#chatbotName").val()
+//                    mode:$("input[name='botMode']:checked").val()
+                },
+                type: "POST",
+                crossDomain: true,
+                async:false,
+                beforeSend :checkJoin,
+                error:function(request,status,error){
+                    console.dir(request);
+                    console.dir(status);
+                    console.dir(error);
+                }
+            }).done(function (result) {
+                console.dir(result);
+                if (result === 'success') {
+                    alert("회원가입성공 성공!");
+
+                    // 회원가입 성공하면 다시 로그인하게 만들고
+//                    $("div.form--signup").hide();
+//                    $("div.form--login").show();
+                    window.localStorage.setItem("recentDate", new Date().getTime()*1000);
+                    $(".modal1").click();
+
+                    location.replace("../index.html");
+                } else {
+                    alert("회원가입하는데 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            });
+    });
+
+
+
+</script>
+</body>
+</html>

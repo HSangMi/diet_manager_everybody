@@ -1,0 +1,103 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-photos",
+        "scope": null,
+        "escapedName": "cordova-plugin-photos",
+        "name": "cordova-plugin-photos",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Users\\joe\\Documents\\final\\eveybody\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-photos@latest",
+  "_id": "cordova-plugin-photos@1.0.8",
+  "_inCache": true,
+  "_location": "/cordova-plugin-photos",
+  "_nodeVersion": "4.2.1",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-photos-1.0.8.tgz_1488598863439_0.8415200882591307"
+  },
+  "_npmUser": {
+    "name": "domax",
+    "email": "mdominichenko@gmail.com"
+  },
+  "_npmVersion": "3.10.6",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-photos",
+    "scope": null,
+    "escapedName": "cordova-plugin-photos",
+    "name": "cordova-plugin-photos",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-photos/-/cordova-plugin-photos-1.0.8.tgz",
+  "_shasum": "f1b9c96e4629aa71e2b4914c6c06c6fdc5c45042",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-photos",
+  "_where": "C:\\Users\\joe\\Documents\\final\\eveybody\\node_modules",
+  "autor": "Maksym Dominichenko <max@dominichenko.com>",
+  "bugs": {
+    "url": "https://github.com/domax/cordova-plugin-photos/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-photos",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "This Cordova/Phonegap plugin provides access to photo library on device.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "f1b9c96e4629aa71e2b4914c6c06c6fdc5c45042",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-photos/-/cordova-plugin-photos-1.0.8.tgz"
+  },
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "gitHead": "f150259c2eb9589cc954c7b056206eb921396a47",
+  "homepage": "https://github.com/domax/cordova-plugin-photos#README",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "exif",
+    "photo-library",
+    "photo-album",
+    "photo-collection",
+    "photo-asset",
+    "thumbnail"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "domax",
+      "email": "mdominichenko@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-photos",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domax/cordova-plugin-photos.git"
+  },
+  "scripts": {},
+  "version": "1.0.8"
+}

@@ -1,0 +1,13 @@
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 99999;
+    background-color: ghostwhite;
+    width: 60%;
+    list-style: none;
+}
+
+.ui-autocomplete > li {
+    margin: 5px;
+}
